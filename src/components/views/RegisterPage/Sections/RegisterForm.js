@@ -151,8 +151,8 @@ function RegisterForm() {
                                 </Form.Item>
                                 <Form.Item {...tailFormItemLayout}>
                                     <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                                        Submit
-                </Button>
+                                        회원 가입
+                                    </Button>
                                 </Form.Item>
                             </Form>
                         </div>
