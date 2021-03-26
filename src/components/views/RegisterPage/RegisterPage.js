@@ -1,9 +1,10 @@
 import React from 'react'
+import RegisterFrame from './Sections/RegisterFrame'
 
 function RegisterPage() {
     return (
         <div>
-            RegisterPage
+            <RegisterFrame/>
         </div>
     )
 }
