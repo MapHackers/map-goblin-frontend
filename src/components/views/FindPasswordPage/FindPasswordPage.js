@@ -1,9 +1,10 @@
 import React from 'react'
+import FindPasswordFrame from './Sections/FindPasswordFrame'
 
 function FindPasswordPage() {
     return (
         <div>
-            FindPasswordPage
+            <FindPasswordFrame/>
         </div>
     )
 }
