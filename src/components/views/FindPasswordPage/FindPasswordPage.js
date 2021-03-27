@@ -3,7 +3,7 @@ import FindPasswordFrame from './Sections/FindPasswordFrame'
 
 function FindPasswordPage() {
     return (
-        <div>
+        <div style={{ display: 'flex'}}>
             <FindPasswordFrame/>
         </div>
     )

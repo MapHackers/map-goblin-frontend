@@ -5,10 +5,10 @@ import FindIdForm from './FindIDForm'
 
 function FindIDPageFrame() {
     return (
-        <div>
-            <Logo/>
-            <Title/>
-            <FindIdForm/>
+        <div style={{ width: '300px', height: '200px', left: '149px', top: '0px', background: '#FFFFF0', margin: '0 auto' }}>
+            <Logo />
+            <Title />
+            <FindIdForm />
         </div>
     )
 }
