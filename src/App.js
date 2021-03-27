@@ -15,6 +15,7 @@ import FindPasswordPage from './components/views/FindPasswordPage/FindPasswordPa
 import MainPage from './components/views/MainPage/MainPage'
 import MyPage from './components/views/MyPage/MyPage'
 import { Suspense } from 'react';
+import "antd/dist/antd.css"
 
 function App() {
   return (

@@ -1,6 +1,7 @@
 import React from 'react'
 import MainContentSlider from './Sections/MainContentSlider'
 import Slider from './Sections/NetflixSlider'
+import NavBar from '../NavigationBar/NavigationBar'
 
 const cards = [
     {
@@ -48,7 +49,8 @@ const cards = [
 function MainPage() {
     return (
         <div>
-            <MainContentSlider/>
+            <NavBar />
+            <MainContentSlider />
             <Slider title="내가 좋아요한 지도">
                 {cards.map(card => (
                     <Slider.Item card={card} key={card.id}>item</Slider.Item>
