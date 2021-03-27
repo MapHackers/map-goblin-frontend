@@ -3,7 +3,7 @@ import RegisterFrame from './Sections/RegisterFrame'
 
 function RegisterPage() {
     return (
-        <div>
+        <div style={{ display: 'flex'}}>
             <RegisterFrame/>
         </div>
     )

@@ -5,10 +5,10 @@ import FindPasswordForm from './FindPasswordForm'
 
 function FindPasswordFrame() {
     return (
-        <div>
-            <Logo/>
-            <Title/>
-            <FindPasswordForm/>
+        <div style={{ width: '302px', height: '379px', left: '149px', top: '0px', background: '#FFFFF0', margin: '0 auto' }}>
+            <Logo />
+            <Title />
+            <FindPasswordForm />
         </div>
     )
 }

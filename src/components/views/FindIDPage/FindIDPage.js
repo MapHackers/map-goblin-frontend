@@ -3,7 +3,7 @@ import FindIdPageFrame from './Sections/FindIDPageFrame'
 
 function FindIDPage() {
     return (
-        <div>
+        <div style={{ display: 'flex'}}>
             <FindIdPageFrame/>
         </div>
     )
