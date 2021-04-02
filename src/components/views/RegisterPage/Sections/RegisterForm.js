@@ -6,6 +6,10 @@ import {
 } from 'antd';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useDispatch } from 'react-redux'
+import { registerUser } from '../../../../redux/_actions/user_action'
+import { withRouter } from 'react-router-dom';
+
 
 const formItemLayout = {
     labelCol: {
@@ -30,7 +34,9 @@ const tailFormItemLayout = {
     },
 };
 
-function RegisterForm() {
+function RegisterForm(props) {
+    const dispatch = useDispatch()
+
     return (
         <div>
             <Formik
@@ -38,6 +44,7 @@ function RegisterForm() {
                     id: '',
                     password: '',
                     confirmPassword: '',
+                    name: '',
                     email: '',
                 }}
                 validationSchema={Yup.object().shape({
@@ -49,6 +56,8 @@ function RegisterForm() {
                     password: Yup.string()
                         .min(6, '비밀번호는 6자리 이상이어야 합니다.')
                         .required('비밀번호는 필수 항목입니다.'),
+                    name: Yup.string()
+                        .required('이름은 필수 항목입니다.'),
                     confirmPassword: Yup.string()
                         .oneOf([Yup.ref('password'), null], '비밀번호가 다릅니다.')
                         .required('비밀번호 확인은 필수 항목입니다.')
@@ -57,10 +66,28 @@ function RegisterForm() {
                     setTimeout(() => {
 
                         let dataToSubmit = {
-                            email: values.email,
+                            userId: values.id,
                             password: values.password,
-                            id: values.id
+                            email: values.email,
+                            name: values.name
                         };
+
+                        dispatch(registerUser(dataToSubmit))
+                        .then(response => {
+                            console.log("payload", response.payload)
+                            if (response.payload.status === 200) {
+                                alert('회원가입이 완료 되었습니다. 로그인 해주세요')
+                                props.history.push('/login')
+                            } else {
+                                alert(response.response)
+                                console.log(response)
+                            }
+                        })
+                        .catch(err => {
+                            setTimeout(() => {
+                                alert("Error!")
+                            }, 3000)
+                        })
 
                         setSubmitting(false);
                     }, 500);
@@ -133,6 +160,23 @@ function RegisterForm() {
                                     )}
                                 </Form.Item>
 
+                                <Form.Item required label="이름">
+                                    <Input
+                                        id="name"
+                                        placeholder="이름"
+                                        type="text"
+                                        value={values.name}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        className={
+                                            errors.name && touched.name ? 'text-input error' : 'text-input'
+                                        }
+                                    />
+                                    {errors.name && touched.name && (
+                                        <div className="input-feedback">{errors.name}</div>
+                                    )}
+                                </Form.Item>
+
                                 <Form.Item required label="이메일" hasFeedback validateStatus={errors.email && touched.email ? "error" : 'success'}>
                                     <Input
                                         id="email"
@@ -164,4 +208,4 @@ function RegisterForm() {
     )
 }
 
-export default RegisterForm
+export default withRouter(RegisterForm)
