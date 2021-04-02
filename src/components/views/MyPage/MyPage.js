@@ -1,9 +1,15 @@
 import React from 'react'
+import NavBar from '../NavigationBar/NavigationBar'
+import MyPageFrame from './Sections/MyPageFrame'
 
-function MyPage() {
+function MyPage(props) {
+
+    const userId = props.match.params.userId
+
     return (
         <div>
-            MyPage
+            <NavBar />
+            <MyPageFrame userId={userId} />
         </div>
     )
 }

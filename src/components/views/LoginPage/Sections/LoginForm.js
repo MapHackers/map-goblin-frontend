@@ -80,7 +80,7 @@ function LoginForm() {
                             </Form.Item>
 
                             <Form.Item>
-                                <Checkbox id="rememberMe" onChange={handleRememberMe} checked={rememberMe}> Remember me </Checkbox>
+                                <Checkbox id="rememberMe" onChange={handleRememberMe} checked={rememberMe}> 아이디 기억하기 </Checkbox>
                             </Form.Item>
 
                             <Form.Item>

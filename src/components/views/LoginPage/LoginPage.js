@@ -3,7 +3,7 @@ import LoginFrame from './Sections/LoginFrame'
 
 function LoginPage() {
     return (
-        <div>
+        <div style={{ display: 'flex'}}>
             <LoginFrame />
         </div>
     )

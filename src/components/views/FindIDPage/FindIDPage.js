@@ -1,9 +1,10 @@
 import React from 'react'
+import FindIdPageFrame from './Sections/FindIDPageFrame'
 
 function FindIDPage() {
     return (
-        <div>
-            FindIdPage
+        <div style={{ display: 'flex'}}>
+            <FindIdPageFrame/>
         </div>
     )
 }

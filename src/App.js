@@ -14,7 +14,9 @@ import FindIDPage from './components/views/FindIDPage/FindIDPage'
 import FindPasswordPage from './components/views/FindPasswordPage/FindPasswordPage'
 import MainPage from './components/views/MainPage/MainPage'
 import MyPage from './components/views/MyPage/MyPage'
+import SearchPage from './components/views/SearchPage/SearchPage'
 import { Suspense } from 'react';
+import "antd/dist/antd.css"
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
             <Route exact path="/findId" component={FindIDPage} />
             <Route exact path="/findPassword" component={FindPasswordPage} />
             <Route exact path="/main" component={MainPage} />
+            <Route exact path="/search" component={SearchPage} />
             <Route exact path="/:userId" component={MyPage} />
           </Switch>
         </Suspense>
