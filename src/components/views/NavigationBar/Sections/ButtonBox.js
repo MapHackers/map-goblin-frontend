@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button } from 'antd'
-function ButtonBox() {
+import { withRouter } from 'react-router-dom';
+
+function ButtonBox(props) {
     return (
         <Button
             type="primary"
@@ -10,10 +12,13 @@ function ButtonBox() {
                 flex: 'none'
             }}
             size="large"
+            onClick={() => {
+                props.history.push(`/new`)
+            }}
         >
             Create-My-Map
         </Button>
     )
 }
 
-export default ButtonBox
+export default withRouter(ButtonBox)

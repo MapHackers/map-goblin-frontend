@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import NavBar from '../NavigationBar/NavigationBar'
 import qs from 'qs'
 import SearchLists from './Sections/SearchList'

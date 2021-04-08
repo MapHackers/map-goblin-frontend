@@ -1,6 +1,6 @@
 import React from 'react'
 import { Avatar } from 'antd';
-import { AntDesignOutlined, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { AntDesignOutlined, PlusOutlined } from '@ant-design/icons';
 
 
 function UserProfile(props) {

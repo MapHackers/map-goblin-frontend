@@ -46,7 +46,7 @@ const cards = [
     }
 ];
 
-function MainPage() {
+function MainPage(props) {
     return (
         <div>
             <NavBar />

@@ -66,7 +66,7 @@ function FindIDForm() {
 
                             <Form.Item {...tailFormItemLayout}>
                                 <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                                    회원 가입
+                                    아이디 찾기
                                     </Button>
                             </Form.Item>
                         </form>

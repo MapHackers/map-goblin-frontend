@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Input } from 'antd'
-import { Redirect, Route, BrowserRouter, useHistory, withRouter, Link } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 
 const { Search } = Input;
 

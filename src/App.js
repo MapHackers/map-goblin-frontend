@@ -15,7 +15,9 @@ import FindPasswordPage from './components/views/FindPasswordPage/FindPasswordPa
 import MainPage from './components/views/MainPage/MainPage'
 import MyPage from './components/views/MyPage/MyPage'
 import SearchPage from './components/views/SearchPage/SearchPage'
+import CreateMyMapPage from './components/views/CreateMyMapPage/CreateMyMapPage'
 import { Suspense } from 'react';
+import Connect from './hoc/connectStore'
 import "antd/dist/antd.css"
 
 function App() {
@@ -24,13 +26,14 @@ function App() {
       <BrowserRouter>
         <Suspense fallback={(<div> Loading ... </div>)}>
           <Switch>
-            <Route exact path="/" component={LandingPage} />
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/register" component={RegisterPage} />
-            <Route exact path="/findId" component={FindIDPage} />
-            <Route exact path="/findPassword" component={FindPasswordPage} />
-            <Route exact path="/main" component={MainPage} />
+            <Route exact path="/" component={Connect(LandingPage)} />
+            <Route exact path="/login" component={Connect(LoginPage)} />
+            <Route exact path="/register" component={Connect(RegisterPage)} />
+            <Route exact path="/findId" component={Connect(FindIDPage)} />
+            <Route exact path="/findPassword" component={Connect(FindPasswordPage)} />
+            <Route exact path="/main" component={Connect(MainPage)} />
             <Route exact path="/search" component={SearchPage} />
+            <Route exact path="/new" component={CreateMyMapPage} />
             <Route exact path="/:userId" component={MyPage} />
           </Switch>
         </Suspense>
