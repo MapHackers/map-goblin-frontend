@@ -17,6 +17,7 @@ import MyPage from './components/views/MyPage/MyPage'
 import SearchPage from './components/views/SearchPage/SearchPage'
 import { Suspense } from 'react';
 import "antd/dist/antd.css"
+import RepositoryPage from "./pages/RepositoryPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route exact path="/findPassword" component={FindPasswordPage} />
             <Route exact path="/main" component={MainPage} />
             <Route exact path="/search" component={SearchPage} />
+            <Route exact path="/repository" component={RepositoryPage}/>
             <Route exact path="/:userId" component={MyPage} />
           </Switch>
         </Suspense>
