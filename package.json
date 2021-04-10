@@ -2,8 +2,9 @@
   "name": "map-goblin",
   "version": "0.1.0",
   "private": true,
-  "proxy" : "http://localhost:8080",
+  "proxy": "http://localhost:8080",
   "dependencies": {
+    "@ant-design/icons": "^4.6.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -22,6 +23,7 @@
     "redux": "^4.0.5",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
+    "styled-components": "^5.2.3",
     "web-vitals": "^1.0.1",
     "yup": "^0.32.9"
   },
