@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Input } from 'antd'
 import {withRouter} from 'react-router-dom';
+import styled from 'styled-components'
 
 const { Search } = Input;
 
@@ -18,10 +19,17 @@ function SearchByRepoName(props) {
 
 
     return (
-        <div style={{ width: 600, height: 30, float: 'right', marginTop: '20px', marginRight: '100px', flex: 'none' }}>
+        <SearchContainer>
             <Search placeholder="레포지토리명으로 검색" onSearch={onSearch} size="large" value={searchValue} onChange={onChange} />
-        </div>
+        </SearchContainer>
     )
 }
 
 export default withRouter(SearchByRepoName)
+
+const SearchContainer = styled.div`
+    width: 37.5rem;
+    height: 2rem;
+    margin-top: 0.75rem;
+    flex: none;
+`

@@ -19,6 +19,7 @@ import CreateMyMapPage from './components/views/CreateMyMapPage/CreateMyMapPage'
 import { Suspense } from 'react';
 import Connect from './hoc/connectStore'
 import "antd/dist/antd.css"
+import NavBar from './components/views/NavigationBar/NavigationBar';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route exact path="/main" component={Connect(MainPage)} />
             <Route exact path="/search" component={SearchPage} />
             <Route exact path="/new" component={CreateMyMapPage} />
+            <Route exact path="/nav" component={NavBar} />
             <Route exact path="/:userId" component={MyPage} />
           </Switch>
         </Suspense>

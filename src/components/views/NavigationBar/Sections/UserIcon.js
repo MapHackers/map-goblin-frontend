@@ -1,20 +1,13 @@
 import React from 'react'
 import { UserOutlined } from '@ant-design/icons';
+import styled from 'styled-components'
 
 function UserIcon() {
     return (
         <div style={{ display: 'flex' }}>
-            <div style={{
-                borderRadius: '25px',
-                backgroundColor: '#E0E9FF',
-                width: '50px',
-                height: '50px',
-                marginTop: '15px',
-                textAlign: 'center',
-                verticalAlign: 'middle'
-            }}>
-                <UserOutlined style={{ fontSize: '40px'}} />
-            </div>
+            <UserIconContainer>
+                <UserOutlined style={{ fontSize: '2rem' }} />
+            </UserIconContainer>
             <div style={{
                 float: 'right'
             }}>
@@ -25,3 +18,13 @@ function UserIcon() {
 }
 
 export default UserIcon
+
+const UserIconContainer = styled.div`
+    border-radius: 1.3rem;
+    background-color: white;
+    width: 2.6rem;
+    height: 2.6rem;
+    margin-top: 0.8rem;
+    text-align: center;
+    vertical-align: middle
+`
