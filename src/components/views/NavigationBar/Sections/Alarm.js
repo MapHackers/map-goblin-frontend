@@ -22,7 +22,7 @@ function Alarm() {
         <AlarmContainer>
             <Badge count={5} size="small">
                 <Dropdown overlay={AlarmList} trigger={['click']}>
-                    <BellOutlined style={{ fontSize: '1.5rem', marginTop: '3px' }} />
+                    <BellOutlined style={{ fontSize: '1.5rem', marginTop: '0.1875rem' }} />
                 </Dropdown>
             </Badge>
         </AlarmContainer >
