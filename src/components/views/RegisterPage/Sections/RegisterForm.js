@@ -10,30 +10,6 @@ import { useDispatch } from 'react-redux'
 import { registerUser } from '../../../../redux/_actions/user_action'
 import { withRouter } from 'react-router-dom';
 
-
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-    },
-};
-const tailFormItemLayout = {
-    wrapperCol: {
-        xs: {
-            span: 24,
-            offset: 0,
-        },
-        sm: {
-            span: 16,
-            offset: 4,
-        },
-    },
-};
-
 function RegisterForm(props) {
     const dispatch = useDispatch()
 
@@ -73,21 +49,20 @@ function RegisterForm(props) {
                         };
 
                         dispatch(registerUser(dataToSubmit))
-                        .then(response => {
-                            console.log("payload", response.payload)
-                            if (response.payload.status === 200) {
-                                alert('회원가입이 완료 되었습니다. 로그인 해주세요')
-                                props.history.push('/login')
-                            } else {
-                                alert(response.response)
-                                console.log(response)
-                            }
-                        })
-                        .catch(err => {
-                            setTimeout(() => {
-                                alert("Error!")
-                            }, 3000)
-                        })
+                            .then(response => {
+                                if (response.payload.status === 200) {
+                                    alert('회원가입이 완료 되었습니다. 로그인 해주세요')
+                                    props.history.push('/login')
+                                } else {
+                                    alert(response.payload.data.message)
+                                    console.log(response)
+                                }
+                            })
+                            .catch(err => {
+                                setTimeout(() => {
+                                    alert("Error!")
+                                }, 3000)
+                            })
 
                         setSubmitting(false);
                     }, 500);
@@ -105,7 +80,7 @@ function RegisterForm(props) {
                     } = props;
                     return (
                         <div>
-                            <Form style={{ minWidth: '375px' }} {...formItemLayout} onSubmit={handleSubmit} >
+                            <form onSubmit={handleSubmit}>
 
                                 <Form.Item required label="아이디">
                                     <Input
@@ -118,6 +93,7 @@ function RegisterForm(props) {
                                         className={
                                             errors.id && touched.id ? 'text-input error' : 'text-input'
                                         }
+                                        size="large"
                                     />
                                     {errors.id && touched.id && (
                                         <div className="input-feedback">{errors.id}</div>
@@ -135,6 +111,7 @@ function RegisterForm(props) {
                                         className={
                                             errors.password && touched.password ? 'text-input error' : 'text-input'
                                         }
+                                        size="large"
                                     />
                                     {errors.password && touched.password && (
                                         <div className="input-feedback">{errors.password}</div>
@@ -152,6 +129,7 @@ function RegisterForm(props) {
                                         className={
                                             errors.confirmPassword && touched.confirmPassword ? 'text-input error' : 'text-input'
                                         }
+                                        size="large"
                                     />
                                     {errors.confirmPassword && touched.confirmPassword && (
                                         <div className="input-feedback">{errors.confirmPassword}</div>
@@ -169,6 +147,7 @@ function RegisterForm(props) {
                                         className={
                                             errors.name && touched.name ? 'text-input error' : 'text-input'
                                         }
+                                        size="large"
                                     />
                                     {errors.name && touched.name && (
                                         <div className="input-feedback">{errors.name}</div>
@@ -186,17 +165,18 @@ function RegisterForm(props) {
                                         className={
                                             errors.email && touched.email ? 'text-input error' : 'text-input'
                                         }
+                                        size="large"
                                     />
                                     {errors.email && touched.email && (
                                         <div className="input-feedback">{errors.email}</div>
                                     )}
                                 </Form.Item>
-                                <Form.Item {...tailFormItemLayout}>
-                                    <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
+                                <Form.Item >
+                                    <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
                                         회원 가입
                                     </Button>
                                 </Form.Item>
-                            </Form>
+                            </form>
                         </div>
                     );
                 }}

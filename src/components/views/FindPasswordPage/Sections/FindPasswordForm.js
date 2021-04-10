@@ -2,19 +2,7 @@ import React from 'react'
 import { Formik } from 'formik'
 import { Form, Input, Button } from 'antd'
 import * as Yup from 'yup'
-
-const tailFormItemLayout = {
-    wrapperCol: {
-        xs: {
-            span: 24,
-            offset: 0,
-        },
-        sm: {
-            span: 16,
-            offset: 4,
-        },
-    },
-};
+import axios from 'axios'
 
 function FindPasswordForm() {
     return (
@@ -33,7 +21,20 @@ function FindPasswordForm() {
                 })}
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
+
+                        let dataToSubmit = {
+                            userId: values.id,
+                            email: values.email
+                        }
+                        
+                        axios.post('/api/find', dataToSubmit)
+                        .then(response => {
+                            console.log(response)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+
                         setSubmitting(false);
                     }, 400);
                 }}
@@ -61,6 +62,7 @@ function FindPasswordForm() {
                                     className={
                                         errors.id && touched.id ? 'text-input error' : 'text-input'
                                     }
+                                    size="large"
                                 />
                                 {errors.id && touched.id && (
                                     <div className="input-feedback">{errors.id}</div>
@@ -78,14 +80,15 @@ function FindPasswordForm() {
                                     className={
                                         errors.email && touched.email ? 'text-input error' : 'text-input'
                                     }
+                                    size="large"
                                 />
                                 {errors.email && touched.email && (
                                     <div className="input-feedback">{errors.email}</div>
                                 )}
                             </Form.Item>
 
-                            <Form.Item {...tailFormItemLayout}>
-                                <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
                                     비밀번호 찾기
                                 </Button>
                             </Form.Item>
@@ -93,7 +96,6 @@ function FindPasswordForm() {
                     )
                 }
                 }
-
             </Formik>
         </div>
     )

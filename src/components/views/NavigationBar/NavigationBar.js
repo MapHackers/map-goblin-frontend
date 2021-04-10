@@ -24,13 +24,16 @@ export default NavigationBar
 const NavContainer = styled.div`
     padding: 0 20px;
     border-bottom: solid 1px #e8e8e8;
-    overflow: auto;
     box-shadow: 0 0 30px #f3f1f1;
     display: flex;
     justify-content: space-between;
     align-content: center;
-    background-color: rgba(160, 208,253, 0.3);
     height: 4rem;
+    background: rgba( 160, 208, 253, 0.3 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 2px );
+    border-radius: 1rem;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );  
 `
 
 const UserIconContainer = styled.div`

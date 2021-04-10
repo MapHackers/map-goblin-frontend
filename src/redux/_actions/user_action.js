@@ -33,12 +33,7 @@ export function registerUser(dataToSubmit) {
 
 export function auth() {
    
-    const request = axios.get('/api/authentication',{},{
-        auth: {
-            username: 'test',
-            password: '123123'
-        }
-    })
+    const request = axios.get('/api/authentication')
     .then(response => response)
     .catch(err => err.response)
 

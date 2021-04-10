@@ -2,21 +2,11 @@ import React from 'react'
 import { Formik } from 'formik'
 import { Form, Input, Button } from 'antd'
 import * as Yup from 'yup'
+import axios from 'axios'
+import { withRouter } from 'react-router-dom';
 
-const tailFormItemLayout = {
-    wrapperCol: {
-        xs: {
-            span: 24,
-            offset: 0,
-        },
-        sm: {
-            span: 16,
-            offset: 4,
-        },
-    },
-};
 
-function FindIDForm() {
+function FindIDForm(props) {
     return (
         <div>
             <Formik
@@ -30,8 +20,22 @@ function FindIDForm() {
                 })}
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
-                        setSubmitting(false);
+                        let dataToSubmit = {
+                            email: values.email
+                        }
+
+                        axios.post('/api/find', dataToSubmit)
+                            .then(response => {
+                                if (response.status === 200) {
+                                    alert(`해당 이메일로 가입된 아이디는 ${response.data.data} 입니다.`)
+                                }
+                                props.history.push('/login')
+                            })
+                            .catch(err => {
+                                alert('해당 이메일로 가입된 아이디가 없습니다.')
+                            })
+                        values.email = ''
+                        setSubmitting(false)
                     }, 400);
                 }}
             >
@@ -58,16 +62,17 @@ function FindIDForm() {
                                     className={
                                         errors.email && touched.email ? 'text-input error' : 'text-input'
                                     }
+                                    size="large"
                                 />
                                 {errors.email && touched.email && (
                                     <div className="input-feedback">{errors.email}</div>
                                 )}
                             </Form.Item>
 
-                            <Form.Item {...tailFormItemLayout}>
-                                <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
                                     아이디 찾기
-                                    </Button>
+                                </Button>
                             </Form.Item>
                         </form>
                     )
@@ -80,4 +85,4 @@ function FindIDForm() {
     )
 }
 
-export default FindIDForm
+export default withRouter(FindIDForm)

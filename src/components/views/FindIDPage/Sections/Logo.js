@@ -3,8 +3,8 @@ import LogoImage from '../../../../assets/images/Logo.png'
 
 function Logo() {
     return (
-        <div>
-            <img style={{width:'40px', height:'40px'}} src={LogoImage} alt="Logo"/>
+        <div style={{ margin: '0 auto' }}>
+            <img style={{ width: '4rem', height: '4rem' }} src={LogoImage} alt="Logo" />
         </div>
     )
 }

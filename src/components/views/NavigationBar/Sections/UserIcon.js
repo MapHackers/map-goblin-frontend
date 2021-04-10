@@ -1,8 +1,26 @@
 import React from 'react'
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components'
+import { Menu, Dropdown } from 'antd'
+
 
 function UserIcon() {
+
+    const UserMenu = (
+        <Menu>
+            <Menu.Item key="0">
+                <div>
+                    User Icon
+                </div>
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Item key="1">
+                <a href="/">My Page</a>
+            </Menu.Item>
+            <Menu.Item key="3">LogOut</Menu.Item>
+        </Menu>
+    )
+
     return (
         <div style={{ display: 'flex' }}>
             <UserIconContainer>
@@ -11,7 +29,10 @@ function UserIcon() {
             <div style={{
                 float: 'right'
             }}>
-                <h3 style={{ marginTop: '25px', marginLeft: '5px' }}> UserName </h3>
+                <Dropdown overlay={UserMenu} trigger={['click']}>
+                    <h3 style={{ marginTop: '1.2rem', marginLeft: '5px' }} className="ant-dropdown-link"> UserName <DownOutlined /> </h3>
+                </Dropdown>
+
             </div>
         </div>
     )
