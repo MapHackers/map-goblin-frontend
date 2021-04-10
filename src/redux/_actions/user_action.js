@@ -2,7 +2,7 @@ import axios from 'axios'
 import {
     LOGIN_USER,
     REGISTER_USER,
-    // AUTH_USER
+    AUTH_USER
 } from './type.js'
 
 export function loginUser(dataToSubmit) {
@@ -31,14 +31,20 @@ export function registerUser(dataToSubmit) {
 
 }
 
-// export function auth() {
+export function auth() {
    
-//     const request = axios.get('/api/users/auth')
-//     .then(response => response.data)
+    const request = axios.get('/api/authentication',{},{
+        auth: {
+            username: 'test',
+            password: '123123'
+        }
+    })
+    .then(response => response)
+    .catch(err => err.response)
 
-//     return {
-//         type: AUTH_USER,
-//         payload: request
-//     }
+    return {
+        type: AUTH_USER,
+        payload: request
+    }
 
-// }
+}

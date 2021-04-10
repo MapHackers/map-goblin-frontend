@@ -18,6 +18,7 @@ import SearchPage from './components/views/SearchPage/SearchPage'
 import CreateMyMapPage from './components/views/CreateMyMapPage/CreateMyMapPage'
 import { Suspense } from 'react';
 import Connect from './hoc/connectStore'
+import Auth from './hoc/Auth'
 import "antd/dist/antd.css"
 import NavBar from './components/views/NavigationBar/NavigationBar';
 
@@ -27,12 +28,12 @@ function App() {
       <BrowserRouter>
         <Suspense fallback={(<div> Loading ... </div>)}>
           <Switch>
-            <Route exact path="/" component={Connect(LandingPage)} />
-            <Route exact path="/login" component={Connect(LoginPage)} />
-            <Route exact path="/register" component={Connect(RegisterPage)} />
-            <Route exact path="/findId" component={Connect(FindIDPage)} />
-            <Route exact path="/findPassword" component={Connect(FindPasswordPage)} />
-            <Route exact path="/main" component={Connect(MainPage)} />
+            <Route exact path="/" component={Auth(LandingPage, false)} />
+            <Route exact path="/login" component={Auth(LoginPage, false)} />
+            <Route exact path="/register" component={Auth(RegisterPage, null)} />
+            <Route exact path="/findId" component={Auth(FindIDPage, null)} />
+            <Route exact path="/findPassword" component={Auth(FindPasswordPage, null)} />
+            <Route exact path="/main" component={Auth(MainPage, true)} />
             <Route exact path="/search" component={SearchPage} />
             <Route exact path="/new" component={CreateMyMapPage} />
             <Route exact path="/nav" component={NavBar} />
