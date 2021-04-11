@@ -10,7 +10,7 @@ const Doilimg = styled.img`
     overflow: hidden;
     width: 200px;
     height: 200px;
-    margin: auto auto;
+    margin: 25px auto;
 `;
 
 

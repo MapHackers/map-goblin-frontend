@@ -5,8 +5,38 @@ import {BookOutlined, EnvironmentOutlined} from '@ant-design/icons';
 import { List } from 'antd';
 
 import InfiniteScroll from 'react-infinite-scroller';
+import Card from "../CardView/CardView";
+
+import { Doughnut } from "react-chartjs-2";
 
 const { TabPane } = Tabs;
+
+const ThumbCards = [
+    {
+        id: 1,
+        title: "도일이의 드라이브 코스",
+        hashtag: "#서울근교 #드라이브 코스",
+        like: 30,
+        dislike: 4,
+        image: "/3.png"
+    },
+    {
+        id: 2,
+        title: "노트북해도 눈치X 카페",
+        hashtag: "#소음환영 #카페",
+        like: 102,
+        dislike: 12,
+        image: '/1.png'
+    },
+    {
+        id: 3,
+        title: "꼬북칩 초코맛 보유 마트",
+        hashtag: "#꼬북칩초코 #마트",
+        like: 42,
+        dislike: 291,
+        image: '/2.png'
+    }
+]
 
 const data = [
     {
@@ -47,6 +77,21 @@ const data = [
     }
 ]
 
+const chartData = {
+    labels : ['도일이의 드라이브 코스', '노트북해도 눈치X 카페', '꼬북칩 초코맛 보유 마트'],
+    datasets : [
+        {
+            data: [12, 19, 3],
+            label:'clone 수',
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56'
+            ]
+        }
+    ]
+}
+
 const MypageTabContainer = () => {
     return (
         <div>
@@ -54,11 +99,13 @@ const MypageTabContainer = () => {
                 <TabPane tab={<span><BookOutlined/>Overview</span>} key="1">
                     <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>내가 좋아요한 지도들</div>
                     <Space size="large" style={{width: "100%"}}>
-                        <CardViewContainer/>
-                        <CardViewContainer/>
+                        {ThumbCards.map(card => (
+                            <Card title={card.title} hastags={card.hashtag} like={card.like} dislike={card.dislike} thumbnail={card.image} key={card.id} />
+                        ))}
                     </Space>
                     <Divider/>
                     <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>통계 자료</div>
+                    <Doughnut data={chartData}/>
                 </TabPane>
                 <TabPane tab={<span><EnvironmentOutlined/>Maps</span>} key="2">
                     <div className="demo-infinite-container" style={{height: "700px", overflow: "auto"}}>
@@ -66,6 +113,7 @@ const MypageTabContainer = () => {
                             initialLoad={false}
                             pageStart={0}
                             hasMore={true}
+                            loadMore={()=>{}}
                             useWindow={false}
                         >
                             <List
@@ -73,7 +121,7 @@ const MypageTabContainer = () => {
                                 renderItem={item => (
                                     <List.Item key={item.id}>
                                         <List.Item.Meta
-                                            title={<h2 style={{alignItems: "flex-start", float: "left"}}>{item.title}</h2>}
+                                            title={<div style={{alignItems: "flex-start", float: "left"}}>{item.title}</div>}
                                             description={<div style={{alignItems: "flex-end", clear: "left", float: "left"}}>{item.hashtag}</div>}
                                         />
                                         <List.Item.Meta
