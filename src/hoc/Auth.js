@@ -16,14 +16,19 @@ export default function (SepecificComponent, option) {
         const dispatch = useDispatch()
         let user = useSelector(state => state.user)
         //backend에 auth요청
-
         useEffect(() => {
 
-            dispatch(auth())
+            dispatch(auth(window.localStorage.getItem("userToken")))
                 .then(response => {
                     //분기처리
                     //로그인 하지 않은 상태
                     console.log("Auth", response)
+                    
+                    if(response.payload.status === 200){
+                        console.log("GOOD 200")
+                    } else{
+                        // props.history.push('/login')
+                    }
 
                     // if (!response.payload.isAuth) {
                     //     if (option) {
@@ -40,7 +45,7 @@ export default function (SepecificComponent, option) {
                     //     }
                     // }
                 })
-        }, [dispatch, props.history])
+        }, [dispatch])
         return(
             <SepecificComponent {...props} user={user}/>
         )

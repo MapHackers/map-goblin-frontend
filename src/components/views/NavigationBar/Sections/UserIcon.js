@@ -2,9 +2,17 @@ import React from 'react'
 import { UserOutlined, DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components'
 import { Menu, Dropdown } from 'antd'
+import { useSelector } from 'react-redux';
 
 
 function UserIcon() {
+
+    let userName = useSelector(state => state.user.userData)
+    console.log("UserICON", userName)
+    let IuserName = ''
+    if (userName !== undefined){
+        IuserName = userName.data.name
+    }
 
     const UserMenu = (
         <Menu>
@@ -30,7 +38,7 @@ function UserIcon() {
                 float: 'right'
             }}>
                 <Dropdown overlay={UserMenu} trigger={['click']}>
-                    <h3 style={{ marginTop: '1.2rem', marginLeft: '5px' }} className="ant-dropdown-link"> UserName <DownOutlined /> </h3>
+                    <h3 style={{ marginTop: '1.2rem', marginLeft: '5px' }} className="ant-dropdown-link"> {IuserName} <DownOutlined /> </h3>
                 </Dropdown>
 
             </div>

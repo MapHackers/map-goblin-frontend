@@ -37,7 +37,7 @@ function App() {
             <Route exact path="/main" component={Auth(MainPage, true)} />
             <Route exact path="/search" component={SearchPage} />
             <Route exact path="/new" component={CreateMyMapPage} />
-            <Route exact path="/nav" component={NavBar} />
+            <Route exact path="/nav" component={Auth(NavBar)} />
             <Route exact path="/:userId" component={MyPage} />
           </Switch>
         </Suspense>

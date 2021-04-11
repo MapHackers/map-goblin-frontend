@@ -6,10 +6,10 @@ import {
 } from './type.js'
 
 export function loginUser(dataToSubmit) {
-   
+
     const request = axios.post('/api/login', dataToSubmit)
-    .then(response => response)
-    .catch(err => err.response)
+        .then(response => response)
+        .catch(err => err.response)
 
     return {
         type: LOGIN_USER,
@@ -19,10 +19,10 @@ export function loginUser(dataToSubmit) {
 }
 
 export function registerUser(dataToSubmit) {
-   
+
     const request = axios.post('/api/members', dataToSubmit)
-    .then(response => response)
-    .catch(err => err.response )
+        .then(response => response)
+        .catch(err => err.response)
 
     return {
         type: REGISTER_USER,
@@ -31,11 +31,16 @@ export function registerUser(dataToSubmit) {
 
 }
 
-export function auth() {
-   
-    const request = axios.get('/api/authentication')
-    .then(response => response)
-    .catch(err => err.response)
+export function auth(token) {
+
+    const request = axios.get('/api/authentication', {
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AUTH-TOKEN': `${token}`,
+        }
+    })
+        .then(response => response)
+        .catch(err => err.response)
 
     return {
         type: AUTH_USER,

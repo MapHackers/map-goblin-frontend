@@ -44,7 +44,7 @@ function LoginForm(props) {
                             .then(response => {
                                 console.log("payload", response.payload)
                                 if (response.payload.status === 200) {
-                                    window.localStorage.setItem('userId', response.payload.data.userId)
+                                    window.localStorage.setItem('userToken', response.payload.data.token)
                                     if (rememberMe === true) {
                                         window.localStorage.setItem('rememberMe', values.id)
                                     } else {
