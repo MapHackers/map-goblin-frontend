@@ -2,26 +2,6 @@ import React from 'react'
 import MainContentSlider from '../components/MainContentSlider/MainContentSlider'
 import NetflixSlider from '../components/NetflixSlider'
 import NavBar from '../components/NavigationBar/NavigationBar'
-<<<<<<< Updated upstream
-
-// import SlideButton from './Sections/NetflixSlider/SlideButton'
-
-// import Slider from "react-slick";
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
-
-
-// let settings = {
-//     dots: false,
-//     infinite: false,
-//     speed: 500,
-//     slidesToShow: 5,
-//     slidesToScroll: 1,
-//     arrows: true,
-//     prevArrow: <SlideButton type="prev" />,
-//     nextArrow: <SlideButton type="next" />
-// };
-=======
 import Card from '../components/CardView/CardView'
 import { Divider } from 'antd'
 
@@ -94,18 +74,13 @@ const ThumbCards = [
     },
 
 ]
->>>>>>> Stashed changes
 
 const cards = [
     {
         id: 1,
         image: '/MapThumbnail/Thumbnail1.jpeg', // public 에 위치함
-<<<<<<< Updated upstream
-        title: '1983'
-=======
         title: '1983',
         hastags: ''
->>>>>>> Stashed changes
     },
     {
         id: 2,
@@ -146,17 +121,10 @@ const cards = [
 
 function MainPage(props) {
     return (
-<<<<<<< Updated upstream
-        <div>
-            <NavBar />
-            <MainContentSlider />
-            <NetflixSlider title="내가 좋아요한 지도">
-=======
         <div style={{ background: '#f5f6f7' }}>
             <NavBar />
             <MainContentSlider />
             {/* <NetflixSlider title="내가 좋아요한 지도">
->>>>>>> Stashed changes
                 {cards.map(card => (
                     <NetflixSlider.Item card={card} key={card.id}>item</NetflixSlider.Item>
                 ))}
@@ -170,18 +138,6 @@ function MainPage(props) {
                 {cards.map(card => (
                     <NetflixSlider.Item card={card} key={card.id}>item</NetflixSlider.Item>
                 ))}
-<<<<<<< Updated upstream
-            </NetflixSlider>
-            {/* <div style={{ border: '1px solid black', padding: '2rem', background: 'yellow' }}>
-                <Slider {...settings}>
-                    {cards.map(card => (
-                        <div>
-                            <img style={{ height: '100%', width: '100%' }} src={card.image} alt="" />
-                        </div>
-                    ))}
-                </Slider>
-            </div> */}
-=======
             </NetflixSlider> */}
             <Divider />
             <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
@@ -226,7 +182,6 @@ function MainPage(props) {
                     ))}
                 </Slider>
             </div>
->>>>>>> Stashed changes
         </div>
     )
 }

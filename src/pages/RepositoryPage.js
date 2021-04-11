@@ -13,17 +13,10 @@ const RepositoryPage = (props) => {
         <CommonLayout>
             <Breadcrumb style={{fontSize:'20px', textAlign:'left', padding:'30px 0px 20px 30px'}}>
                 <Breadcrumb.Item>
-<<<<<<< Updated upstream
-                    <a href="">사용자 아이디</a>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>
-                    <a href="">지도 이름</a>
-=======
                     <a href="/repository">사용자 아이디</a>
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>
                     <a href="/repository">지도 이름</a>
->>>>>>> Stashed changes
                 </Breadcrumb.Item>
             </Breadcrumb>
             <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px'}}>

@@ -1,10 +1,6 @@
 import React from 'react';
 import { Layout } from 'antd';
-<<<<<<< Updated upstream
-import NavigationBar from "../views/NavigationBar/NavigationBar";
-=======
 import NavigationBar from '../NavigationBar/NavigationBar'
->>>>>>> Stashed changes
 
 const { Footer, Content } = Layout;
 
