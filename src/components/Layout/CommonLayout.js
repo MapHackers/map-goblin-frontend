@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout } from 'antd';
-import NavigationBar from "../views/NavigationBar/NavigationBar";
+import NavigationBar from '../NavigationBar/NavigationBar'
 
 const { Footer, Content } = Layout;
 
