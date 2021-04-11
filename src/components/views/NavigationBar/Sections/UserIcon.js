@@ -3,9 +3,22 @@ import { UserOutlined, DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components'
 import { Menu, Dropdown } from 'antd'
 import { useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom'
 
 
-function UserIcon() {
+function UserIcon(props) {
+
+    const user = useSelector(state => state.user)
+    console.log(user)
+
+    const onClickLogoutHandler = () => {
+        window.localStorage.setItem("userToken", '')
+        props.history.push('/')
+    }
+
+    const onClickMyPageHandler = () => {
+        props.history.push(`/${user.userData.data.userId}`)
+    }
 
     let userName = useSelector(state => state.user.userData)
     console.log("UserICON", userName)
@@ -22,10 +35,10 @@ function UserIcon() {
                 </div>
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key="1">
-                <a href="/">My Page</a>
+            <Menu.Item key="1" onClick={onClickMyPageHandler}>
+                My Page
             </Menu.Item>
-            <Menu.Item key="3">LogOut</Menu.Item>
+            <Menu.Item key="3" onClick={onClickLogoutHandler}>LogOut</Menu.Item>
         </Menu>
     )
 
@@ -46,7 +59,7 @@ function UserIcon() {
     )
 }
 
-export default UserIcon
+export default withRouter(UserIcon)
 
 const UserIconContainer = styled.div`
     border-radius: 1.3rem;
