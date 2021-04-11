@@ -2,23 +2,24 @@ import React from 'react'
 import MainContentSlider from './Sections/MainContentSlider'
 import NetflixSlider from './Sections/NetflixSlider'
 import NavBar from '../NavigationBar/NavigationBar'
-import SlideButton from './Sections/NetflixSlider/SlideButton'
 
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+// import SlideButton from './Sections/NetflixSlider/SlideButton'
+
+// import Slider from "react-slick";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
 
 
-let settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    arrows: true,
-    prevArrow: <SlideButton type="prev" />,
-    nextArrow: <SlideButton type="next" />
-};
+// let settings = {
+//     dots: false,
+//     infinite: false,
+//     speed: 500,
+//     slidesToShow: 5,
+//     slidesToScroll: 1,
+//     arrows: true,
+//     prevArrow: <SlideButton type="prev" />,
+//     nextArrow: <SlideButton type="next" />
+// };
 
 const cards = [
     {

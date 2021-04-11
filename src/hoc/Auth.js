@@ -23,29 +23,23 @@ export default function (SepecificComponent, option) {
                     //분기처리
                     //로그인 하지 않은 상태
                     console.log("Auth", response)
-                    
-                    if(response.payload.status === 200){
-                        console.log("GOOD 200")
-                    } else{
-                        // props.history.push('/login')
+                    if (option === null){
+                        console.log("anyone can access")
                     }
-
-                    // if (!response.payload.isAuth) {
-                    //     if (option) {
-                    //         props.history.push('/login')
-                    //     }
-                    // } else {
-                    //     //로그인 한 상태
-                    //     if (adminRoute && !response.payload.isAdmin) {
-                    //         props.history.push('/')
-                    //     } else {//로그인한 유저가 출입 불가능한 페이지
-                    //         if (option === false) {
-                    //             props.history.push('/')
-                    //         }
-                    //     }
-                    // }
+                    else if (option === true){
+                        if(response.payload.status !== 200){
+                            alert('로그인이 필요합니다!')
+                            props.history.push('/login')
+                        }
+                    }
+                    else if(option === false){
+                        if(response.payload.status === 200){
+                            alert('접근 불가능!')
+                            props.history.goBack()
+                        }
+                    }
                 })
-        }, [dispatch])
+        }, [dispatch, props.history])
         return(
             <SepecificComponent {...props} user={user}/>
         )

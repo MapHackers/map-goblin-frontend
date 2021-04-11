@@ -19,9 +19,15 @@ import CreateMyMapPage from './components/views/CreateMyMapPage/CreateMyMapPage'
 import { Suspense } from 'react';
 import Auth from './hoc/Auth'
 import "antd/dist/antd.css"
-import NavBar from './components/views/NavigationBar/NavigationBar';
 
 import styled from 'styled-components'
+
+/* 
+option
+null => 아무나 출입이 가능한 페이지
+true => 로그인한 유저만 출입이 가능한 페이지
+false => 로그인한 유저는 출입 불가능한 페이지
+*/
 
 function App() {
   return (
@@ -35,10 +41,9 @@ function App() {
             <Route exact path="/findId" component={Auth(FindIDPage, null)} />
             <Route exact path="/findPassword" component={Auth(FindPasswordPage, null)} />
             <Route exact path="/main" component={Auth(MainPage, true)} />
-            <Route exact path="/search" component={SearchPage} />
-            <Route exact path="/new" component={CreateMyMapPage} />
-            <Route exact path="/nav" component={Auth(NavBar)} />
-            <Route exact path="/:userId" component={MyPage} />
+            <Route exact path="/search" component={Auth(SearchPage, true)} />
+            <Route exact path="/new" component={Auth(CreateMyMapPage, true)} />
+            <Route exact path="/:userId" component={Auth(MyPage, true)} />
           </Switch>
         </Suspense>
       </BrowserRouter>
