@@ -1,7 +1,7 @@
 import React from 'react'
-import MainContentSlider from '../../MainContentSlider/MainContentSlider'
-import NetflixSlider from '../../NetflixSlider'
-import NavBar from '../../NavigationBar/NavigationBar'
+import MainContentSlider from '../components/MainContentSlider/MainContentSlider'
+import NetflixSlider from '../components/NetflixSlider'
+import NavBar from '../components/NavigationBar/NavigationBar'
 
 // import SlideButton from './Sections/NetflixSlider/SlideButton'
 

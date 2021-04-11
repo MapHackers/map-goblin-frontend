@@ -7,15 +7,15 @@ import {
   BrowserRouter
 } from 'react-router-dom'
 
-import LandingPage from './components/views/LandingPage/LandingPage'
-import LoginPage from './components/views/LoginPage/LoginPage'
-import RegisterPage from './components/views/RegisterPage/RegisterPage'
-import FindIDPage from './components/views/FindIDPage/FindIDPage'
-import FindPasswordPage from './components/views/FindPasswordPage/FindPasswordPage'
-import MainPage from './components/views/MainPage/MainPage'
-import MyPage from './components/views/MyPage/MyPage'
-import SearchPage from './components/views/SearchPage/SearchPage'
-import CreateMyMapPage from './components/views/CreateMyMapPage/CreateMyMapPage'
+import LandingPage from './pages/LandingPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import FindIDPage from './pages/FindIdPage'
+import FindPasswordPage from './pages/FindPasswordPage'
+import MainPage from './pages/MainPage'
+import MyPage from './pages/MyPage'
+import SearchPage from './pages/SearchPage'
+import CreateMyMapPage from './pages/CreateMyMapPage'
 import { Suspense } from 'react';
 import Auth from './hoc/Auth'
 import "antd/dist/antd.css"

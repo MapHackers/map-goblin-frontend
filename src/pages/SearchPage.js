@@ -1,7 +1,7 @@
 import React from 'react'
-import NavBar from ''
+import NavBar from '../components/NavigationBar/NavigationBar'
 import qs from 'qs'
-import SearchLists from './Sections/SearchList'
+import SearchLists from '../components/SearchList/SearchList'
 
 const Lists = [
     {

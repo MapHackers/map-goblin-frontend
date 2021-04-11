@@ -1,5 +1,5 @@
 import React from 'react'
-import Card from '../../../CardView/CardView'
+import Card from '../CardView/CardView'
 
 const Cards = [
     {

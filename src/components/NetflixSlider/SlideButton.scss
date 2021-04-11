@@ -2,7 +2,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 2rem;
+    width: 3rem;
     background: rgba(0, 0, 0, 0.6);
     border: 0;
     outline: 0;
@@ -18,7 +18,7 @@
     }
   
     &--next {
-      right: -2rem;
+      right: 0;
   
       span {
         transform: rotateZ(-90deg);
@@ -26,7 +26,7 @@
     }
   
     &--prev {
-      left: -2rem;
+      left: 0;
   
       span {
         transform: rotateZ(90deg);
