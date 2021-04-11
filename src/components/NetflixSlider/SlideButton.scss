@@ -1,9 +1,19 @@
 .slide-button {
     position: absolute;
-    top: 0;
+    top: 7rem;
     bottom: 0;
+<<<<<<< Updated upstream:src/components/NetflixSlider/SlideButton.scss
     width: 3rem;
+=======
+<<<<<<< Updated upstream:src/components/views/MainPage/Sections/NetflixSlider/SlideButton.scss
+    width: 55px;
+>>>>>>> Stashed changes:src/components/views/MainPage/Sections/NetflixSlider/SlideButton.scss
     background: rgba(0, 0, 0, 0.6);
+=======
+    width: 3.5rem;
+    height: 6rem;
+    background: rgba(0, 0, 0, 0.2);
+>>>>>>> Stashed changes:src/components/NetflixSlider/SlideButton.scss
     border: 0;
     outline: 0;
     padding: 0;
@@ -18,7 +28,7 @@
     }
   
     &--next {
-      right: 0;
+      right: -3rem;
   
       span {
         transform: rotateZ(-90deg);
@@ -26,7 +36,7 @@
     }
   
     &--prev {
-      left: 0;
+      left: -3rem;
   
       span {
         transform: rotateZ(90deg);

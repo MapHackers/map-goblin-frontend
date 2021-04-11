@@ -11,6 +11,10 @@ const MapContainer = () => {
             level: 3
         };
         const map = new kakao.maps.Map(container, options);
+<<<<<<< Updated upstream
+=======
+        console.log(map)
+>>>>>>> Stashed changes
     }, [])
 
     return (
