@@ -1,23 +1,24 @@
-import React from 'react'
-import NavBar from '../components/NavigationBar/NavigationBar'
-import UserProfile from '../components/UserProfile/UserProfile'
-import RepositoryTaps from '../components/RepositoryTaps/RepositoryTaps'
+import React from 'react';
+import CommonLayout from "../components/Layout/CommonLayout";
+import ProfileContainer from "../components/Profile/ProfileContainer";
+import MypageTabContainer from "../components/MypageTab/MypageTabContainer";
+import { Row, Col } from 'antd';
 
-function MyPage(props) {
-
-    const userId = props.match.params.userId
-
+const MyPage = () => {
     return (
-        <div>
-            <NavBar />
-            <div style={{ display: 'flex' }}>
-                <div style={{ width: '70vw', display: 'flex', margin: '0 auto', paddingTop: '30px' }}>
-                    <UserProfile userId={userId} />
-                    <RepositoryTaps />
-                </div>
+        <CommonLayout>
+            <div id="testlayout" style={{margin: "50px 150px 20px 150px", height: "100%"}} >
+                <Row>
+                    <Col flex={1} style={{marginRight: "80px", height: "100%"}}>
+                        <ProfileContainer name="doyle" email="doili@naver.com" description="상도동 진지 탐험러" style={{height: "100%"}}/>
+                    </Col>
+                    <Col flex={8}>
+                        <MypageTabContainer/>
+                    </Col>
+                </Row>
             </div>
-        </div>
-    )
-}
+        </CommonLayout>
+    );
+};
 
-export default MyPage
+export default MyPage;
