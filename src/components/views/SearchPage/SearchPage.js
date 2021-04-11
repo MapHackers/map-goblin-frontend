@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import NavBar from '../NavigationBar/NavigationBar'
+import React from 'react'
+import NavBar from ''
 import qs from 'qs'
 import SearchLists from './Sections/SearchList'
 

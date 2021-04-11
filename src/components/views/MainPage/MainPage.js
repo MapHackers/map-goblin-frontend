@@ -1,7 +1,25 @@
 import React from 'react'
-import MainContentSlider from './Sections/MainContentSlider'
-import Slider from './Sections/NetflixSlider'
-import NavBar from '../NavigationBar/NavigationBar'
+import MainContentSlider from '../../MainContentSlider/MainContentSlider'
+import NetflixSlider from '../../NetflixSlider'
+import NavBar from '../../NavigationBar/NavigationBar'
+
+// import SlideButton from './Sections/NetflixSlider/SlideButton'
+
+// import Slider from "react-slick";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
+
+
+// let settings = {
+//     dots: false,
+//     infinite: false,
+//     speed: 500,
+//     slidesToShow: 5,
+//     slidesToScroll: 1,
+//     arrows: true,
+//     prevArrow: <SlideButton type="prev" />,
+//     nextArrow: <SlideButton type="next" />
+// };
 
 const cards = [
     {
@@ -46,26 +64,35 @@ const cards = [
     }
 ];
 
-function MainPage() {
+function MainPage(props) {
     return (
         <div>
             <NavBar />
             <MainContentSlider />
-            <Slider title="내가 좋아요한 지도">
+            <NetflixSlider title="내가 좋아요한 지도">
                 {cards.map(card => (
-                    <Slider.Item card={card} key={card.id}>item</Slider.Item>
+                    <NetflixSlider.Item card={card} key={card.id}>item</NetflixSlider.Item>
                 ))}
-            </Slider>
-            <Slider title="최근 검색한 지도">
+            </NetflixSlider>
+            <NetflixSlider title="최근 검색한 지도">
                 {cards.map(card => (
-                    <Slider.Item card={card} key={card.id}>item</Slider.Item>
+                    <NetflixSlider.Item card={card} key={card.id}>item</NetflixSlider.Item>
                 ))}
-            </Slider>
-            <Slider title="제주도 드라이브 코스">
+            </NetflixSlider>
+            <NetflixSlider title="제주도 드라이브 코스">
                 {cards.map(card => (
-                    <Slider.Item card={card} key={card.id}>item</Slider.Item>
+                    <NetflixSlider.Item card={card} key={card.id}>item</NetflixSlider.Item>
                 ))}
-            </Slider>
+            </NetflixSlider>
+            {/* <div style={{ border: '1px solid black', padding: '2rem', background: 'yellow' }}>
+                <Slider {...settings}>
+                    {cards.map(card => (
+                        <div>
+                            <img style={{ height: '100%', width: '100%' }} src={card.image} alt="" />
+                        </div>
+                    ))}
+                </Slider>
+            </div> */}
         </div>
     )
 }

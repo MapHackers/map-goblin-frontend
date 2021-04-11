@@ -7,38 +7,54 @@ import {
   BrowserRouter
 } from 'react-router-dom'
 
-import LandingPage from './components/views/LandingPage/LandingPage'
-import LoginPage from './components/views/LoginPage/LoginPage'
-import RegisterPage from './components/views/RegisterPage/RegisterPage'
-import FindIDPage from './components/views/FindIDPage/FindIDPage'
-import FindPasswordPage from './components/views/FindPasswordPage/FindPasswordPage'
-import MainPage from './components/views/MainPage/MainPage'
-import MyPage from './components/views/MyPage/MyPage'
-import SearchPage from './components/views/SearchPage/SearchPage'
+import LandingPage from './pages/LandingPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import FindIDPage from './pages/FindIdPage'
+import FindPasswordPage from './pages/FindPasswordPage'
+import MainPage from './pages/MainPage'
+import MyPage from './pages/MyPage'
+import SearchPage from './pages/SearchPage'
+import CreateMyMapPage from './pages/CreateMyMapPage'
 import { Suspense } from 'react';
+import Auth from './hoc/Auth'
 import "antd/dist/antd.css"
 import RepositoryPage from "./pages/RepositoryPage";
 
+import styled from 'styled-components'
+
+/* 
+option
+null => 아무나 출입이 가능한 페이지
+true => 로그인한 유저만 출입이 가능한 페이지
+false => 로그인한 유저는 출입 불가능한 페이지
+*/
+
 function App() {
   return (
-    <div className="App">
+    <AppFrame>
       <BrowserRouter>
         <Suspense fallback={(<div> Loading ... </div>)}>
           <Switch>
-            <Route exact path="/" component={LandingPage} />
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/register" component={RegisterPage} />
-            <Route exact path="/findId" component={FindIDPage} />
-            <Route exact path="/findPassword" component={FindPasswordPage} />
-            <Route exact path="/main" component={MainPage} />
-            <Route exact path="/search" component={SearchPage} />
-            <Route exact path="/repository" component={RepositoryPage}/>
-            <Route exact path="/:userId" component={MyPage} />
+            <Route exact path="/" component={Auth(LandingPage, false)} />
+            <Route exact path="/login" component={Auth(LoginPage, false)} />
+            <Route exact path="/register" component={Auth(RegisterPage, null)} />
+            <Route exact path="/findId" component={Auth(FindIDPage, null)} />
+            <Route exact path="/findPassword" component={Auth(FindPasswordPage, null)} />
+            <Route exact path="/main" component={Auth(MainPage, true)} />
+            <Route exact path="/search" component={Auth(SearchPage, true)} />
+            <Route exact path="/new" component={Auth(CreateMyMapPage, true)} />
+            <Route exact path="/repository" component={Auth(RepositoryPage, true)}/>
+            <Route exact path="/:userId" component={Auth(MyPage, true)} />
           </Switch>
         </Suspense>
       </BrowserRouter>
-    </div>
+    </AppFrame>
   );
 }
 
 export default App;
+
+const AppFrame = styled.div`
+
+`

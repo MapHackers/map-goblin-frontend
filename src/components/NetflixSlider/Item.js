@@ -19,7 +19,7 @@ function Item({ card }) {
     return (
         <SliderContext.Consumer>
             {({ elementRef }) => {
-                let isHovering = false;
+                // let isHovering = false;
                 return (
                     <div
                         ref={elementRef}

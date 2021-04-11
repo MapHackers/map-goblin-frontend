@@ -2,15 +2,49 @@ import React from 'react'
 import Logo from './Logo'
 import Title from './Title'
 import FindPasswordForm from './FindPasswordForm'
+import styled from 'styled-components'
 
 function FindPasswordFrame() {
     return (
-        <div style={{ width: '302px', height: '379px', left: '149px', top: '0px', background: '#FFFFF0', margin: '0 auto' }}>
-            <Logo />
-            <Title />
-            <FindPasswordForm />
-        </div>
+        <FindPasswordFrameContainer>
+            <HeaderContainer>
+                <Logo />
+                <Title />
+            </HeaderContainer>
+            <FormContainer>
+                <FindPasswordForm />
+            </FormContainer>
+        </FindPasswordFrameContainer>
     )
 }
 
 export default FindPasswordFrame
+
+const FindPasswordFrameContainer = styled.div`
+    width: 100vw;
+    height: 100vh;
+    background: #f5f6f7;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+`
+
+
+const HeaderContainer = styled.div`
+    position: relative;
+    width: 50vw;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 5rem 0 3rem;
+`
+
+const FormContainer = styled.div`
+    position: relative;
+    box-sizing: border-box;
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+`

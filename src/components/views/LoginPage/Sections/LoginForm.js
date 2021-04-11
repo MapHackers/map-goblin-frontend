@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux'
 import { loginUser } from '../../../../redux/_actions/user_action'
 
 function LoginForm(props) {
-    const rememberMeChecked = false
+    const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false
 
     const [rememberMe, setRememberMe] = useState(rememberMeChecked)
     const dispatch = useDispatch()
@@ -44,7 +44,7 @@ function LoginForm(props) {
                             .then(response => {
                                 console.log("payload", response.payload)
                                 if (response.payload.status === 200) {
-                                    window.localStorage.setItem('userId', response.payload.data.userId)
+                                    window.localStorage.setItem('userToken', response.payload.data.token)
                                     if (rememberMe === true) {
                                         window.localStorage.setItem('rememberMe', values.id)
                                     } else {
@@ -88,6 +88,7 @@ function LoginForm(props) {
                                     className={
                                         errors.id && touched.id ? 'text-input error' : 'text-input'
                                     }
+                                    size="large"
                                 />
                                 {errors.id && touched.id && (
                                     <div className="input-feedback">{errors.email}</div>
@@ -105,6 +106,7 @@ function LoginForm(props) {
                                     className={
                                         errors.password && touched.password ? 'text-input error' : 'text-input'
                                     }
+                                    size="large"
                                 />
                                 {errors.password && touched.password && (
                                     <div className="input-feedback">{errors.password}</div>
@@ -116,16 +118,18 @@ function LoginForm(props) {
 
                             <Form.Item>
                                 <div>
-                                    <Button type="primary" htmlType="submit" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
+                                    <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
                                         로그인
                                     </Button>
                                 </div>
                             </Form.Item>
 
                             <Form.Item>
-                                <a href="/findId"> 아이디 찾기 </a>
-                                <a href="/findPassword"> 비밀번호 찾기 </a>
-                                <a href="/register"> 회원가입 </a>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <a href="/findId" style={{marginLeft: '3rem'}}> 아이디 찾기 </a>
+                                    <a href="/findPassword"> 비밀번호 찾기 </a>
+                                    <a href="/register" style={{marginRight: '3rem'}}> 회원가입 </a>
+                                </div>
                             </Form.Item>
                         </form>
                     )
