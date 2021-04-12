@@ -22,6 +22,7 @@ import "antd/dist/antd.css"
 import RepositoryPage from "./pages/RepositoryPage";
 
 import styled from 'styled-components'
+import RequestDetailPage from "./pages/RequestDetailPage";
 
 /* 
 option
@@ -44,7 +45,8 @@ function App() {
             <Route exact path="/main" component={Auth(MainPage, true)} />
             <Route exact path="/search" component={Auth(SearchPage, true)} />
             <Route exact path="/new" component={Auth(CreateMyMapPage, true)} />
-            <Route exact path="/repository" component={Auth(RepositoryPage, true)}/>
+            <Route exact path="/repositories/:id" component={Auth(RepositoryPage, true)}/>
+            <Route exact path="/repositories/:id/request" component={Auth(RequestDetailPage, true)}/>
             <Route exact path="/:userId" component={Auth(MyPage, true)} />
           </Switch>
         </Suspense>
