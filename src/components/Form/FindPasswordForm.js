@@ -41,9 +41,10 @@ function FindPasswordForm(props) {
                                     settypePassword(true)
                                 })
                                 .catch(err => {
-                                    console.log(err)
+                                    alert("해당 이메일로 만든 아이디가 없습니다!")
                                 })
-
+                            values.id = ''
+                            values.email = ''
                             setSubmitting(false);
                         }, 400);
                     }}
@@ -116,22 +117,26 @@ function FindPasswordForm(props) {
                     validationSchema={Yup.object().shape({
                         password: Yup.string()
                             .required('비밀번호를 입력 해주세요.'),
+                        confirmPassword: Yup.string()
+                            .oneOf([Yup.ref('password'), null], '비밀번호가 다릅니다.')
+                            .required('비밀번호 확인은 필수 항목입니다.')
                     })}
                     onSubmit={(values, { setSubmitting }) => {
                         setTimeout(() => {
 
                             let dataToSubmit = {
-                                password: values.password
+                                password: values.password,
+                                confirmPassword: values.confirmPassword
                             }
 
                             axios.post(`/api/members/${userId}/password`, dataToSubmit, {
                                 headers: {
-                                    'Content-Type' : 'application/json',
-                                    'X-AUTH-TOKEN' : `${userToken}`,
+                                    'Content-Type': 'application/json',
+                                    'X-AUTH-TOKEN': `${userToken}`,
                                 }
                             })
                                 .then(response => {
-                                    if (response.status === 200){
+                                    if (response.status === 200) {
                                         alert("비밀번호 변경이 완료되었습니다. 로그인 해주세요")
                                     }
                                     props.history.push('/login')
@@ -173,7 +178,23 @@ function FindPasswordForm(props) {
                                         <div className="input-feedback">{errors.password}</div>
                                     )}
                                 </Form.Item>
-
+                                <Form.Item required>
+                                    <Input
+                                        id="confirmPassword"
+                                        placeholder="비밀번호 확인"
+                                        type="password"
+                                        value={values.confirmPassword}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        className={
+                                            errors.confirmPassword && touched.confirmPassword ? 'text-input error' : 'text-input'
+                                        }
+                                        size="large"
+                                    />
+                                    {errors.confirmPassword && touched.confirmPassword && (
+                                        <div className="input-feedback">{errors.confirmPassword}</div>
+                                    )}
+                                </Form.Item>
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
                                         비밀번호변경하기

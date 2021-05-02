@@ -10,7 +10,8 @@
     padding: 0;
     margin: 0 0;
     z-index: 4;
-  
+    transition: 0.5s all;
+
     span {
       width: 1.1625rem;
       color: #fff;
@@ -24,6 +25,7 @@
       span {
         transform: rotateZ(-90deg);
       }
+
     }
   
     &--prev {
@@ -33,4 +35,9 @@
         transform: rotateZ(90deg);
       }
     }
+  }
+
+  .slide-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transition: 0.5s all;
   }

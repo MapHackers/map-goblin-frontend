@@ -94,7 +94,7 @@ const chartData = {
 
 const MypageTabContainer = () => {
     return (
-        <div>
+        <div style={{ width: '75vw'}}>
             <Tabs defaultActiveKey="1">
                 <TabPane tab={<span><BookOutlined/>Overview</span>} key="1">
                     <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>내가 좋아요한 지도들</div>

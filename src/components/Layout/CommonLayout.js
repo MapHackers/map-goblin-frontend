@@ -11,7 +11,7 @@ const CommonLayout = ({children}) => {
             <Content style={{backgroundColor:'#FFFF'}}>
                 {children}
             </Content>
-            <Footer style={{ textAlign: 'center', backgroundColor:'#FFFFEE' }}>
+            <Footer style={{ textAlign: 'center', backgroundColor: 'rgba( 160, 208, 253, 0.3 )' }}>
                 <h3> Our github : <a href="https://github.com/MapHackers" target="blank">https://github.com/MapHackers</a></h3>
                 <h3> User Guide : <a href="/guide/kr"> User Guide </a></h3>
             </Footer>
