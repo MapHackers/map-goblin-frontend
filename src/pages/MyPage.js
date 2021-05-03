@@ -11,7 +11,7 @@ const MyPage = (props) => {
             <div id="testlayout" style={{margin: "50px 0px 20px 10px", height: "100%"}} >
                 <Row>
                     <Col flex="250px" style={{marginRight: "50px", height: "100%"}}>
-                        <ProfileContainer name={userData.name} email={userData.email} description="상도동 진지 탐험러" style={{height: "100%"}}/>
+                        <ProfileContainer name="doyle" email="doili@naver.com" description="상도동진지 탐험러" style={{height: "100%"}}/>
                     </Col>
                     <Col flex="auto">
                         <MypageTabContainer/>
