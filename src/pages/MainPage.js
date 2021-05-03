@@ -10,6 +10,7 @@ import SlideButton from '../components/NetflixSlider/SlideButton'
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ExpandingText from '../components/ExpandingText/ExpandingText'
 
 let settings = {
     dots: false,
@@ -142,11 +143,9 @@ function MainPage(props) {
             <Divider />
             <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
                 <div
-                    style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1.5rem 3rem' }}
+                    style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1rem 3rem' }}
                 >
-                    <a href={`/category`}>
-                        내가 최근에 방문한 페이지
-                    </a>
+                    <ExpandingText text="내가 최근 방문한 페이지"/>
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
@@ -158,9 +157,7 @@ function MainPage(props) {
                 <div
                     style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1.5rem 3rem' }}
                 >
-                    <a href={`/category`}>
-                        내가 최근에 방문한 페이지
-                    </a>
+                    <ExpandingText text="내가 좋아요한 페이지"/>
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
@@ -172,9 +169,8 @@ function MainPage(props) {
                 <div
                     style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1.5rem 3rem' }}
                 >
-                    <a href={`/category`}>
-                        내가 최근에 방문한 페이지
-                    </a>
+                    <ExpandingText text="제주도 드라이브 코스"/>
+
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (

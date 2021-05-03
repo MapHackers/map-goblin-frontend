@@ -87,6 +87,10 @@ const HeaderContainer = styled.div`
     flex-direction: column;
     margin: 0 auto;
     padding: 5rem 0 3rem;
+    @media (max-width: 850px) {
+        width: 100vw;
+        margin: 0;
+    }
 `
 
 const FormContainer = styled.div`
@@ -96,4 +100,8 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     margin: 0 auto;
+    @media (max-width: 850px) {
+        width: 60vw;
+        margin: 0 auto;
+    }
 `

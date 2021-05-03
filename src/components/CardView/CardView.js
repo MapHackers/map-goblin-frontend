@@ -55,7 +55,7 @@ function CardView({ title, hastags, like, dislike, thumbnail }) {
         //     </div>
         // </div>
         <Card
-            style={{ width: '15rem', marginLeft: '3rem', marginRight: '3rem', boxShadow: '6px 6px 10px 0 rgba(169, 169, 169, 0.4)' }}
+            style={{ width: '15rem', marginLeft: '3rem', marginRight: '3rem', marginBottom: '1rem',boxShadow: '6px 6px 10px 0 rgba(169, 169, 169, 0.4)' }}
             cover={
                 <img
                     alt="example"

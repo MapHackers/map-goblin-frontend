@@ -8,19 +8,19 @@ function Alarm() {
     const AlarmList = (
         <Menu>
             <Menu.Item key="0">
-                <a href="https://www.antgroup.com">1st menu item</a>
+                <a href="https://www.antgroup.com">Alarm 1 ---- !</a>
             </Menu.Item>
             <Menu.Item key="1">
-                <a href="https://www.aliyun.com">2nd menu item</a>
+                <a href="https://www.aliyun.com">Alarm 2 ---- !</a>
             </Menu.Item>
-            <Menu.Item key="3">3rd menu item</Menu.Item>
+            <Menu.Item key="3">Alarm 3 ---- !</Menu.Item>
         </Menu>
     )
 
     return (
 
         <AlarmContainer>
-            <Badge count={5} size="small">
+            <Badge count={3} size="small">
                 <Dropdown overlay={AlarmList} trigger={['click']}>
                     <BellOutlined style={{ fontSize: '1.5rem', marginTop: '0.1875rem' }} />
                 </Dropdown>
