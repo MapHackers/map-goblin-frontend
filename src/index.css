@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#create-map-upload > .ant-upload-picture-card-wrapper > .ant-upload-list > .ant-upload-select-picture-card{
+  width: 200px;
+  height: 200px;
+}
+
+#create-map-upload > .ant-upload-picture-card-wrapper > .ant-upload-list > .ant-upload-list-picture-card-container{
+  width: 200px;
+  height: 200px;
+}
