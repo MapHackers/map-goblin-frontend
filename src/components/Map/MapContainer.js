@@ -1,115 +1,225 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState } from 'react'
+import { Map, Marker } from '@ref/react-kakao-maps'
 import MapController from './MapController';
+import { Modal, Input, Button } from 'antd';
+
 
 const { kakao } = window;
 
 const MapContainer = () => {
-
-    // 맵을 만들때 데이터를 불러와서 기존의 마커들을 저장
-    let markers = useMemo(() => [
+    const [markers, setmarkers] = useState([
         {
             title: '카카오',
-            latlng: new kakao.maps.LatLng(37.504502, 127.053617)
+            latlng: new kakao.maps.LatLng(37.504502, 127.053617),
+            description: "카카오 건물 입니다."
         },
         {
             title: '생태연못',
-            latlng: new kakao.maps.LatLng(37.506502, 127.053617)
+            latlng: new kakao.maps.LatLng(37.506502, 127.053617),
+            description: "생태 연못 입니다."
         },
         {
             title: '텃밭',
-            latlng: new kakao.maps.LatLng(37.506502, 127.053617)
+            latlng: new kakao.maps.LatLng(37.52098071008246, 127.05230727786302),
+            description: "텃밭 입니다."
         },
         {
             title: '근린공원',
-            latlng: new kakao.maps.LatLng(37.506502, 127.053617)
+            latlng: new kakao.maps.LatLng(37.506502, 127.053617),
+            description: "근린 공원 입니다."
         }
-    ], [])
+    ])
 
-    let MarkerCreatable = false
+    const [searchedPlace, setsearchedPlace] = useState([])
 
-    const markerImageSrc = [
-        "../../assets/images/Logo.png"
-    ]
+    const [isMarkerCreatable, setisMarkerCreatable] = useState(false)
 
-    const MarkerOnClick = () => {
-        MarkerCreatable = !MarkerCreatable
+    const toggleMarkerCreatable = () => {
+        setisMarkerCreatable(!isMarkerCreatable)
     }
 
-    useEffect(() => {
-        var container = document.getElementById('map');
-        const options = {
-            center: new kakao.maps.LatLng(37.506502, 127.053617),
-            level: 7
-        };
-        var map = new kakao.maps.Map(container, options);
+    const [isDescModalVisible, setIsDescModalVisible] = useState(false);
+    const [clickedMarker, setclickedMarker] = useState()
 
-        let zoomControl = new kakao.maps.ZoomControl();
-        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+    const showDescModal = () => {
+        setIsDescModalVisible(true);
+    };
 
-        let infowindow = new kakao.maps.InfoWindow({
-            zIndex: 1,
-            removable: true
-        });
+    const handleDescOk = () => {
+        setIsDescModalVisible(false);
+    };
 
-        for (let i = 0; i < markers.length; i++) {
-            // 마커를 생성합니다
-            let marker = new kakao.maps.Marker({
-                map: map, // 마커를 표시할 지도
-                position: markers[i].latlng, // 마커를 표시할 위치
-                title: markers[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                clickable: true, // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-                image: new kakao.maps.MarkerImage(
-                    'Logo.png',
-                    new kakao.maps.Size(44, 44),
-                    {offset: new kakao.maps.Point(20, 44)}
-                )
-            });
-            kakao.maps.event.addListener(marker, 'click', function () {
-                // 마커를 클릭하면 장소명이 인포윈도우에 표출
-                infowindow.setContent('<div style="padding:5px;font-size:12px;"> hello world! </div>');
-                infowindow.open(map, marker);
-            });
-        }
+    const handleDescCancel = () => {
 
-        function addMarker(position) {
-            // 마커를 생성합니다
-            let marker = new kakao.maps.Marker({
-                position: position,
-                image: new kakao.maps.MarkerImage(
-                    'Logo.png',
-                    new kakao.maps.Size(44, 44),
-                    {offset: new kakao.maps.Point(20, 44)}
-                )
-            });
-            kakao.maps.event.addListener(marker, 'click', function () {
-                // 마커를 클릭하면 장소명이 인포윈도우에 표출
-                infowindow.setContent('<div style="padding:5px;font-size:12px;"> hello world! </div>');
-                infowindow.open(map, marker);
-            });
-            // 마커가 지도 위에 표시되도록 설정합니다
-            marker.setMap(map);
+        setIsDescModalVisible(false);
+    };
 
-            markers.push({
-                title: "new",
-                position: position
+    const handleDescDelete = () => {
+        markers.splice(clickedMarker[1], 1)
+
+        setIsDescModalVisible(false);
+    }
+
+    const [isCreateModalVisible, setisCreateModalVisible] = useState(false)
+
+    const showCreateModal = () => {
+        setisCreateModalVisible(true)
+    }
+
+    const handleCreateOk = () => {
+        console.log("ok")
+        setmarkers([...markers, {
+            title: createMarkerInfo.title,
+            latlng: createMarkerInfo.latlng,
+            description: createMarkerInfo.description
+        }])
+        setisCreateModalVisible(false)
+        console.log(createMarkerInfo)
+    }
+
+    const handleCreateCancel = () => {
+        console.log("cancle")
+        setisCreateModalVisible(false)
+    }
+
+    const [createMarkerInfo, setcreateMarkerInfo] = useState({ title: "", latlng: "", description: "" })
+
+    function onMapClick(e) {
+        if (isMarkerCreatable) {
+            showCreateModal()
+            setcreateMarkerInfo({
+                latlng: e.latLng
             })
+            toggleMarkerCreatable()
         }
+    }
 
-        kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-            if (MarkerCreatable) {
-                addMarker(mouseEvent.latLng);
+    var ps = new kakao.maps.services.Places();
+
+    ps.keywordSearch('이태원 맛집', placesSearchCB);
+
+    // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+    function placesSearchCB(data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+            // LatLngBounds 객체에 좌표를 추가합니다
+            var bounds = new kakao.maps.LatLngBounds();
+
+            for (var i = 0; i < data.length; i++) {
+                // console.log(data[i])
             }
-
-        });
-
-    }, [markers])
-
+        }
+    }
 
     return (
-        <div id="map" style={{ width: "100%", height: "700px" }}>
-            <MapController MarkerOnClick={MarkerOnClick} />
-        </div>
-    );
-};
+        <>
+            <Map
+                style={{ width: '100vw', height: '100vh' }}
+                options={{
+                    center: new kakao.maps.LatLng(37.506502, 127.053617),
+                    level: 7
+                }}
+                onClick={onMapClick}
+            >
+                <MapController MarkerOnClick={toggleMarkerCreatable} isMarkerCreatable={isMarkerCreatable} />
 
-export default MapContainer;
+                {markers.map((marker, idx) => (
+                    <>
+                        <Marker key={idx}
+                            options={{
+                                title: marker.title,
+                                position: marker.latlng,
+                                clickable: true,
+                                image: new kakao.maps.MarkerImage(
+                                    'Logo.png',
+                                    new kakao.maps.Size(44, 44),
+                                    { offset: new kakao.maps.Point(20, 44) }
+                                )
+                            }}
+                            onClick={() => {
+                                setclickedMarker([marker, idx])
+                                console.log(marker.title)
+                                showDescModal()
+                            }}
+                        />
+                    </>
+                ))}
+                <Modal title="마커 정보" visible={isDescModalVisible} onOk={handleDescOk} onCancel={handleDescCancel}
+                    footer={[
+                        <Button type="primary" onClick={handleDescDelete} style={{ background: 'red', border: 'red' }}>
+                            삭제하기
+                        </Button>,
+                        <Button type="primary" onClick={handleDescOk}>
+                            OK
+                        </Button>
+                    ]}
+                >
+                    <div>
+                        <p> {clickedMarker && clickedMarker[0].title} </p>
+                        <p> {clickedMarker && clickedMarker[0].description} </p>
+                    </div>
+                </Modal>
+
+                <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
+                    <div>
+                        <Input
+                            placeholder="마커 이름"
+                            value={createMarkerInfo.title}
+                            onChange={(event) => {
+                                setcreateMarkerInfo({
+                                    latlng: createMarkerInfo.latlng,
+                                    title: event.currentTarget.value
+                                })
+                            }}
+                        />
+                        <Input
+                            placeholder="마커 설명"
+                            value={createMarkerInfo.description}
+                            onChange={(event) => {
+                                setcreateMarkerInfo({
+                                    latlng: createMarkerInfo.latlng,
+                                    title: createMarkerInfo.title,
+                                    description: event.currentTarget.value
+                                })
+                            }}
+                        />
+                    </div>
+                </Modal>
+
+
+                {/* {searchedPlace.map((marker, idx) => (
+                    <Marker key={idx}
+                        options={{
+                            title: marker.title,
+                            position: marker.latlng,
+                            clickable: true,
+                            image: new kakao.maps.MarkerImage(
+                                'Logo.png',
+                                new kakao.maps.Size(44, 44),
+                                { offset: new kakao.maps.Point(20, 44) }
+                            )
+                        }}
+                    >
+                        <InfoWindow
+                            key={idx}
+                            options={{
+                                content: '<div style="padding:5px;">Hello World!</div>',
+                                position: marker.latlng,
+                                zIndex: 420,
+                                removable: true
+                            }}
+                        >
+                        </InfoWindow>
+                    </Marker>
+
+                ))} */}
+
+
+            </Map>
+
+        </>
+    )
+}
+
+export default MapContainer

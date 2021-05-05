@@ -1589,6 +1589,11 @@
     schema-utils "^2.6.5"
     source-map "^0.7.3"
 
+"@ref/react-kakao-maps@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@ref/react-kakao-maps/-/react-kakao-maps-0.2.2.tgz#87612438b039197dd3e0d3f649ba56b29852988f"
+  integrity sha512-fZhdz+acKASzHxnxVWXHa+a4KfVVD8RJMFhvLX9xdD66Jtb7sxa8IONYEFXMc2Ffnyyr+7eW6wV2iL1c/++dBw==
+
 "@rollup/plugin-node-resolve@^7.1.1":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-7.1.3.tgz"
