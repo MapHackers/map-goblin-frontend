@@ -2,11 +2,20 @@ import React from 'react'
 import styled from 'styled-components'
 import LogoImage from '../../assets/images/Logo.png'
 
-const MapController = ({ MarkerOnClick }) => {
+const MapController = ({ MarkerOnClick, isMarkerCreatable }) => {
     return (
-        <Controller onClick={MarkerOnClick}>
-            <img style={{ width: '100%', height: '100%' }} src={LogoImage} alt="Logo" />
-        </Controller>
+        <>
+            {isMarkerCreatable ?
+                <Controller onClick={MarkerOnClick}>
+                    <img style={{ width: '100%', height: '100%', backgroundColor: 'blue' }} src={LogoImage} alt="Logo" />
+                </Controller>
+                :
+                <Controller onClick={MarkerOnClick}>
+                    <img style={{ width: '100%', height: '100%', backgroundColor: 'whitesmoke' }} src={LogoImage} alt="Logo" />
+                </Controller>
+            }
+        </>
+
     )
 }
 
@@ -20,5 +29,4 @@ const Controller = styled.a`
     top: 200px;
     right: 3.5px;
     display: block;
-    background-color: whitesmoke;
 `
