@@ -3,11 +3,10 @@ import CommonLayout from "../components/Layout/CommonLayout";
 
 import { Row, Col, Divider } from "antd";
 import { Form, Input, Button } from 'antd';
-import { Upload, message, Select, Tag } from 'antd';
+import { Upload, Select, Tag } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
 import Api from "../util/Api";
-import {Router} from "@material-ui/icons";
 
 const { TextArea } = Input;
 
@@ -46,7 +45,6 @@ const CreateMyMapPage = (props) => {
     const onFinish = (values) => {
 
         const formData = new FormData();
-        let imgName = "";
 
         if (fileList.length > 0) {
             formData.append('file', fileList[0].originFileObj);
@@ -56,20 +54,28 @@ const CreateMyMapPage = (props) => {
                     'Content-Type': 'multipart/form-data',
                 }
             }).then(response => {
-                imgName = response.data;
+                console.log(response);
+                values.thumbnail = response.data;
+
+                Api.post('/repositories', values).then(response=>{
+                    const userId = props.user.userData.data.userId;
+                    const repositoryName = response.data.name;
+
+                    props.history.push('/'+userId+'/repositories/'+repositoryName);
+                }).catch(error=>{
+                    alert(error.response.data.message);
+                });
+            });
+        }else{
+            Api.post('/repositories', values).then(response=>{
+                const userId = props.user.userData.data.userId;
+                const repositoryName = response.data.name;
+
+                props.history.push('/'+userId+'/repositories/'+repositoryName);
+            }).catch(error=>{
+                alert(error.response.data.message);
             });
         }
-
-        values.thumbnail = imgName;
-
-        Api.post('/repositories', values).then(response=>{
-            const userId = props.user.userData.data.userId;
-            const repositoryName = response.data.name;
-
-            props.history.push('/'+userId+'/repositories/'+repositoryName);
-        }).catch(error=>{
-            alert(error.response.data.message);
-        });
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -94,7 +100,7 @@ const CreateMyMapPage = (props) => {
     const options = [{ value: '카테고리1' }, { value: '카테고리2' }, { value: '카테고리3' }, { value: '카테고리4' }];
 
     const tagRender = (props) => {
-        const { label, value, closable, onClose } = props;
+        const { label, closable, onClose } = props;
         const onPreventMouseDown = event => {
             event.preventDefault();
             event.stopPropagation();
