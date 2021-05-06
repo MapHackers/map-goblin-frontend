@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 
 import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, ExclamationCircleOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
@@ -6,7 +6,8 @@ import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, Exclamation
 import CommonLayout from "../components/Layout/CommonLayout";
 import MapContainer from "../components/Map/MapContainer";
 
-import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider } from 'antd';
+import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider, Result, Button, Spin } from 'antd';
+import Api from "../util/Api";
 
 const { TabPane } = Tabs
 
@@ -15,6 +16,7 @@ const columns = [
         title: 'Title',
         dataIndex: 'title',
         key: 'title',
+        // eslint-disable-next-line jsx-a11y/anchor-is-valid
         render: title => <a>{title}</a>,
     },
     {
@@ -165,106 +167,160 @@ const Info = styled.div`
 
 const RepositoryPage = (props) => {
 
-    return (
-        <CommonLayout>
-            <Breadcrumb style={{fontSize:'20px', textAlign:'left', padding:'30px 0px 20px 30px'}}>
-                <Breadcrumb.Item>
-                    <a href="/repository">사용자 아이디</a>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>
-                    <a href="/repository">지도 이름</a>
-                </Breadcrumb.Item>
-            </Breadcrumb>
-            <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px'}}>
-                <TabPane tab={<span><FileTextOutlined />Description</span>} key="1">
-                    <Description>
-                        <Row>
-                            <Col flex="980px">
-                                <Row style={{alignContent:"center", justifyContent:"center"}}>
-                                    <img src="/cau.jpg"/>
-                                </Row>
-                                <Row>
-                                    <h1>중앙대학교 지도!</h1>
-                                </Row>
-                            </Col>
-                            <Col flex="auto">
-                                <Info>
-                                    <Divider>Owner의 한마디</Divider>
-                                    <p>
-                                        우리 함께 중앙대학교 지도를 만들어봐요!
-                                    </p>
-                                    <Divider>Owner</Divider>
-                                    <div>
-                                        <h3 style={{textAlign:"left"}}>
-                                            <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-                                            &nbsp;ghdtjq2038
-                                        </h3>
-                                        <h3 style={{textAlign:"left"}}>
-                                            <Avatar style={{ backgroundColor: 'blue' }} icon={<UserOutlined />} />
-                                            &nbsp;doili0552
-                                        </h3>
-                                        <h3 style={{textAlign:"left"}}>
-                                            <Avatar style={{ backgroundColor: 'orange' }} icon={<UserOutlined />} />
-                                            &nbsp;88dydfuf
-                                        </h3>
-                                    </div>
-                                </Info>
-                            </Col>
-                        </Row>
-                    </Description>
-                </TabPane>
-                <TabPane tab={<span><EnvironmentOutlined />Map</span>} key="2">
-                    <MapContainer/>
-                </TabPane>
-                <TabPane tab={<span><ExclamationCircleOutlined />Issues</span>} key="3">
-                    <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
-                        <TabPane tab={<span>3 Waiting</span>} key="1">
-                            <Table
-                                columns={columns}
-                                pagination={{ position: ['bottomCenter'] }}
-                                dataSource={issueWaitingData}
-                            />
-                        </TabPane>
-                        <TabPane tab={<span>2 Checked</span>} key="2">
-                            <Table
-                                columns={columns}
-                                pagination={{ position: ['bottomCenter'] }}
-                                dataSource={issueCheckedData}
-                            />
-                        </TabPane>
-                    </Tabs>
-                </TabPane>
-                <TabPane tab={<span><PullRequestOutlined />Pull requests</span>} key="4">
-                    <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
-                        <TabPane tab={<span>2 Waiting</span>} key="1">
-                            <Table
-                                columns={columns}
-                                pagination={{ position: ['bottomCenter'] }}
-                                dataSource={requestWaitingData}
-                            />
-                        </TabPane>
-                        <TabPane tab={<span>2 Accepted</span>} key="2">
-                            <Table
-                                columns={columns}
-                                pagination={{ position: ['bottomCenter'] }}
-                                dataSource={requestAcceptedData}
-                            />
-                        </TabPane>
-                        <TabPane tab={<span>1 Denied</span>} key="3">
-                            <Table
-                                columns={columns}
-                                pagination={{ position: ['bottomCenter'] }}
-                                dataSource={requestDeniedData}
-                            />
-                        </TabPane>
-                    </Tabs>
-                </TabPane>
-                <TabPane tab={<span><SettingOutlined />Settings</span>} key="5">
-                    Settings
-                </TabPane>
-            </Tabs>
-        </CommonLayout>
-    );
+    const [repositoryInfo, setRepositoryInfo] = useState({});
+    const [thumbnail, setThumbnail] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+    const [notFound, setNotFound] = useState(false);
+    const {userId, repositoryName} = props.match.params;
+    const userUrl = '/'+userId;
+
+    const backHome = () => {
+        props.history.push('/main')
+    }
+
+    useEffect(() => {
+
+        async function getRepositoryInfo(){
+            await Api.get('/'+userId+'/repositories/'+repositoryName).then(response=>{
+                setRepositoryInfo(response.data);
+
+                if(response.data.thumbnail !== ""){
+                    setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
+                }
+
+                setIsLoading(false);
+            }).catch(error=>{
+                console.log(error);
+                setNotFound(true);
+            })
+        }
+
+        getRepositoryInfo().then(r => {
+            if(isLoading){
+                return <Result
+                    status="404"
+                    title="404"
+                    subTitle="존재하지 않는 페이지입니다."
+                    extra={<Button type="primary" onClick={backHome}>홈으로</Button>}
+                />
+            }
+        });
+    }, [])
+
+    if(!isLoading){
+        return (
+            <CommonLayout>
+                <Breadcrumb style={{fontSize:'20px', textAlign:'left', padding:'30px 0px 20px 30px'}}>
+                    <Breadcrumb.Item>
+                        <a href={userUrl}>{userId}</a>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                        <a href="">{repositoryName}</a>
+                    </Breadcrumb.Item>
+                </Breadcrumb>
+                <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px'}}>
+                    <TabPane tab={<span><FileTextOutlined />Description</span>} key="1">
+                        <Description>
+                            <Row>
+                                <Col flex="980px">
+                                    <Row style={{alignContent:"center", justifyContent:"center"}}>
+                                        {thumbnail !== "" && <img src={thumbnail} alt="Thumbnail" style={{width:"50%", height:"50%"}}/>}
+                                    </Row>
+                                    <Row>
+                                        <h1>{repositoryInfo.description}</h1>
+                                    </Row>
+                                </Col>
+                                <Col flex="auto">
+                                    <Info>
+                                        <Divider>Owner의 한마디</Divider>
+                                        <p>
+                                            우리 함께 중앙대학교 지도를 만들어봐요!
+                                        </p>
+                                        <Divider>Owner</Divider>
+                                        <div>
+                                            <h3 style={{textAlign:"left"}}>
+                                                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                                                &nbsp;ghdtjq2038
+                                            </h3>
+                                            <h3 style={{textAlign:"left"}}>
+                                                <Avatar style={{ backgroundColor: 'blue' }} icon={<UserOutlined />} />
+                                                &nbsp;doili0552
+                                            </h3>
+                                            <h3 style={{textAlign:"left"}}>
+                                                <Avatar style={{ backgroundColor: 'orange' }} icon={<UserOutlined />} />
+                                                &nbsp;88dydfuf
+                                            </h3>
+                                        </div>
+                                    </Info>
+                                </Col>
+                            </Row>
+                        </Description>
+                    </TabPane>
+                    <TabPane tab={<span><EnvironmentOutlined />Map</span>} key="2">
+                        <MapContainer/>
+                    </TabPane>
+                    <TabPane tab={<span><ExclamationCircleOutlined />Issues</span>} key="3">
+                        <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
+                            <TabPane tab={<span>3 Waiting</span>} key="1">
+                                <Table
+                                    columns={columns}
+                                    pagination={{ position: ['bottomCenter'] }}
+                                    dataSource={issueWaitingData}
+                                />
+                            </TabPane>
+                            <TabPane tab={<span>2 Checked</span>} key="2">
+                                <Table
+                                    columns={columns}
+                                    pagination={{ position: ['bottomCenter'] }}
+                                    dataSource={issueCheckedData}
+                                />
+                            </TabPane>
+                        </Tabs>
+                    </TabPane>
+                    <TabPane tab={<span><PullRequestOutlined />Pull requests</span>} key="4">
+                        <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
+                            <TabPane tab={<span>2 Waiting</span>} key="1">
+                                <Table
+                                    columns={columns}
+                                    pagination={{ position: ['bottomCenter'] }}
+                                    dataSource={requestWaitingData}
+                                />
+                            </TabPane>
+                            <TabPane tab={<span>2 Accepted</span>} key="2">
+                                <Table
+                                    columns={columns}
+                                    pagination={{ position: ['bottomCenter'] }}
+                                    dataSource={requestAcceptedData}
+                                />
+                            </TabPane>
+                            <TabPane tab={<span>1 Denied</span>} key="3">
+                                <Table
+                                    columns={columns}
+                                    pagination={{ position: ['bottomCenter'] }}
+                                    dataSource={requestDeniedData}
+                                />
+                            </TabPane>
+                        </Tabs>
+                    </TabPane>
+                    <TabPane tab={<span><SettingOutlined />Settings</span>} key="5">
+                        Settings
+                    </TabPane>
+                </Tabs>
+            </CommonLayout>
+        );
+    }else{
+        return (
+            <div style={isLoading && notFound ? null : {textAlign:"center", lineHeight:"100vh", height:"100vh"}}>
+                {isLoading && notFound ? <Result
+                    status="404"
+                    title="404"
+                    subTitle="존재하지 않는 페이지입니다."
+                    extra={<Button type="primary" onClick={backHome}>홈으로</Button>}
+                /> : <Spin size="large" tip="Loading..."></Spin>}
+            </div>
+        );
+    }
 };
 
 export default RepositoryPage;
