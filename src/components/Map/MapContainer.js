@@ -6,7 +6,8 @@ import { Modal, Input, Button } from 'antd';
 
 const { kakao } = window;
 
-const MapContainer = () => {
+const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSave }) => {
+
     const [markers, setmarkers] = useState([
         {
             title: '카카오',
@@ -94,26 +95,38 @@ const MapContainer = () => {
         }
     }
 
-    var ps = new kakao.maps.services.Places();
+    // 검색을 위한 기능
+    // var ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch('이태원 맛집', placesSearchCB);
+    // ps.keywordSearch('이태원 맛집', placesSearchCB);
 
-    // 키워드 검색 완료 시 호출되는 콜백함수 입니다
-    function placesSearchCB(data, status, pagination) {
-        if (status === kakao.maps.services.Status.OK) {
+    // // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+    // function placesSearchCB(data, status, pagination) {
+    //     if (status === kakao.maps.services.Status.OK) {
 
-            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-            // LatLngBounds 객체에 좌표를 추가합니다
-            var bounds = new kakao.maps.LatLngBounds();
+    //         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+    //         // LatLngBounds 객체에 좌표를 추가합니다
+    //         var bounds = new kakao.maps.LatLngBounds();
 
-            for (var i = 0; i < data.length; i++) {
-                // console.log(data[i])
-            }
-        }
-    }
+    //         for (var i = 0; i < data.length; i++) {
+    //             // console.log(data[i])
+    //         }
+    //     }
+    // }
 
     return (
         <>
+            {isCreate &&
+                <Button
+                    style={{ zIndex: 420, position: 'absolute', top: '10px', left: '100px' }}
+                    onClick={async () => {
+                        await setSaveMarkers(markers)
+                        console.log(markers)
+                    }}
+                >
+                    저장하기
+                </Button>}
+
             <Map
                 style={{ width: '100vw', height: '100vh' }}
                 options={{
