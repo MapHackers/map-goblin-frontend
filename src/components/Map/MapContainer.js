@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Map, Marker } from '@ref/react-kakao-maps'
 import MapController from './MapController';
 import { Modal, Input, Button } from 'antd';
+import MarkerDescription from './MarkerDescription';
 
 
 const { kakao } = window;
@@ -168,10 +169,11 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                         </Button>
                     ]}
                 >
-                    <div>
+                    {/* <div>
                         <p> {clickedMarker && clickedMarker[0].title} </p>
                         <p> {clickedMarker && clickedMarker[0].description} </p>
-                    </div>
+                    </div> */}
+                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0'}}title={clickedMarker[0].title} description={clickedMarker[0].description}/>}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
