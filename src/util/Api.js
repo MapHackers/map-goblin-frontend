@@ -3,14 +3,14 @@ import axios from "axios";
 const Api = axios.create({
     baseURL: 'http://localhost:8080/api',
     headers: {
-        "Access-Control-Allow-Origin": "*",
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
-        'X-AUTH-TOKEN': window.localStorage.getItem("userToken")
     }
 });
 
 Api.interceptors.request.use(
     (config) => {
+        config.headers = {...config.headers,'X-AUTH-TOKEN': window.localStorage.getItem("userToken")};
         return config;
     },
     (error) => {
