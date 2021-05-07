@@ -1,10 +1,7 @@
-import React from 'react';
-import { Divider, Space, Tabs } from 'antd';
-import CardViewContainer from "../CardView/CardViewContainer";
+import React, {useState} from 'react';
+import { Divider, Space, Tabs, List } from 'antd';
 import { BookOutlined, EnvironmentOutlined, MessageOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
-import { List } from 'antd';
 
-import InfiniteScroll from 'react-infinite-scroller';
 import Card from "../CardView/CardView";
 
 import { Doughnut } from "react-chartjs-2";
@@ -194,6 +191,7 @@ const IconText = ({ icon, text }) => (
 );
 
 const MypageTabContainer = (props) => {
+
     const chartData = {
         labels : ['도일이의 드라이브 코스', '노트북해도 눈치X 카페', '꼬북칩 초코맛 보유 마트'],
         datasets : [
@@ -210,7 +208,7 @@ const MypageTabContainer = (props) => {
     }
 
     return (
-        <div style={{ width: '75vw'}}>
+        <div style={{ width: '60vw'}}>
             <Tabs defaultActiveKey="1">
                 <TabPane tab={<span><BookOutlined/>Overview</span>} key="1">
                     <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>내가 좋아요한 지도들</div>
@@ -235,7 +233,7 @@ const MypageTabContainer = (props) => {
                                 onChange: page => {
                                     console.log(page);
                                 },
-                                pageSize: 6,
+                                pageSize: 7,
                             }}
                             renderItem={item => (
                                 <List.Item

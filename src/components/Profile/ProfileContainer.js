@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import { Card, Avatar } from 'antd';
+import {Card, Avatar, Upload} from 'antd';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import styled from "styled-components";
+import ImgCrop from 'antd-img-crop';
 
 const { Meta } = Card;
 
@@ -21,6 +22,29 @@ const ProfileContainer = (props) => {
     const [description, setDescription] = useState("")
     const onClick = () => setShowResults(!editData)
 
+    const [fileList, setFileList] = useState([]);
+
+    const onChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+
+        return false;
+    };
+
+    const onPreview = async file => {
+        let src = file.url;
+        if (!src) {
+            src = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj);
+                reader.onload = () => resolve(reader.result);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow.document.write(image.outerHTML);
+    };
+
     useEffect(() => {
         console.log("props : ",props)
         setUserName(props.name)
@@ -33,7 +57,22 @@ const ProfileContainer = (props) => {
         <Card
             style={{ width: "100%"}}
             cover={
-                <Doilimg alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>
+                editData ?
+                    <span id="create-map-upload" style={{margin: '25px auto'}}>
+                        <ImgCrop rotate>
+                            <Upload
+                                action=""
+                                listType="picture-card"
+                                fileList={fileList}
+                                onChange={onChange}
+                                onPreview={onPreview}
+                                style={{ alignItems: 'center'}}
+                            >
+                                {fileList.length < 1 && '+ Upload'}
+                            </Upload>
+                        </ImgCrop>
+                    </span> :
+                    <Doilimg alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>
             }
             actions={[
                 <span title='edit profile' onClick={onClick}>{
@@ -81,6 +120,6 @@ const ProfileContainer = (props) => {
             }
         </Card>
     );
-}
+};
 
 export default ProfileContainer;

@@ -21,7 +21,7 @@ const MyPage = () => {
         <CommonLayout>
             <div id="testlayout" style={{margin: "50px 0px 20px 10px", height: "100%"}} >
                 <Row>
-                    <Col flex="250px" style={{marginRight: "50px", height: "100%"}}>
+                    <Col flex="250px" style={{marginLeft: "100px", marginRight: "50px", height: "100%"}}>
                         <ProfileContainer name={userName} email={userEmail} description={description} style={{height: "100%"}}/>
                     </Col>
                     <Col flex="auto">
