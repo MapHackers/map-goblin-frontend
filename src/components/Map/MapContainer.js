@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
 import { Map, Marker } from '@ref/react-kakao-maps'
 import MapController from './MapController';
-import { Modal, Input, Button } from 'antd';
+import { Modal, Input, Button, Rate, Upload } from 'antd';
 import MarkerDescription from './MarkerDescription';
+import ImgCrop from 'antd-img-crop'
+import Logo from '../Form/Logo';
 
 
 const { kakao } = window;
+
+const { TextArea } = Input;
+
 
 const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSave }) => {
 
@@ -173,11 +178,12 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                         <p> {clickedMarker && clickedMarker[0].title} </p>
                         <p> {clickedMarker && clickedMarker[0].description} </p>
                     </div> */}
-                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0'}}title={clickedMarker[0].title} description={clickedMarker[0].description}/>}
+                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].title} description={clickedMarker[0].description} />}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
-                    <div>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <h2> Title </h2>
                         <Input
                             placeholder="마커 이름"
                             value={createMarkerInfo.title}
@@ -188,7 +194,9 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                                 })
                             }}
                         />
-                        <Input
+                        <h2 style={{ marginTop: '20px' }}> Description </h2>
+                        <TextArea
+                            rows={3}
                             placeholder="마커 설명"
                             value={createMarkerInfo.description}
                             onChange={(event) => {
@@ -199,8 +207,27 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                                 })
                             }}
                         />
+                        <h2 style={{ marginTop: '20px' }}> Rating </h2>
+                        <div style={{ display: 'flex' }}>
+                            <Rate />
+                            <div style={{ marginLeft: 'auto'}}>
+                                <Upload
+
+                                    name="avatar"
+                                    listType="picture-card"
+                                    className="avatar-uploader"
+                                    showUploadList={false}
+                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                // beforeUpload={beforeUpload}
+                                // onChange={this.handleChange}
+                                >
+                                    upload
+                        </Upload>
+                            </div>
+                        </div>
                     </div>
                 </Modal>
+
 
 
                 {/* {searchedPlace.map((marker, idx) => (
