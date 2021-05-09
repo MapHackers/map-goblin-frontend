@@ -6,6 +6,7 @@ import MarkerDescription from './MarkerDescription';
 import { HeartFilled } from '@ant-design/icons'
 import { useDispatch, connect } from 'react-redux'
 import { loadMapData } from '../../_actions/map_action'
+import Api from '../../util/Api';
 
 const { kakao } = window;
 
@@ -15,13 +16,18 @@ const { TextArea } = Input;
 const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSave, mapId, layers }) => {
 
     const dispatch = useDispatch()
+
+    const [markers, setmarkers] = useState([])
+
     useEffect(() => {
         dispatch(loadMapData(mapId))
             .then(response => {
-                console.log("Responose", response)
+                // console.log("Responose", response.payload.data.data[0].mapDatas)
+                response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
             })
 
     }, [dispatch, mapId])
+
 
     // if (layers !== null && layers !== undefined) {
     //     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", layers.data[0].mapDatas)
@@ -29,42 +35,41 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
     //         console.log(mapdata.latlng.split(","))
     //     })
     // }
-    if (layers.data !== null & layers !== undefined) {
-        console.log("================================")
-        if (layers.data.length > 0) {
-            layers.data[0].mapDatas.map(mapdata => {
-                console.log(mapdata.latlng.split(","))
-            })
-        }
-    }
-    const [loadedMarker, setloadedMarker] = useState()
+    // if (layers.data !== null & layers !== undefined) {
+    //     console.log("================================")
+    //     if (layers.data.length > 0) {
+    //         layers.data[0].mapDatas.map(mapdata => {
+    //             console.log(mapdata.latlng.split(","))
+    //         })
+    //     }
+    // }
 
-    const [markers, setmarkers] = useState([
-        {
-            name: '카카오',
-            latlng: new kakao.maps.LatLng(37.504502, 127.053617),
-            description: "카카오 건물 입니다.",
-            rating: 5
-        },
-        {
-            name: '생태연못',
-            latlng: new kakao.maps.LatLng(37.506502, 127.053617),
-            description: "생태 연못 입니다.",
-            rating: 4
-        },
-        {
-            name: '텃밭',
-            latlng: new kakao.maps.LatLng(37.52098071008246, 127.05230727786302),
-            description: "텃밭 입니다.",
-            rating: 3.5
-        },
-        {
-            name: '근린공원',
-            latlng: new kakao.maps.LatLng(37.506502, 127.053617),
-            description: "근린 공원 입니다.",
-            rating: 1
-        }
-    ])
+    // const [markers, setmarkers] = useState([
+    //     {
+    //         name: '카카오',
+    //         latlng: new kakao.maps.LatLng(37.504502, 127.053617),
+    //         description: "카카오 건물 입니다.",
+    //         rating: 5
+    //     },
+    //     {
+    //         name: '생태연못',
+    //         latlng: new kakao.maps.LatLng(37.506502, 127.053617),
+    //         description: "생태 연못 입니다.",
+    //         rating: 4
+    //     },
+    //     {
+    //         name: '텃밭',
+    //         latlng: new kakao.maps.LatLng(37.52098071008246, 127.05230727786302),
+    //         description: "텃밭 입니다.",
+    //         rating: 3.5
+    //     },
+    //     {
+    //         name: '근린공원',
+    //         latlng: new kakao.maps.LatLng(37.506502, 127.053617),
+    //         description: "근린 공원 입니다.",
+    //         rating: 1
+    //     }
+    // ])
 
 
     const [isMarkerCreatable, setisMarkerCreatable] = useState(false)
@@ -101,16 +106,33 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
         setisCreateModalVisible(true)
     }
 
-    const handleCreateOk = () => {
+    const handleCreateOk = async () => {
         console.log("ok")
-        setmarkers([...markers, {
+        await setmarkers([...markers, {
             name: createMarkerInfo.title,
             latlng: createMarkerInfo.latlng,
             description: createMarkerInfo.description,
             rating: createMarkerInfo.rating
         }])
         setisCreateModalVisible(false)
-        console.log(createMarkerInfo)
+        let dataToSubmit = {
+            "mapId": mapId,
+            "layerName": "default1",
+            "title": createMarkerInfo.title,
+            "description": createMarkerInfo.description,
+            "rating": createMarkerInfo.rating,
+            "geometry": createMarkerInfo.latlng,
+            "thumbnail": null,
+            "mapDataType": "point"
+        }
+        Api.post('/mapdata', dataToSubmit)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        console.log("data to submit", dataToSubmit)
     }
 
     const handleCreateCancel = () => {
@@ -123,8 +145,9 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
     function onMapClick(e) {
         if (isMarkerCreatable) {
             showCreateModal()
+            console.log(`${e.latLng.La},${e.latLng.Ma}`)
             setcreateMarkerInfo({
-                latlng: e.latLng
+                latlng: `${e.latLng.Ma},${e.latLng.La}`
             })
             toggleMarkerCreatable()
         }
@@ -145,6 +168,7 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
             // for (var i = 0; i < data.length; i++) {
             //     console.log(data[i])
             // }
+            console.log(data[0])
             setsearchedPlace(data)
         }
     }
@@ -152,6 +176,8 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
     const [visible, setVisible] = useState(false);
 
     const showDrawer = () => {
+        // console.log(loadedLayer)
+        console.log(markers)
         setVisible(true);
     };
     const onClose = () => {
@@ -170,7 +196,7 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
         console.log(searchedPlace)
     }
 
-    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(37.506502, 127.053617))
+    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(37.504877390232885, 126.9550496072659))
 
     const SearchedList = ({ searchedPlace }) => (
         <List
@@ -209,12 +235,6 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
             )}
         />
     );
-
-    const [value, setvalue] = useState()
-
-    const handleRatingChange = (value) => {
-        setvalue(value)
-    }
 
     return (
         <>
@@ -260,12 +280,12 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                 </Drawer>
                 <MapController MarkerOnClick={toggleMarkerCreatable} isMarkerCreatable={isMarkerCreatable} />
 
-                {markers.map((marker, idx) => (
+                {markers && markers.map((marker, idx) => (
                     <>
-                        <Marker key={idx}
+                        <Marker key={marker.id}
                             options={{
                                 title: marker.name,
-                                position: marker.latlng,
+                                position: new kakao.maps.LatLng(marker.latlng.split(",")[0], marker.latlng.split(",")[1]),
                                 clickable: true,
                                 image: new kakao.maps.MarkerImage(
                                     '../../Logo.png',
@@ -281,6 +301,7 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                         />
                     </>
                 ))}
+
                 <Modal title="마커 정보" visible={isDescModalVisible} onOk={handleDescOk} onCancel={handleDescCancel}
                     footer={[
                         <Button type="primary" onClick={handleDescDelete} style={{ background: 'red', border: 'red' }}>
@@ -291,7 +312,7 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                         </Button>
                     ]}
                 >
-                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].title} description={clickedMarker[0].description} rating={clickedMarker[0].rating} />}
+                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} />}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
@@ -366,6 +387,18 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                             }}
                         />
                     </>}
+
+                {/* {loadedLayer && loadedLayer.map((loaded, idx) => (
+                    <>
+                    <Marker key={loaded.id}
+                        options={{
+                            title: loaded.name,
+                            position: new kakao.maps.LatLng(loaded.latlng.split(",")[0], loaded.latlng.split(",")[1]),
+                            clickable: true,
+                        }}
+                    />
+                    </>
+                ))} */}
 
                 {/* {searchedPlace.map((marker, idx) => (
                     <Marker key={idx}
