@@ -5,15 +5,9 @@ import LogoImage from '../../assets/images/Logo.png'
 const MapController = ({ MarkerOnClick, isMarkerCreatable }) => {
     return (
         <>
-            {isMarkerCreatable ?
-                <Controller onClick={MarkerOnClick}>
-                    <img style={{ width: '100%', height: '100%', backgroundColor: 'blue' }} src={LogoImage} alt="Logo" />
-                </Controller>
-                :
-                <Controller onClick={MarkerOnClick}>
-                    <img style={{ width: '100%', height: '100%', backgroundColor: 'whitesmoke' }} src={LogoImage} alt="Logo" />
-                </Controller>
-            }
+            <Controller onClick={MarkerOnClick}>
+                <img style={{ width: '100%', height: '100%', backgroundColor: isMarkerCreatable  ? 'rgba(0,100,255, 0.2)' : 'whitesmoke', boxShadow: '2px 2px 2px 2px gray' }} src={LogoImage} alt="Logo" />
+            </Controller>
         </>
 
     )

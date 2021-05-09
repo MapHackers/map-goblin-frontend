@@ -7,7 +7,7 @@ import UserIcon from './Sections/UserIcon'
 import styled from 'styled-components'
 import Api from "../../util/Api";
 import {useSelector, connect, useDispatch} from "react-redux";
-import {loadAlarm} from "../../redux/_actions/user_action";
+import {loadAlarm} from "../../_actions/alram_action";
 
 const Alarm = lazy(() => import('./Sections/Alarm'))
 

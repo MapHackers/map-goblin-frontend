@@ -7,9 +7,9 @@ import { Provider, } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise'
 import ReduxThunk from 'redux-thunk'
-import Reducer from './redux/_reducers'
-import logger from 'redux-logger'
+import Reducer from './_reducers'
 import { BrowserRouter } from 'react-router-dom';
+import logger from 'redux-logger'
 
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk, logger)(createStore)
 

@@ -5,7 +5,7 @@ import MypageTabContainer from "../components/MypageTab/MypageTabContainer";
 import { Row, Col } from 'antd';
 import {useSelector, connect, useDispatch} from "react-redux";
 import Api from "../util/Api";
-import {loadAlarm} from "../redux/_actions/user_action";
+import {loadAlarm} from "../_actions/alram_action";
 
 const mapStateToProps = state => ({
     userId: state.user.userId,

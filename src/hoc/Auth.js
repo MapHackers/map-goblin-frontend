@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { auth } from '../redux/_actions/user_action'
+import { auth } from '../_actions/user_action'
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default function (SepecificComponent, option) {
+function withAuthHoc(SepecificComponent, option) {
 
     /*
     option
@@ -14,35 +13,29 @@ export default function (SepecificComponent, option) {
 
     function AuthenticationCheck(props) {
         const dispatch = useDispatch()
-        const [isLoading, setIsLoading] = useState(true);
-
         //backend에 auth요청
         useEffect(() => {
-            async function auth_dispatch(){
-                await dispatch(auth(window.localStorage.getItem("userToken")))
-                    .then(response => {
-                        //분기처리
-                        //로그인 하지 않은 상태
-                        console.log("Auth", response)
-                        if (option === null){
-                            console.log("anyone can access")
+            dispatch(auth(window.localStorage.getItem("userToken")))
+                .then(response => {
+                    //분기처리
+                    //로그인 하지 않은 상태
+                    if (option === null){
+                        console.log("anyone can access")
+                    }
+                    else if (option === true) {
+                        if (response.payload.status !== 200) {
+                            alert('로그인이 필요합니다!')
+                            props.history.push('/login')
                         }
-                        else if (option === true){
-                            if(response.payload.status !== 200){
-                                alert('로그인이 필요합니다!')
-                                props.history.push('/login')
-                            }
-                        }
-                        else if(option === false){
+                    }else if(option === false){
                             if(response.payload.status === 200){
                                 alert('접근 불가능!')
                                 props.history.goBack()
                             }
                         }
                     })
-            }
-            auth_dispatch()
         }, [dispatch, props.history])
+
         let user = useSelector(state => state.user)
 
         return(
@@ -52,3 +45,5 @@ export default function (SepecificComponent, option) {
 
    return AuthenticationCheck
 }
+
+export default withAuthHoc
