@@ -163,7 +163,7 @@ const requestDeniedData = [
 ];
 
 const Description = styled.div`
-    margin : 20px 200px 20px 200px;
+    margin : 20px 100px 20px 100px;
 `;
 
 const Info = styled.div`
@@ -197,7 +197,7 @@ const RepositoryPage = (props) => {
                 }
 
                 setIsLoading(false);
-            }).catch(error=>{
+            }).catch(error => {
                 setNotFound(true);
             })
         }
@@ -222,7 +222,7 @@ const RepositoryPage = (props) => {
 
     }
 
-    if(!isLoading){
+    if (!isLoading) {
         return (
             <CommonLayout>
                 <Breadcrumb style={{ fontSize: '20px', textAlign: 'left', padding: '30px 0px 20px 30px' }}>
@@ -232,27 +232,30 @@ const RepositoryPage = (props) => {
                     <Breadcrumb.Item>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a href="">{repositoryName}</a>
-                        {repositoryInfo.source === "CLONE" && <div style={{fontSize:"15px"}}>cloned from <a style={{color:"blue"}} href={'/'+repositoryInfo.hostUserId+'/repositories/'+repositoryInfo.name}>{'/'+repositoryInfo.hostUserId+'/repositories/'+repositoryInfo.name}</a></div>}
+                        {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>cloned from <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.name}>{'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.name}</a></div>}
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px' }}>
                     <TabPane tab={<span><FileTextOutlined />Description</span>} key="1">
                         <Description>
                             <Row>
-                                <Col flex="980px">
+                                <Col flex="auto" style={{ width: '200px' }}>
+                                    <Row>
+                                        <h1 style={{ marginBottom: '50px', fontSize: '2rem', fontWeight: '2rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}> Information </h1>
+                                        <h2 style={{ fontSize: '1.1rem', lineHeight: '2rem' }}>{repositoryInfo.description}</h2>
+                                    </Row>
+                                </Col>
+                                <Col flex="auto" style={{ marginLeft: '50px', marginRight: '50px' }}>
                                     <Row style={{ alignContent: "center", justifyContent: "center" }}>
                                         {thumbnail !== "" && <Image src={thumbnail} alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}
-                                                fallback="/no-image.svg"
+                                            fallback="/no-image.svg"
                                         />}
-                                    </Row>
-                                    <Row>
-                                        <h1>{repositoryInfo.description}</h1>
                                     </Row>
                                 </Col>
                                 <Col flex="auto">
                                     <Info>
-                                        {repositoryInfo.source === "HOST" && <Button type="primary" size="large" style={{width:"100%"}} onClick={onClickClone}>Clone</Button>}
-                                        <Divider/>
+                                        {repositoryInfo.source === "HOST" && <Button type="primary" size="large" style={{ width: "100%" }} onClick={onClickClone}>Clone</Button>}
+                                        <Divider />
                                         <Row gutter={16}>
                                             <Col span={12}>
                                                 <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={<LikeOutlined />} />
@@ -288,8 +291,8 @@ const RepositoryPage = (props) => {
                     <TabPane tab={<span><EnvironmentOutlined />Map</span>} key="2">
                         <MapContainer mapId={repositoryInfo.map_id} />
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : {display:"none"}}><ExclamationCircleOutlined />Issues</span>} key="3">
-                        <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
+                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><ExclamationCircleOutlined />Issues</span>} key="3">
+                        <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>3 Waiting</span>} key="1">
                                 <Table
                                     columns={columns}
@@ -306,8 +309,8 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : {display:"none"}}><PullRequestOutlined />Pull requests</span>} key="4">
-                        <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
+                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><PullRequestOutlined />Pull requests</span>} key="4">
+                        <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>2 Waiting</span>} key="1">
                                 <Table
                                     columns={columns}
@@ -331,7 +334,7 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER" ? null : {display:"none"}}><SettingOutlined />Settings</span>} key="5">
+                    <TabPane tab={<span style={repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER" ? null : { display: "none" }}><SettingOutlined />Settings</span>} key="5">
                         Settings
                     </TabPane>
                 </Tabs>
@@ -345,7 +348,7 @@ const RepositoryPage = (props) => {
                     title="404"
                     subTitle="존재하지 않는 페이지입니다."
                     extra={<Button type="primary" onClick={backHome}>홈으로</Button>}
-                /> : <Spin size="large" tip="Loading..."/>}
+                /> : <Spin size="large" tip="Loading..." />}
             </div>
         );
     }
