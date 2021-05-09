@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{lazy} from 'react'
 
 import './App.css';
 import {
@@ -12,8 +12,6 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import FindIDPage from './pages/FindIdPage'
 import FindPasswordPage from './pages/FindPasswordPage'
-import MainPage from './pages/MainPage'
-import MyPage from './pages/MyPage'
 import SearchPage from './pages/SearchPage'
 import CreateMyMapPage from './pages/CreateMyMapPage'
 import { Suspense } from 'react';
@@ -23,7 +21,8 @@ import RepositoryPage from "./pages/RepositoryPage";
 
 import styled from 'styled-components'
 import RequestDetailPage from "./pages/RequestDetailPage";
-
+const MainPage = lazy(() => import('./pages/MainPage'))
+const MyPage = lazy(() => import('./pages/MyPage'))
 /* 
 option
 null => 아무나 출입이 가능한 페이지
@@ -37,8 +36,8 @@ function App() {
       <BrowserRouter>
         <Suspense fallback={(<div> Loading ... </div>)}>
           <Switch>
-            <Route exact path="/" component={Auth(LandingPage, false)} />
-            <Route exact path="/login" component={Auth(LoginPage, false)} />
+            <Route exact path="/" component={Auth(LandingPage, null)} />
+            <Route exact path="/login" component={Auth(LoginPage, null)} />
             <Route exact path="/register" component={Auth(RegisterPage, null)} />
             <Route exact path="/findId" component={Auth(FindIDPage, null)} />
             <Route exact path="/findPassword" component={Auth(FindPasswordPage, null)} />
