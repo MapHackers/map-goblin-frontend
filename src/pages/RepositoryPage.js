@@ -196,8 +196,6 @@ const RepositoryPage = (props) => {
                     setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
                 }
 
-                console.log(response.data)
-
                 setIsLoading(false);
             }).catch(error=>{
                 setNotFound(true);
@@ -208,15 +206,20 @@ const RepositoryPage = (props) => {
     }, [props])
 
     const onClickClone = () => {
-        // eslint-disable-next-line no-restricted-globals
-        if(confirm("지도를 클론하시겠습니까?")){
-            Api.post('/repositories/clone', {"repositoryId":repositoryInfo.id}).then(response => {
-                alert("클론이 완료되었습니다. 클론된 지도로 이동합니다.");
-                props.history.push('/'+props.user.userData.data.userId+'/repositories/'+response.data.name);
-            }).catch(error => {
-                alert(error.response.data.message);
-            })
+        if(repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER"){
+            alert("본인의 지도는 클론할 수 없습니다.");
+        }else{
+            // eslint-disable-next-line no-restricted-globals
+            if(confirm("지도를 클론하시겠습니까?")){
+                Api.post('/repositories/clone', {"repositoryId":repositoryInfo.id}).then(response => {
+                    alert("클론이 완료되었습니다. 클론된 지도로 이동합니다.");
+                    props.history.push('/'+props.user.userData.data.userId+'/repositories/'+response.data.name);
+                }).catch(error => {
+                    alert(error.response.data.message);
+                })
+            }
         }
+
     }
 
     if(!isLoading){
