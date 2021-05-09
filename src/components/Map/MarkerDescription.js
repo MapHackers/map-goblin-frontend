@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Tabs, Rate, Divider, Comment, Input, Form, Button, List } from 'antd';
 import { InfoCircleOutlined, CommentOutlined, HeartFilled } from '@ant-design/icons'
-import Logo from '../Form/Logo';
+import { connect } from 'react-redux'
+
 const { TabPane } = Tabs;
 
 const { TextArea } = Input;
@@ -35,7 +36,7 @@ const CommentList = ({ comments }) => (
     />
 );
 
-const MarkerDescription = ({ title, description, rating }) => {
+const MarkerDescription = ({ title, description, rating, userName }) => {
 
     const [reviewInput, setreviewInput] = useState("")
     const [value, setValue] = useState(null)
@@ -51,7 +52,7 @@ const MarkerDescription = ({ title, description, rating }) => {
             setsubmitting(false)
             setreviewList([
                 {
-                    author: <span style={{ display: 'flex' }}><p>Doil2</p> <Rate style={{ marginLeft: '16px', fontSize: '14px' }} disabled allowHalf value={value} /></span>,
+                    author: <span style={{ display: 'flex' }}><p>{userName}</p> <Rate style={{ marginLeft: '16px', fontSize: '14px' }} disabled allowHalf value={value} /></span>,
                     content: <p>{reviewInput}</p>
                 }, ...reviewList
             ])
@@ -91,11 +92,7 @@ const MarkerDescription = ({ title, description, rating }) => {
                                 />
                             }
                         />
-                        {/* <CommentList comments={[{
-                            author: <span style={{ display: 'flex' }}><p>Han Solo</p> <Rate style={{ marginLeft: '16px', fontSize: '14px' }} disabled defaultValue={5} /></span>,
-                            content: <p>{`dkljflkasjdlkf`}</p>,
-                        }]} /> */}
-                        <CommentList comments={reviewList} />
+                        <CommentList key={Math.random()} comments={reviewList} />
                     </div>
                 </TabPane>
             </Tabs>
@@ -103,4 +100,8 @@ const MarkerDescription = ({ title, description, rating }) => {
     )
 }
 
-export default MarkerDescription
+const mapStateToProps = state => ({
+    userName: state.user.userName
+})
+
+export default connect(mapStateToProps)(MarkerDescription)
