@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { auth } from '../_actions/user_action'
 
 function withAuthHoc(SepecificComponent, option) {
 
-    /* 
+    /*
     option
     null => 아무나 출입이 가능한 페이지
     true => 로그인한 유저만 출입이 가능한 페이지
@@ -27,14 +27,21 @@ function withAuthHoc(SepecificComponent, option) {
                             alert('로그인이 필요합니다!')
                             props.history.push('/login')
                         }
-                    }
-                    else if(option === false){
-                        if(response.payload.status === 200){
-                            alert('접근 불가능!')
-                            props.history.goBack()
+                        else if (option === true){
+                            if(response.payload.status !== 200){
+                                alert('로그인이 필요합니다!')
+                                props.history.push('/login')
+                            }
                         }
-                    }
-                })
+                        else if(option === false){
+                            if(response.payload.status === 200){
+                                alert('접근 불가능!')
+                                props.history.goBack()
+                            }
+                        }
+                    })
+            }
+            auth_dispatch()
         }, [dispatch, props.history])
         let user = useSelector(state => state.user)
 
@@ -42,7 +49,8 @@ function withAuthHoc(SepecificComponent, option) {
             <SepecificComponent {...props} user={user}/>
         )
     }
-    return AuthenticationCheck
+
+   return AuthenticationCheck
 }
 
 export default withAuthHoc
