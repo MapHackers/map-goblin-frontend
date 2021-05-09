@@ -177,23 +177,26 @@ const RepositoryPage = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
     const { userId, repositoryName } = props.match.params;
-    const userUrl = '/' + userId;
+    const userUrl = `/${userId}`;
 
     const backHome = () => {
         props.history.push('/main')
     }
 
-
-    const dispatch = useDispatch()
+    //const dispatch = useDispatch()
 
     useEffect(() => {
 
         async function getRepositoryInfo() {
-            await Api.get('/' + userId + '/repositories/' + repositoryName).then(response => {
+            await Api.get(`/${userId}/repositories/${repositoryName}`).then(response => {
                 setRepositoryInfo(response.data);
 
-                if (response.data.thumbnail !== "") {
+                console.log(response.data);
+
+                if (response.data.thumbnail !== null) {
                     setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
+                }else{
+                    setThumbnail(Api.defaults.baseURL + '/files/no-image.svg');
                 }
 
                 setIsLoading(false);
@@ -213,7 +216,7 @@ const RepositoryPage = (props) => {
             if(confirm("지도를 클론하시겠습니까?")){
                 Api.post('/repositories/clone', {"repositoryId":repositoryInfo.id}).then(response => {
                     alert("클론이 완료되었습니다. 클론된 지도로 이동합니다.");
-                    props.history.push('/'+props.user.userData.data.userId+'/repositories/'+response.data.name);
+                    props.history.push(`/${props.user.userData.data.userId}/repositories/${response.data.name}`);
                 }).catch(error => {
                     alert(error.response.data.message);
                 })
@@ -248,7 +251,7 @@ const RepositoryPage = (props) => {
                                 <Col flex="auto" style={{ marginLeft: '50px', marginRight: '50px' }}>
                                     <Row style={{ alignContent: "center", justifyContent: "center" }}>
                                         {thumbnail !== "" && <Image src={thumbnail} alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}
-                                            fallback="/no-image.svg"
+                                                                    fallback="/no-image.svg"
                                         />}
                                     </Row>
                                 </Col>
@@ -264,6 +267,14 @@ const RepositoryPage = (props) => {
                                                 <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={<DislikeOutlined />} />
                                             </Col>
                                         </Row>
+                                        <Divider>카테고리</Divider>
+                                        {
+                                            repositoryInfo.categories.map((category, idx)=>{
+                                                return (
+                                                    <Tag color='geekblue'>{category}</Tag>
+                                                )
+                                            })
+                                        }
                                         <Divider>Owner의 한마디</Divider>
                                         <p>
                                             우리 함께 중앙대학교 지도를 만들어봐요!
