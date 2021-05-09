@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { auth } from '../redux/_actions/user_action'
+import { auth } from '../_actions/user_action'
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default function (SepecificComponent, option) {
+function withAuthHoc(SepecificComponent, option) {
 
     /* 
     option
@@ -14,15 +13,12 @@ export default function (SepecificComponent, option) {
 
     function AuthenticationCheck(props) {
         const dispatch = useDispatch()
-        let user = useSelector(state => state.user)
         //backend에 auth요청
         useEffect(() => {
-
             dispatch(auth(window.localStorage.getItem("userToken")))
                 .then(response => {
                     //분기처리
                     //로그인 하지 않은 상태
-                    console.log("Auth", response)
                     if (option === null){
                         console.log("anyone can access")
                     }
@@ -40,9 +36,13 @@ export default function (SepecificComponent, option) {
                     }
                 })
         }, [dispatch, props.history])
+        let user = useSelector(state => state.user)
+
         return(
             <SepecificComponent {...props} user={user}/>
         )
     }
     return AuthenticationCheck
 }
+
+export default withAuthHoc

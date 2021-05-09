@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import { withRouter } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux'
-import { loginUser } from '../../redux/_actions/user_action'
+import { loginUser } from '../../_actions/user_action'
 
 function LoginForm(props) {
     const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false
