@@ -7,7 +7,6 @@ import UserIcon from './Sections/UserIcon'
 import styled from 'styled-components'
 
 function NavigationBar(props) {
-    console.log("user",props.user)
     return (
         <NavContainer>
             <Logo />

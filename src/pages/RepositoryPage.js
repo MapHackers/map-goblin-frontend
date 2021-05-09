@@ -6,7 +6,7 @@ import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, Exclamation
 import CommonLayout from "../components/Layout/CommonLayout";
 import MapContainer from "../components/Map/MapContainer";
 
-import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider, Result, Button, Spin, Statistic } from 'antd';
+import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider, Result, Button, Spin, Statistic, Image } from 'antd';
 import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import Api from "../util/Api";
 
@@ -238,7 +238,9 @@ const RepositoryPage = (props) => {
                             <Row>
                                 <Col flex="980px">
                                     <Row style={{ alignContent: "center", justifyContent: "center" }}>
-                                        {thumbnail !== "" && <img src={thumbnail} alt="Thumbnail" style={{ width: "50%", height: "50%" }} />}
+                                        {thumbnail !== "" && <Image src={thumbnail} alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}
+                                                fallback="/no-image.svg"
+                                        />}
                                     </Row>
                                     <Row>
                                         <h1>{repositoryInfo.description}</h1>

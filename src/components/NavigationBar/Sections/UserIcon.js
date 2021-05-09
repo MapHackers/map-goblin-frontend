@@ -9,7 +9,6 @@ import { withRouter } from 'react-router-dom'
 function UserIcon(props) {
 
     const user = useSelector(state => state.user)
-    console.log(user)
 
     const onClickLogoutHandler = () => {
         window.localStorage.setItem("userToken", '')
@@ -21,7 +20,6 @@ function UserIcon(props) {
     }
 
     let userName = useSelector(state => state.user.userData)
-    console.log("UserICON", userName)
     let IuserName = ''
     if (userName !== undefined){
         IuserName = userName.data.name
