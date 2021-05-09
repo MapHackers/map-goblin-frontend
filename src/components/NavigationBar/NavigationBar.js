@@ -2,75 +2,44 @@ import React, {useEffect, lazy, useState} from 'react'
 import Logo from './Sections/Logo'
 import ButtonBox from './Sections/ButtonBox'
 import SearchBar from './Sections/SearchByRepoName'
-// import Alarm from './Sections/Alarm'
 import UserIcon from './Sections/UserIcon'
 import styled from 'styled-components'
-import Api from "../../util/Api";
 import {useSelector, connect, useDispatch} from "react-redux";
 import {loadAlarm} from "../../_actions/alram_action";
+import Alarm from "./Sections/Alarm";
 
-const Alarm = lazy(() => import('./Sections/Alarm'))
+function NavigationBar(props) {
 
-const mapStateToProps = state => ({
-    userId: state.user.userId,
-    userName: state.user.userName,
-    userAlarm: state.user.userAlarm
-})
-
-
-function NavigationBar({userId, userName, userAlarm}, props) {
-
-    // let userName = useSelector(state => state.user.userData)
-    // let IuserName = undefined
-    // if (userName !== undefined){
-    //     IuserName = userName.data.userId
-    // }
-
-    const [alarmData, setAlarmData] = useState("")
-    // let userId = ''
     const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = useState(true);
+
+    const user = useSelector(state => state.user);
 
     useEffect(() => {
-        // console.log("mypage user, name", userId)
-        // async function fetch_user_alarm(){
-        //     try{
-        //         //if (userId !== ''){
-        //             await Api.get("/"+ userId +"/alarms").then(response => {
-        //                 console.log("----------------------------------------------")
-        //                 console.log("NavBar.js responseData", response.data)
-        //                 setAlarmData(response.data)
-        //                 console.log("NAVBar.js set alarm ",alarmData)
-        //             });
-        //         //}
-        //
-        //     } catch (e){
-        //         console.log(e)
-        //     }
-        //     console.log("fetch : ", alarmData)
-        // }
-        // fetch_user_alarm()
-
-        dispatch(loadAlarm(userId))
+        dispatch(loadAlarm(user.userId))
             .then(response => {
+                console.log("response/////////////////////////")
                 console.log(response)
-                console.log("NavBar===",userAlarm)
+
+                setIsLoading(false);
             })
-    }, [dispatch, userId])
+    }, [])
+
     return (
-        <NavContainer>
-            <Logo />
-            <ButtonBox />
-            <SearchBar />
-            <UserIconContainer>
-                <Alarm alarmData = {userAlarm}/>
-                <UserIcon />
-            </UserIconContainer>
-        </NavContainer>
+        <>
+            {isLoading ? null : <NavContainer>
+                <Logo />
+                <ButtonBox />
+                <SearchBar />
+                <UserIconContainer>
+                    <Alarm />
+                    <UserIcon />
+                </UserIconContainer>
+            </NavContainer>}
+        </>
     )
 }
-export default connect(mapStateToProps)(NavigationBar)
-
-
+export default NavigationBar
 
 const NavContainer = styled.div`
     padding: 0 20px;
