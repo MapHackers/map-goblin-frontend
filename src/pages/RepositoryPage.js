@@ -6,7 +6,8 @@ import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, Exclamation
 import CommonLayout from "../components/Layout/CommonLayout";
 import MapContainer from "../components/Map/MapContainer";
 
-import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider, Result, Button, Spin } from 'antd';
+import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider, Result, Button, Spin, Statistic } from 'antd';
+import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import Api from "../util/Api";
 
 const { TabPane } = Tabs
@@ -195,16 +196,7 @@ const RepositoryPage = (props) => {
             })
         }
 
-        getRepositoryInfo().then(r => {
-            if(isLoading){
-                return <Result
-                    status="404"
-                    title="404"
-                    subTitle="존재하지 않는 페이지입니다."
-                    extra={<Button type="primary" onClick={backHome}>홈으로</Button>}
-                />
-            }
-        });
+        getRepositoryInfo().then();
     }, [])
 
     if(!isLoading){
@@ -233,6 +225,16 @@ const RepositoryPage = (props) => {
                                 </Col>
                                 <Col flex="auto">
                                     <Info>
+                                        <Button type="primary" size="large" style={{width:"100%"}}>Clone</Button>
+                                        <Divider/>
+                                        <Row gutter={16}>
+                                            <Col span={12}>
+                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={<LikeOutlined />} />
+                                            </Col>
+                                            <Col span={12}>
+                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={<DislikeOutlined />} />
+                                            </Col>
+                                        </Row>
                                         <Divider>Owner의 한마디</Divider>
                                         <p>
                                             우리 함께 중앙대학교 지도를 만들어봐요!
@@ -303,7 +305,7 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span><SettingOutlined />Settings</span>} key="5">
+                    <TabPane tab={<span style={repositoryInfo.type === "HOST" ? null : {display:"none"}}><SettingOutlined />Settings</span>} key="5">
                         Settings
                     </TabPane>
                 </Tabs>
@@ -317,7 +319,7 @@ const RepositoryPage = (props) => {
                     title="404"
                     subTitle="존재하지 않는 페이지입니다."
                     extra={<Button type="primary" onClick={backHome}>홈으로</Button>}
-                /> : <Spin size="large" tip="Loading..."></Spin>}
+                /> : <Spin size="large" tip="Loading..."/>}
             </div>
         );
     }
