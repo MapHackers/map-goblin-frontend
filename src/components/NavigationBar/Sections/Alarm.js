@@ -3,14 +3,12 @@ import { BellOutlined } from '@ant-design/icons';
 import styled from 'styled-components'
 import { Badge, Menu, Dropdown, Divider } from 'antd'
 import {connect, useSelector} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 import Api from "../../../util/Api";
 
 function Alarm(props) {
 
     const alarms = useSelector(state => state.alarm.userAlarm.data)
-
-    console.log("//////////////////araaaa")
-    console.log(alarms)
 
     const typemap = {
         'LIKE' : '를 좋아합니다.',
@@ -23,21 +21,28 @@ function Alarm(props) {
         console.log("values////////////////////")
         console.log(values);
 
-        Api.post("/", {alarmId:values.key}).then(response => {
+        Api.post("/alarms", {alarmId:values.key}).then(response => {
             console.log(response);
+            console.log(props);
         }).catch(error => {
             console.log(error);
         })
+
     }
+
+    let alarmCount = 0
 
     const AlarmList = (
         <Menu>
             {
-                alarms.map((alarm, idx) => (
-                    <Menu.Item key={alarm.id} onClick={onClickAlarm}>
-                        <div>{alarm.dstMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}</div>
-                    </Menu.Item>
-                ))
+                alarms.map((alarm, idx) => {
+                    if(alarm.read === false){
+                        alarmCount += 1;
+                        return (<Menu.Item key={alarm.id} title={alarm.spaceName} onClick={onClickAlarm}>
+                            <a href={`/${props.user.userId}/repositories/${alarm.spaceName}`}>{alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}</a>
+                        </Menu.Item>)
+                    }
+                })
             }
         </Menu>
     )
@@ -46,7 +51,7 @@ function Alarm(props) {
     return (
 
         <AlarmContainer>
-            <Badge count={alarms.length} size="small" >
+            <Badge count={alarmCount} size="small" >
                 <Dropdown overlay={AlarmList} trigger={['click']} >
                     <BellOutlined style={{ fontSize: '1.5rem', marginTop: '0.1875rem' }} />
                 </Dropdown>
@@ -56,7 +61,7 @@ function Alarm(props) {
     )
 }
 
-export default Alarm
+export default withRouter(Alarm)
 
 const AlarmContainer = styled.div`
     border-radius: 1.1rem;

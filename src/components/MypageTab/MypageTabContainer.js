@@ -7,6 +7,8 @@ import Card from "../CardView/CardView";
 
 import { Doughnut } from "react-chartjs-2";
 import Avatar from "antd/es/avatar/avatar";
+import Api from "../../util/Api";
+import {withRouter} from "react-router-dom";
 
 const { TabPane } = Tabs;
 
@@ -191,33 +193,35 @@ const IconText = ({ icon, text }) => (
     </Space>
 );
 
-const mapStateToProps = state => ({
-    userName: state.user.userName,
-    userAlarm: state.user.userAlarm
-})
+// const mapStateToProps = state => ({
+//     userName: state.user.userName,
+//     userAlarm: state.user.userAlarm
+// })
 
-const MypageTabContainer = ({userName, userAlarm}, props) => {
+const MypageTabContainer = (props) => {
 
-    const [alarmData, setAlarmData] = useState()
+    //const [alarmData, setAlarmData] = useState()
 
-    useEffect(() => {
-        // console.log("TabContainer.js ==============================",userAlarm)
-        // if(userAlarm !== undefined){
-        //     console.log("MypageTabcontainer.js ==============================",userAlarm)
-        //     //setAlarmData(pAlarmData)
-        // }
-        //
-        //     // pAlarmData.alarmData.data.reverse().map(alarm => {
-        //     //     if (alarm.read === false){
-        //     //         tmpData.push(alarm)
-        //     //     }
-        //     // })
-        //
-        //
-        // // setAlarmData(pAlarmData.data)
-        // // console.log("alarmData : ",pAlarmData.data)
-        // // console.log("alarm : ", alarms)
-    }, [props])
+    const alarms = useSelector(state => state.alarm.userAlarm.data)
+
+    // useEffect(() => {
+    //     // console.log("TabContainer.js ==============================",userAlarm)
+    //     // if(userAlarm !== undefined){
+    //     //     console.log("MypageTabcontainer.js ==============================",userAlarm)
+    //     //     //setAlarmData(pAlarmData)
+    //     // }
+    //     //
+    //     //     // pAlarmData.alarmData.data.reverse().map(alarm => {
+    //     //     //     if (alarm.read === false){
+    //     //     //         tmpData.push(alarm)
+    //     //     //     }
+    //     //     // })
+    //     //
+    //     //
+    //     // // setAlarmData(pAlarmData.data)
+    //     // // console.log("alarmData : ",pAlarmData.data)
+    //     // // console.log("alarm : ", alarms)
+    // }, [props])
     const chartData = {
         labels : ['도일이의 드라이브 코스', '노트북해도 눈치X 카페', '꼬북칩 초코맛 보유 마트'],
         datasets : [
@@ -244,11 +248,11 @@ const MypageTabContainer = ({userName, userAlarm}, props) => {
                         ))}
                     </Space>
                     <Divider/>
-                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{userName}님의 통계자료</div>
+                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{props.name}님의 통계자료</div>
                     <Doughnut data={chartData}/>
                 </TabPane>
                 <TabPane tab={<span><EnvironmentOutlined/>Maps</span>} key="2">
-                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{userName}님의 지도 목록</div>
+                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{props.name}님의 지도 목록</div>
                     <div className="demo-infinite-container" style={{height: "700px", overflow: "auto"}}>
                         <List
                             itemLayout="horizontal"
@@ -289,7 +293,7 @@ const MypageTabContainer = ({userName, userAlarm}, props) => {
                             itemlayout="horizontal"
                             size="small"
                             layout="vertical"
-                            dataSource={userAlarm.data}
+                            dataSource={alarms}
                             pagination={{
                                 onChange: page => {
                                     console.log(page);
@@ -299,7 +303,7 @@ const MypageTabContainer = ({userName, userAlarm}, props) => {
                             renderItem={alarm => (
                                 <List.Item>
                                     <List.Item.Meta
-                                        title={<a href={"https://ant.design"}>{alarm.dstMemberName}님이 회원님 지도{typemap[alarm.alarmType]}</a>}
+                                        title={<a href={`/${props.userId}/repositories/${alarm.spaceName}`}>{alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}</a>}
                                     />
                                 </List.Item>
                             )}
@@ -311,4 +315,4 @@ const MypageTabContainer = ({userName, userAlarm}, props) => {
     );
 };
 
-export default connect(mapStateToProps)(MypageTabContainer);
+export default withRouter(MypageTabContainer);

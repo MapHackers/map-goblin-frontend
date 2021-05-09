@@ -32,13 +32,14 @@ function NavigationBar(props) {
                 <ButtonBox />
                 <SearchBar />
                 <UserIconContainer>
-                    <Alarm />
+                    <Alarm user={user}/>
                     <UserIcon />
                 </UserIconContainer>
             </NavContainer>}
         </>
     )
 }
+
 export default NavigationBar
 
 const NavContainer = styled.div`
