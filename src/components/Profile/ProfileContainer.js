@@ -15,11 +15,11 @@ const Doilimg = styled.img`
 `;
 
 
-const ProfileContainer = (props) => {
+const ProfileContainer = ({name, email, description}) => {
     const [editData, setShowResults] = React.useState(false)
-    const [userName, setUserName] = React.useState("")
+    const [userName, setUserName] = useState()
     const [userEmail, setUserEmail] = useState("")
-    const [description, setDescription] = useState("")
+    const [userDescription, setUserDescription] = useState("")
     const onClick = () => setShowResults(!editData)
 
     const [fileList, setFileList] = useState([]);
@@ -46,12 +46,14 @@ const ProfileContainer = (props) => {
     };
 
     useEffect(() => {
-        console.log("props : ",props)
-        setUserName(props.name)
-        setUserEmail(props.email)
-        setDescription(props.description)
+        //console.log("props : ",props)
+        setUserName(name)
+        setUserEmail(email)
+        setUserDescription(description)
         }
     , [])
+
+
 
     return (
         <Card
@@ -99,9 +101,9 @@ const ProfileContainer = (props) => {
                     />
                     <div>상태메시지</div>
                     <input
-                        value={description}
+                        value={userDescription}
                         onChange={(event) => {
-                            setDescription(event.currentTarget.value)
+                            setUserDescription(event.currentTarget.value)
                         }
                         }
                     />
@@ -114,7 +116,7 @@ const ProfileContainer = (props) => {
                     />
                     <Meta
                         style={{marginTop:"30px"}}
-                        title={description}
+                        title={userDescription}
                     />
                 </div>
             }

@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Divider, Space, Tabs, List } from 'antd';
 import { BookOutlined, EnvironmentOutlined, MessageOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import {useSelector, connect, useDispatch} from "react-redux";
 
 import Card from "../CardView/CardView";
 
 import { Doughnut } from "react-chartjs-2";
 import Avatar from "antd/es/avatar/avatar";
+import Api from "../../util/Api";
+import {withRouter} from "react-router-dom";
 
 const { TabPane } = Tabs;
 
@@ -176,10 +179,10 @@ const alarms = [
 ]
 
 const typemap = {
-    'like' : '를 좋아합니다.',
-    'clone' : '를 클론하였습니다.',
-    'request' : '에 요청을 남겼습니다.',
-    'issue' : '에 이슈를 남겼습니다.'
+    'LIKE' : '를 좋아합니다.',
+    'CLONE' : '를 클론하였습니다.',
+    'REQUEST' : '에 요청을 남겼습니다.',
+    'ISSUE' : '에 이슈를 남겼습니다.'
 }
 
 
@@ -190,8 +193,35 @@ const IconText = ({ icon, text }) => (
     </Space>
 );
 
+// const mapStateToProps = state => ({
+//     userName: state.user.userName,
+//     userAlarm: state.user.userAlarm
+// })
+
 const MypageTabContainer = (props) => {
 
+    //const [alarmData, setAlarmData] = useState()
+
+    const alarms = useSelector(state => state.alarm.userAlarm.data)
+
+    // useEffect(() => {
+    //     // console.log("TabContainer.js ==============================",userAlarm)
+    //     // if(userAlarm !== undefined){
+    //     //     console.log("MypageTabcontainer.js ==============================",userAlarm)
+    //     //     //setAlarmData(pAlarmData)
+    //     // }
+    //     //
+    //     //     // pAlarmData.alarmData.data.reverse().map(alarm => {
+    //     //     //     if (alarm.read === false){
+    //     //     //         tmpData.push(alarm)
+    //     //     //     }
+    //     //     // })
+    //     //
+    //     //
+    //     // // setAlarmData(pAlarmData.data)
+    //     // // console.log("alarmData : ",pAlarmData.data)
+    //     // // console.log("alarm : ", alarms)
+    // }, [props])
     const chartData = {
         labels : ['도일이의 드라이브 코스', '노트북해도 눈치X 카페', '꼬북칩 초코맛 보유 마트'],
         datasets : [
@@ -218,7 +248,7 @@ const MypageTabContainer = (props) => {
                         ))}
                     </Space>
                     <Divider/>
-                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{props.name}의 통계자료</div>
+                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{props.name}님의 통계자료</div>
                     <Doughnut data={chartData}/>
                 </TabPane>
                 <TabPane tab={<span><EnvironmentOutlined/>Maps</span>} key="2">
@@ -273,7 +303,7 @@ const MypageTabContainer = (props) => {
                             renderItem={alarm => (
                                 <List.Item>
                                     <List.Item.Meta
-                                        title={<a href={"https://ant.design"}>{alarm.user}님이 회원님 지도{typemap[alarm.type]}</a>}
+                                        title={<a href={`/${props.userId}/repositories/${alarm.spaceName}`}>{alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}</a>}
                                     />
                                 </List.Item>
                             )}
@@ -285,4 +315,4 @@ const MypageTabContainer = (props) => {
     );
 };
 
-export default MypageTabContainer;
+export default withRouter(MypageTabContainer);

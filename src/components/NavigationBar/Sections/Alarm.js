@@ -2,77 +2,47 @@ import React, {useEffect, useState} from 'react'
 import { BellOutlined } from '@ant-design/icons';
 import styled from 'styled-components'
 import { Badge, Menu, Dropdown, Divider } from 'antd'
+import {connect, useSelector} from 'react-redux'
+import {withRouter} from 'react-router-dom'
+import Api from "../../../util/Api";
 
+function Alarm(props) {
 
-function setRead(alarmData){
-    alarmData.read = true
-}
-
-function Alarm() {
-
-    const alarmDatas = [
-        {
-            id : 1,
-            user : 'dydfuf',
-            type : 'like',
-            read : true
-        },
-        {
-            id : 2,
-            user : 'oxhe2038',
-            type : 'clone',
-            read : true
-        },
-        {
-            id : 3,
-            user : 'unknown1',
-            type : 'issue',
-            read : true
-        },
-        {
-            id : 4,
-            user : 'ghdtjq',
-            type : 'request',
-            read : false
-        },
-        {
-            id : 5,
-            user : 'yongyeol',
-            type : 'like',
-            read : false
-        }
-    ]
-
-    const [unreadAlarmDatas, setUnreadAlarmDatas] = useState([])
-
-
-
-    useEffect(async () => {
-        let temp = []
-        alarmDatas.reverse().map((alarmData)=>{
-            if(alarmData.read === false){
-                temp.push(alarmData)
-            }
-        })
-        await setUnreadAlarmDatas([...temp])
-    }, [])
+    const alarms = useSelector(state => state.alarm.userAlarm.data)
 
     const typemap = {
-        'like' : '를 좋아합니다.',
-        'clone' : '를 클론하였습니다.',
-        'request' : '에 요청을 남겼습니다.',
-        'issue' : '에 이슈를 남겼습니다.'
+        'LIKE' : '를 좋아합니다.',
+        'CLONE' : '를 클론하였습니다.',
+        'REQUEST' : '에 요청을 남겼습니다.',
+        'ISSUE' : '에 이슈를 남겼습니다.'
     }
 
+    const onClickAlarm = (values) => {
+        console.log("values////////////////////")
+        console.log(values);
+
+        Api.post("/alarms", {alarmId:values.key}).then(response => {
+            console.log(response);
+            console.log(props);
+        }).catch(error => {
+            console.log(error);
+        })
+
+    }
+
+    let alarmCount = 0
 
     const AlarmList = (
         <Menu>
             {
-                unreadAlarmDatas.map((alarm, idx) => (
-                    <Menu.Item key={idx}>
-                        <div>{alarm.user}님이 회원님의 지도{typemap[alarm.type]}</div>
-                    </Menu.Item>
-                ))
+                alarms.map((alarm, idx) => {
+                    if(alarm.read === false){
+                        alarmCount += 1;
+                        return (<Menu.Item key={alarm.id} title={alarm.spaceName} onClick={onClickAlarm}>
+                            <a href={`/${props.user.userId}/repositories/${alarm.spaceName}`}>{alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}</a>
+                        </Menu.Item>)
+                    }
+                })
             }
         </Menu>
     )
@@ -81,7 +51,7 @@ function Alarm() {
     return (
 
         <AlarmContainer>
-            <Badge count={unreadAlarmDatas.length} size="small" >
+            <Badge count={alarmCount} size="small" >
                 <Dropdown overlay={AlarmList} trigger={['click']} >
                     <BellOutlined style={{ fontSize: '1.5rem', marginTop: '0.1875rem' }} />
                 </Dropdown>
@@ -91,7 +61,7 @@ function Alarm() {
     )
 }
 
-export default Alarm
+export default withRouter(Alarm)
 
 const AlarmContainer = styled.div`
     border-radius: 1.1rem;

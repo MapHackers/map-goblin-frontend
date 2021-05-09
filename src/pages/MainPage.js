@@ -1,7 +1,6 @@
-import React from 'react'
+import React, {lazy}from 'react'
 import MainContentSlider from '../components/MainContentSlider/MainContentSlider'
 import NetflixSlider from '../components/NetflixSlider'
-import NavBar from '../components/NavigationBar/NavigationBar'
 import Card from '../components/CardView/CardView'
 import { Divider } from 'antd'
 
@@ -11,6 +10,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ExpandingText from '../components/ExpandingText/ExpandingText'
+const NavBar = lazy(() => import('../components/NavigationBar/NavigationBar'))
 
 let settings = {
     dots: false,
@@ -121,9 +121,10 @@ const cards = [
 ];
 
 function MainPage(props) {
+    console.log(props)
     return (
         <div style={{ background: '#f5f6f7' }}>
-            <NavBar />
+            <NavBar user={props.user}/>
             <MainContentSlider />
             {/* <NetflixSlider title="내가 좋아요한 지도">
                 {cards.map(card => (

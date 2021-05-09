@@ -1,25 +1,45 @@
-import React from 'react'
+import React, {useEffect, lazy, useState} from 'react'
 import Logo from './Sections/Logo'
 import ButtonBox from './Sections/ButtonBox'
 import SearchBar from './Sections/SearchByRepoName'
-import Alarm from './Sections/Alarm'
 import UserIcon from './Sections/UserIcon'
 import styled from 'styled-components'
+import {useSelector, connect, useDispatch} from "react-redux";
+import {loadAlarm} from "../../_actions/alram_action";
+import Alarm from "./Sections/Alarm";
 
 function NavigationBar(props) {
-    console.log("user",props.user)
+
+    const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = useState(true);
+
+    const user = useSelector(state => state.user);
+
+    useEffect(() => {
+        dispatch(loadAlarm(user.userId))
+            .then(response => {
+                console.log("response/////////////////////////")
+                console.log(response)
+
+                setIsLoading(false);
+            })
+    }, [])
+
     return (
-        <NavContainer>
-            <Logo />
-            <ButtonBox />
-            <SearchBar />
-            <UserIconContainer>
-                <Alarm />
-                <UserIcon />
-            </UserIconContainer>
-        </NavContainer>
+        <>
+            {isLoading ? null : <NavContainer>
+                <Logo />
+                <ButtonBox />
+                <SearchBar />
+                <UserIconContainer>
+                    <Alarm user={user}/>
+                    <UserIcon />
+                </UserIconContainer>
+            </NavContainer>}
+        </>
     )
 }
+
 export default NavigationBar
 
 const NavContainer = styled.div`
