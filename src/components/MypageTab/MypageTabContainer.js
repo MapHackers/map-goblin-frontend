@@ -9,174 +9,9 @@ import { Doughnut } from "react-chartjs-2";
 import Avatar from "antd/es/avatar/avatar";
 import Api from "../../util/Api";
 import {withRouter} from "react-router-dom";
+import SlideButton from "../NetflixSlider/SlideButton";
 
 const { TabPane } = Tabs;
-
-const ThumbCards = [
-    {
-        id: 1,
-        title: "도일이의 드라이브 코스",
-        hashtag: "#서울근교 #드라이브 코스",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id: 2,
-        title: "노트북해도 눈치X 카페",
-        hashtag: "#소음환영 #카페",
-        like: 102,
-        dislike: 12,
-        image: '/1.png'
-    },
-    {
-        id: 3,
-        title: "꼬북칩 초코맛 보유 마트",
-        hashtag: "#꼬북칩초코 #마트",
-        like: 42,
-        dislike: 291,
-        image: '/2.png'
-    }
-]
-
-const data = [
-    {
-        id : "0",
-        title : "동작구 꼬북칩 초코맛",
-        hashtag : "#동작구 #마트 #편의점",
-        date : "Apr 12, 2021",
-        like: 42,
-        dislike: 291,
-        image: '/2.png'
-    },
-    {
-        id : "1",
-        title : "붕세권",
-        hashtag : "#붕어빵",
-        date : "Mar 15, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "2",
-        title : "알바생이 친절한 편의점",
-        hashtag : "#편의점 #친절 #알바생",
-        date : "Mar 1, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "3",
-        title : "공부하기 좋은 카페",
-        hashtag : "#카페 #조용한 #공부",
-        date : "Feb 28, 2021",
-        like: 102,
-        dislike: 12,
-        image: '/1.png'
-    },
-    {
-        id : "4",
-        title : "콘센트 많은 카페",
-        hashtag : "#전기도둑 #충전",
-        date : "Jan 21, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "5",
-        title : "초보자를 위한 드라이브 코스",
-        hashtag : "#초보운전 #드라이브코스",
-        date : "Jan 10, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "0",
-        title : "111동작구 꼬북칩 초코맛",
-        hashtag : "#동작구 #마트 #편의점",
-        date : "Apr 12, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "1",
-        title : "111붕세권",
-        hashtag : "#붕어빵",
-        date : "Mar 15, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "2",
-        title : "111알바생이 친절한 편의점",
-        hashtag : "#편의점 #친절 #알바생",
-        date : "Mar 1, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "3",
-        title : "111공부하기 좋은 카페",
-        hashtag : "#카페 #조용한 #공부",
-        date : "Feb 28, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "4",
-        title : "111콘센트 많은 카페",
-        hashtag : "#전기도둑 #충전",
-        date : "Jan 21, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    },
-    {
-        id : "5",
-        title : "초보자를 위한 드라이브 코스",
-        hashtag : "#초보운전 #드라이브코스",
-        date : "Jan 10, 2021",
-        like: 30,
-        dislike: 4,
-        image: "/3.png"
-    }
-]
-
-const alarms = [
-    {
-        id : 1,
-        user : 'dydfuf',
-        type : 'like'
-    },
-    {
-        id : 2,
-        user : 'oxhe2038',
-        type : 'clone'
-    },
-    {
-        id : 3,
-        user : 'unknown1',
-        type : 'issue'
-    },
-    {
-        id : 4,
-        user : 'ghdtjq',
-        type : 'request'
-    },
-    {
-        id : 5,
-        user : 'yongyeol',
-        type : 'like'
-    }
-]
 
 const typemap = {
     'LIKE' : '를 좋아합니다.',
@@ -193,41 +28,23 @@ const IconText = ({ icon, text }) => (
     </Space>
 );
 
-// const mapStateToProps = state => ({
-//     userName: state.user.userName,
-//     userAlarm: state.user.userAlarm
-// })
 
 const MypageTabContainer = (props) => {
-
+    let repoDatas = []
     //const [alarmData, setAlarmData] = useState()
+    const [repoData, setRepoData] = useState([])
+    const [isLoading, setIsLoading] = useState(true);
 
     const alarms = useSelector(state => state.alarm.userAlarm.data)
 
-    // useEffect(() => {
-    //     // console.log("TabContainer.js ==============================",userAlarm)
-    //     // if(userAlarm !== undefined){
-    //     //     console.log("MypageTabcontainer.js ==============================",userAlarm)
-    //     //     //setAlarmData(pAlarmData)
-    //     // }
-    //     //
-    //     //     // pAlarmData.alarmData.data.reverse().map(alarm => {
-    //     //     //     if (alarm.read === false){
-    //     //     //         tmpData.push(alarm)
-    //     //     //     }
-    //     //     // })
-    //     //
-    //     //
-    //     // // setAlarmData(pAlarmData.data)
-    //     // // console.log("alarmData : ",pAlarmData.data)
-    //     // // console.log("alarm : ", alarms)
-    // }, [props])
+    const chart = {}
+
     const chartData = {
-        labels : ['도일이의 드라이브 코스', '노트북해도 눈치X 카페', '꼬북칩 초코맛 보유 마트'],
+        labels : ["1번 더미 데이터","2번 더미 데이터","3번 더미 데이터"],
         datasets : [
             {
-                data: [12, 19, 3],
-                label:'clone 수',
+                data: [4,2,1],
+                label:'좋아요 수',
                 backgroundColor: [
                     '#FF6384',
                     '#36A2EB',
@@ -236,6 +53,18 @@ const MypageTabContainer = (props) => {
             }
         ]
     }
+    useEffect(()=>{
+        Api.get(`/${props.userId}/repositories`)
+            .then(response=>{
+                repoDatas = response.data.data
+                console.log("GET REPO//////////////", repoDatas)
+                setRepoData(response.data.data)
+                setIsLoading(false)
+            })
+            .catch(error=>error)
+
+    },[])
+
 
     return (
         <div style={{ width: '60vw'}}>
@@ -243,12 +72,12 @@ const MypageTabContainer = (props) => {
                 <TabPane tab={<span><BookOutlined/>Overview</span>} key="1">
                     <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>내가 좋아요한 지도들</div>
                     <Space size="large" style={{width: "100%"}}>
-                        {ThumbCards.map(card => (
-                            <Card title={card.title} hastags={card.hashtag} like={card.like} dislike={card.dislike} thumbnail={card.image} key={card.id} />
+                        {repoData.map(card => (
+                            <Card title={card.name} hashtags={card.description} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={props.userId}/>
                         ))}
                     </Space>
                     <Divider/>
-                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{props.name}님의 통계자료</div>
+                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{props.name}님의 지도별 좋아요 수</div>
                     <Doughnut data={chartData}/>
                 </TabPane>
                 <TabPane tab={<span><EnvironmentOutlined/>Maps</span>} key="2">
@@ -258,7 +87,7 @@ const MypageTabContainer = (props) => {
                             itemLayout="horizontal"
                             size="large"
                             layout="vertical"
-                            dataSource={data}
+                            dataSource={repoData}
                             pagination={{
                                 onChange: page => {
                                     console.log(page);
@@ -268,9 +97,9 @@ const MypageTabContainer = (props) => {
                             renderItem={item => (
                                 <List.Item
                                     actions={[
-                                        <div>{item.date}</div>,
-                                        <IconText icon={LikeOutlined} text={item.like} key="list-vertical-star-o" />,
-                                        <IconText icon={DislikeOutlined} text={item.dislike} key="list-vertical-like-o" />,
+
+                                        <IconText icon={LikeOutlined} text={item.likeCount} key="list-vertical-star-o" />,
+                                        <IconText icon={DislikeOutlined} text={item.dislikeCount} key="list-vertical-like-o" />,
                                         <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
                                     ]}
                                 >
@@ -278,8 +107,8 @@ const MypageTabContainer = (props) => {
                                         avatar={
                                             <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                                         }
-                                        title={<a href="https://ant.design">{item.title}</a>}
-                                        description={item.hashtag}
+                                        title={<a href={`/${props.userId}/repositories/${item.name}`}>{item.name}</a>}
+                                        description={item.description}
                                     />
                                 </List.Item>
                             )}
