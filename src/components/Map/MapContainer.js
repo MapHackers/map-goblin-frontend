@@ -7,6 +7,7 @@ import { HeartFilled } from '@ant-design/icons'
 import { useDispatch } from 'react-redux'
 import { loadMapData } from '../../_actions/map_action'
 import Api from '../../util/Api';
+import ImgCrop from 'antd-img-crop';
 
 const { kakao } = window;
 
@@ -22,6 +23,7 @@ const MapContainer = ({ isCreate = false, mapId }) => {
     useEffect(() => {
         dispatch(loadMapData(mapId))
             .then(response => {
+                console.log("loaded data", response.payload.data)
                 response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
             })
 
@@ -51,14 +53,12 @@ const MapContainer = ({ isCreate = false, mapId }) => {
 
     const handleDescDelete = async () => {
         let deleteData = markers.splice(clickedMarker[1], 1)
-        console.log("deleteData", deleteData)
         let dataToSubmit = {
             "mapId": mapId,
             "layerName": "default1",
             "geometry": deleteData[0].latlng,
             "mapDataType": "point"
         }
-        console.log("data To Submit" , dataToSubmit)
         Api.post('/mapdata/delete', dataToSubmit)
             .then(response => {
                 console.log(response)
@@ -77,13 +77,6 @@ const MapContainer = ({ isCreate = false, mapId }) => {
     }
 
     const handleCreateOk = async () => {
-        console.log("ok")
-        await setmarkers([...markers, {
-            name: createMarkerInfo.title,
-            latlng: createMarkerInfo.latlng,
-            description: createMarkerInfo.description,
-            rating: createMarkerInfo.rating
-        }])
         setisCreateModalVisible(false)
         let dataToSubmit = {
             "mapId": mapId,
@@ -95,18 +88,61 @@ const MapContainer = ({ isCreate = false, mapId }) => {
             "thumbnail": null,
             "mapDataType": "point"
         }
-        Api.post('/mapdata', dataToSubmit)
-            .then(response => {
-                console.log(response)
+
+        const formData = new FormData();
+
+        if (fileList.length > 0) {
+            formData.append('file', fileList[0].originFileObj)
+
+            Api.post('/files', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
             })
-            .catch(error => {
-                console.log(error)
-            })
-        console.log("data to submit", dataToSubmit)
+                .then(response => {
+                    dataToSubmit.thumbnail = response.data
+                    console.log("data To Submit : ", dataToSubmit)
+                    Api.post('/mapdata', dataToSubmit)
+                        .then(response => {
+                            console.log(response)
+                            setmarkers([...markers, {
+                                name: createMarkerInfo.title,
+                                latlng: createMarkerInfo.latlng,
+                                description: createMarkerInfo.description,
+                                rating: createMarkerInfo.rating,
+                                thumbnail: dataToSubmit.thumbnail
+                            }])
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                    setFileList([])
+                })
+                .catch(err => {
+                    alert(err.response.data.message)
+                })
+        } else{
+            console.log("data To Submit : ", dataToSubmit)
+            Api.post('/mapdata', dataToSubmit)
+                .then(response => {
+                    console.log(response)
+                    setmarkers([...markers, {
+                        name: createMarkerInfo.title,
+                        latlng: createMarkerInfo.latlng,
+                        description: createMarkerInfo.description,
+                        rating: createMarkerInfo.rating,
+                    }])
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+
     }
 
     const handleCreateCancel = () => {
         console.log("cancle")
+        setFileList([])
         setisCreateModalVisible(false)
     }
 
@@ -197,6 +233,29 @@ const MapContainer = ({ isCreate = false, mapId }) => {
         />
     );
 
+    // 파일 업로드
+    const [fileList, setFileList] = useState([])
+
+    const onChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+
+    };
+
+    const onPreview = async file => {
+        let src = file.url;
+        if (!src) {
+            src = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj);
+                reader.onload = () => resolve(reader.result);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow.document.write(image.outerHTML);
+    };
+
     return (
         <>
             <Map
@@ -240,7 +299,7 @@ const MapContainer = ({ isCreate = false, mapId }) => {
                             }}
                             onClick={() => {
                                 setclickedMarker([marker, idx])
-                                console.log(marker.name)
+                                console.log(marker.thumbnail)
                                 showDescModal()
                             }}
                         />
@@ -257,7 +316,7 @@ const MapContainer = ({ isCreate = false, mapId }) => {
                         </Button>
                     ]}
                 >
-                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} />}
+                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} thumbnail={clickedMarker[0].thumbnail} />}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
@@ -300,15 +359,20 @@ const MapContainer = ({ isCreate = false, mapId }) => {
                                     })
                                 }} />
                             <div style={{ marginLeft: 'auto' }}>
-                                <Upload
-                                    name="avatar"
-                                    listType="picture-card"
-                                    className="avatar-uploader"
-                                    showUploadList={false}
-                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                >
-                                    upload
-                        </Upload>
+                                <ImgCrop rotate>
+                                    <Upload
+                                        listType="picture-card"
+                                        fileList={fileList}
+                                        onChange={onChange}
+                                        onPreview={onPreview}
+                                        beforeUpload={file => {
+                                            setFileList(fileList.concat(file));
+                                            return false;
+                                        }}
+                                    >
+                                        {fileList.length < 1 && '+ Upload'}
+                                    </Upload>
+                                </ImgCrop>
                             </div>
                         </div>
                     </div>

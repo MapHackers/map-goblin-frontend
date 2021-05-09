@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Tabs, Rate, Divider, Comment, Input, Form, Button, List } from 'antd';
 import { InfoCircleOutlined, CommentOutlined, HeartFilled } from '@ant-design/icons'
 import { connect } from 'react-redux'
+import Api from '../../util/Api';
 
 const { TabPane } = Tabs;
 
@@ -36,7 +37,7 @@ const CommentList = ({ comments }) => (
     />
 );
 
-const MarkerDescription = ({ title, description, rating, userName }) => {
+const MarkerDescription = ({ title, description, rating, userName, thumbnail }) => {
 
     const [reviewInput, setreviewInput] = useState("")
     const [value, setValue] = useState(null)
@@ -72,7 +73,7 @@ const MarkerDescription = ({ title, description, rating, userName }) => {
                     <div>
                         <h2> {title} </h2>
                         <Rate disabled allowHalf={true} value={rating} style={{ marginBottom: '25px' }} />
-                        <img src="../../cau.jpg" alt="cau" />
+                        <img style={{width: '400px', marginLeft: '30px'}}src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" />
                         <h3 style={{ marginTop: '25px' }}> {description} </h3>
                     </div>
                 </TabPane>
