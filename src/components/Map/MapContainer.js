@@ -4,68 +4,30 @@ import MapController from './MapController';
 import { Modal, Input, Button, Rate, Upload, Drawer, List } from 'antd';
 import MarkerDescription from './MarkerDescription';
 import { HeartFilled } from '@ant-design/icons'
-import { useDispatch, connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { loadMapData } from '../../_actions/map_action'
+import Api from '../../util/Api';
+import ImgCrop from 'antd-img-crop';
 
 const { kakao } = window;
 
 const { TextArea } = Input;
 
 
-const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSave, mapId, layers }) => {
+const MapContainer = ({ isCreate = false, mapId }) => {
 
     const dispatch = useDispatch()
+
+    const [markers, setmarkers] = useState([])
+
     useEffect(() => {
         dispatch(loadMapData(mapId))
             .then(response => {
-                console.log("Responose", response)
+                console.log("loaded data", response.payload.data)
+                response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
             })
 
     }, [dispatch, mapId])
-
-    // if (layers !== null && layers !== undefined) {
-    //     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", layers.data[0].mapDatas)
-    //     layers[0].mapDatas.map(mapdata => {
-    //         console.log(mapdata.latlng.split(","))
-    //     })
-    // }
-    if (layers.data !== null & layers !== undefined) {
-        console.log("================================")
-        if (layers.data.length > 0) {
-            layers.data[0].mapDatas.map(mapdata => {
-                console.log(mapdata.latlng.split(","))
-            })
-        }
-    }
-    const [loadedMarker, setloadedMarker] = useState()
-
-    const [markers, setmarkers] = useState([
-        {
-            name: '카카오',
-            latlng: new kakao.maps.LatLng(37.504502, 127.053617),
-            description: "카카오 건물 입니다.",
-            rating: 5
-        },
-        {
-            name: '생태연못',
-            latlng: new kakao.maps.LatLng(37.506502, 127.053617),
-            description: "생태 연못 입니다.",
-            rating: 4
-        },
-        {
-            name: '텃밭',
-            latlng: new kakao.maps.LatLng(37.52098071008246, 127.05230727786302),
-            description: "텃밭 입니다.",
-            rating: 3.5
-        },
-        {
-            name: '근린공원',
-            latlng: new kakao.maps.LatLng(37.506502, 127.053617),
-            description: "근린 공원 입니다.",
-            rating: 1
-        }
-    ])
-
 
     const [isMarkerCreatable, setisMarkerCreatable] = useState(false)
 
@@ -89,8 +51,21 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
         setIsDescModalVisible(false);
     };
 
-    const handleDescDelete = () => {
-        markers.splice(clickedMarker[1], 1)
+    const handleDescDelete = async () => {
+        let deleteData = markers.splice(clickedMarker[1], 1)
+        let dataToSubmit = {
+            "mapId": mapId,
+            "layerName": "default1",
+            "geometry": deleteData[0].latlng,
+            "mapDataType": "point"
+        }
+        Api.post('/mapdata/delete', dataToSubmit)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(err => {
+                console.log(err)
+            })
 
         setIsDescModalVisible(false);
     }
@@ -101,20 +76,73 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
         setisCreateModalVisible(true)
     }
 
-    const handleCreateOk = () => {
-        console.log("ok")
-        setmarkers([...markers, {
-            name: createMarkerInfo.title,
-            latlng: createMarkerInfo.latlng,
-            description: createMarkerInfo.description,
-            rating: createMarkerInfo.rating
-        }])
+    const handleCreateOk = async () => {
         setisCreateModalVisible(false)
-        console.log(createMarkerInfo)
+        let dataToSubmit = {
+            "mapId": mapId,
+            "layerName": "default1",
+            "title": createMarkerInfo.title,
+            "description": createMarkerInfo.description,
+            "rating": createMarkerInfo.rating,
+            "geometry": createMarkerInfo.latlng,
+            "thumbnail": null,
+            "mapDataType": "point"
+        }
+
+        const formData = new FormData();
+
+        if (fileList.length > 0) {
+            formData.append('file', fileList[0].originFileObj)
+
+            Api.post('/files', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+                .then(response => {
+                    dataToSubmit.thumbnail = response.data
+                    console.log("data To Submit : ", dataToSubmit)
+                    Api.post('/mapdata', dataToSubmit)
+                        .then(response => {
+                            console.log(response)
+                            setmarkers([...markers, {
+                                name: createMarkerInfo.title,
+                                latlng: createMarkerInfo.latlng,
+                                description: createMarkerInfo.description,
+                                rating: createMarkerInfo.rating,
+                                thumbnail: dataToSubmit.thumbnail
+                            }])
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                    setFileList([])
+                })
+                .catch(err => {
+                    alert(err.response.data.message)
+                })
+        } else{
+            console.log("data To Submit : ", dataToSubmit)
+            Api.post('/mapdata', dataToSubmit)
+                .then(response => {
+                    console.log(response)
+                    setmarkers([...markers, {
+                        name: createMarkerInfo.title,
+                        latlng: createMarkerInfo.latlng,
+                        description: createMarkerInfo.description,
+                        rating: createMarkerInfo.rating,
+                    }])
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+
     }
 
     const handleCreateCancel = () => {
         console.log("cancle")
+        setFileList([])
         setisCreateModalVisible(false)
     }
 
@@ -123,8 +151,9 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
     function onMapClick(e) {
         if (isMarkerCreatable) {
             showCreateModal()
+            console.log(`${e.latLng.La},${e.latLng.Ma}`)
             setcreateMarkerInfo({
-                latlng: e.latLng
+                latlng: `${e.latLng.Ma},${e.latLng.La}`
             })
             toggleMarkerCreatable()
         }
@@ -137,14 +166,6 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
     // 키워드 검색 완료 시 호출되는 콜백함수 입니다
     function placesSearchCB(data, status, pagination) {
         if (status === kakao.maps.services.Status.OK) {
-
-            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-            // LatLngBounds 객체에 좌표를 추가합니다
-            // var bounds = new kakao.maps.LatLngBounds();
-
-            // for (var i = 0; i < data.length; i++) {
-            //     console.log(data[i])
-            // }
             setsearchedPlace(data)
         }
     }
@@ -152,6 +173,8 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
     const [visible, setVisible] = useState(false);
 
     const showDrawer = () => {
+        // console.log(loadedLayer)
+        console.log(markers)
         setVisible(true);
     };
     const onClose = () => {
@@ -170,7 +193,7 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
         console.log(searchedPlace)
     }
 
-    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(37.506502, 127.053617))
+    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(37.504877390232885, 126.9550496072659))
 
     const SearchedList = ({ searchedPlace }) => (
         <List
@@ -210,25 +233,31 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
         />
     );
 
-    const [value, setvalue] = useState()
+    // 파일 업로드
+    const [fileList, setFileList] = useState([])
 
-    const handleRatingChange = (value) => {
-        setvalue(value)
-    }
+    const onChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+
+    };
+
+    const onPreview = async file => {
+        let src = file.url;
+        if (!src) {
+            src = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj);
+                reader.onload = () => resolve(reader.result);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow.document.write(image.outerHTML);
+    };
 
     return (
         <>
-            {isCreate &&
-                <Button
-                    style={{ zIndex: 420, position: 'absolute', top: '10px', left: '100px' }}
-                    onClick={async () => {
-                        await setSaveMarkers(markers)
-                        console.log(markers)
-                    }}
-                >
-                    저장하기
-                </Button>}
-
             <Map
                 style={{ width: '95vw', height: '80vh' }}
                 options={{
@@ -251,21 +280,16 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                     width="400"
                 >
                     <Search placeholder="장소, 주소 검색" size="large" value={searchValue} onChange={(event) => { setsearchValue(event.currentTarget.value) }} onSearch={onSearch} enterButton />
-                    {/* {searchedPlace && searchedPlace.map((place, idx) => (
-                        <>
-                            <h3> {place.place_name} </h3>
-                        </>
-                    ))} */}
                     <SearchedList searchedPlace={searchedPlace} />
                 </Drawer>
                 <MapController MarkerOnClick={toggleMarkerCreatable} isMarkerCreatable={isMarkerCreatable} />
 
-                {markers.map((marker, idx) => (
+                {markers && markers.map((marker, idx) => (
                     <>
-                        <Marker key={idx}
+                        <Marker key={marker.id}
                             options={{
                                 title: marker.name,
-                                position: marker.latlng,
+                                position: new kakao.maps.LatLng(marker.latlng.split(",")[0], marker.latlng.split(",")[1]),
                                 clickable: true,
                                 image: new kakao.maps.MarkerImage(
                                     '../../Logo.png',
@@ -275,12 +299,13 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                             }}
                             onClick={() => {
                                 setclickedMarker([marker, idx])
-                                console.log(marker.name)
+                                console.log(marker.thumbnail)
                                 showDescModal()
                             }}
                         />
                     </>
                 ))}
+
                 <Modal title="마커 정보" visible={isDescModalVisible} onOk={handleDescOk} onCancel={handleDescCancel}
                     footer={[
                         <Button type="primary" onClick={handleDescDelete} style={{ background: 'red', border: 'red' }}>
@@ -291,7 +316,7 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                         </Button>
                     ]}
                 >
-                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].title} description={clickedMarker[0].description} rating={clickedMarker[0].rating} />}
+                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} thumbnail={clickedMarker[0].thumbnail} />}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
@@ -334,18 +359,20 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                                     })
                                 }} />
                             <div style={{ marginLeft: 'auto' }}>
-                                <Upload
-
-                                    name="avatar"
-                                    listType="picture-card"
-                                    className="avatar-uploader"
-                                    showUploadList={false}
-                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                // beforeUpload={beforeUpload}
-                                // onChange={this.handleChange}
-                                >
-                                    upload
-                        </Upload>
+                                <ImgCrop rotate>
+                                    <Upload
+                                        listType="picture-card"
+                                        fileList={fileList}
+                                        onChange={onChange}
+                                        onPreview={onPreview}
+                                        beforeUpload={file => {
+                                            setFileList(fileList.concat(file));
+                                            return false;
+                                        }}
+                                    >
+                                        {fileList.length < 1 && '+ Upload'}
+                                    </Upload>
+                                </ImgCrop>
                             </div>
                         </div>
                     </div>
@@ -358,50 +385,17 @@ const MapContainer = ({ isCreate = false, saveMarkers, setSaveMarkers, handleSav
                             options={{
                                 position: searchdAndClickedPlace.latlng,
                                 clickable: true,
-                                // image: new kakao.maps.MarkerImage(
-                                //     '../../Logo.png',
-                                //     new kakao.maps.Size(44, 44),
-                                //     { offset: new kakao.maps.Point(20, 44) }
-                                // )
+                                image: new kakao.maps.MarkerImage(
+                                    '../../SearchLogo1.png',
+                                    new kakao.maps.Size(44, 44),
+                                    { offset: new kakao.maps.Point(20, 44) }
+                                )
                             }}
                         />
                     </>}
-
-                {/* {searchedPlace.map((marker, idx) => (
-                    <Marker key={idx}
-                        options={{
-                            title: marker.title,
-                            position: marker.latlng,
-                            clickable: true,
-                            image: new kakao.maps.MarkerImage(
-                                'Logo.png',
-                                new kakao.maps.Size(44, 44),
-                                { offset: new kakao.maps.Point(20, 44) }
-                            )
-                        }}
-                    >
-                        <InfoWindow
-                            key={idx}
-                            options={{
-                                content: '<div style="padding:5px;">Hello World!</div>',
-                                position: marker.latlng,
-                                zIndex: 420,
-                                removable: true
-                            }}
-                        >
-                        </InfoWindow>
-                    </Marker>
-
-                ))} */}
-
-
             </Map>
         </>
     )
 }
 
-const mapStateToProps = state => ({
-    layers: state.map.layers
-})
-
-export default connect(mapStateToProps)(MapContainer)
+export default MapContainer

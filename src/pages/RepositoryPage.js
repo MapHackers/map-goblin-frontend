@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 
 import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, ExclamationCircleOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
@@ -9,6 +9,10 @@ import MapContainer from "../components/Map/MapContainer";
 import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider, Result, Button, Spin, Statistic } from 'antd';
 import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import Api from "../util/Api";
+
+import { useDispatch } from 'react-redux'
+import { loadMapData } from '../_actions/map_action'
+
 
 const { TabPane } = Tabs
 
@@ -31,31 +35,31 @@ const columns = [
         dataIndex: 'tags',
         render: tags => (
             <span>
-        {tags.map(tag => {
-            let color;
+                {tags.map(tag => {
+                    let color;
 
-            if (tag === 'question') {
-                color = 'geekblue'
-            }else if (tag === 'issue') {
-                color = 'volcano'
-            }else if (tag === 'ok') {
-                color = 'green'
-            }else if(tag === 'denied'){
-                color = 'red'
-            }else if(tag === 'request'){
-                color = 'processing'
-            }else if(tag === 'merge'){
-                color = 'gold'
-            }else if(tag === 'duplicate'){
-                color = 'default'
-            }
-            return (
-                <Tag color={color} key={tag}>
-                    {tag.toUpperCase()}
-                </Tag>
-            );
-        })}
-      </span>
+                    if (tag === 'question') {
+                        color = 'geekblue'
+                    } else if (tag === 'issue') {
+                        color = 'volcano'
+                    } else if (tag === 'ok') {
+                        color = 'green'
+                    } else if (tag === 'denied') {
+                        color = 'red'
+                    } else if (tag === 'request') {
+                        color = 'processing'
+                    } else if (tag === 'merge') {
+                        color = 'gold'
+                    } else if (tag === 'duplicate') {
+                        color = 'default'
+                    }
+                    return (
+                        <Tag color={color} key={tag}>
+                            {tag.toUpperCase()}
+                        </Tag>
+                    );
+                })}
+            </span>
         ),
     },
     {
@@ -172,20 +176,23 @@ const RepositoryPage = (props) => {
     const [thumbnail, setThumbnail] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
-    const {userId, repositoryName} = props.match.params;
-    const userUrl = '/'+userId;
+    const { userId, repositoryName } = props.match.params;
+    const userUrl = '/' + userId;
 
     const backHome = () => {
         props.history.push('/main')
     }
 
+
+    const dispatch = useDispatch()
+
     useEffect(() => {
 
-        async function getRepositoryInfo(){
-            await Api.get('/'+userId+'/repositories/'+repositoryName).then(response=>{
+        async function getRepositoryInfo() {
+            await Api.get('/' + userId + '/repositories/' + repositoryName).then(response => {
                 setRepositoryInfo(response.data);
 
-                if(response.data.thumbnail !== ""){
+                if (response.data.thumbnail !== "") {
                     setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
                 }
 
@@ -215,7 +222,7 @@ const RepositoryPage = (props) => {
     if(!isLoading){
         return (
             <CommonLayout>
-                <Breadcrumb style={{fontSize:'20px', textAlign:'left', padding:'30px 0px 20px 30px'}}>
+                <Breadcrumb style={{ fontSize: '20px', textAlign: 'left', padding: '30px 0px 20px 30px' }}>
                     <Breadcrumb.Item>
                         <a href={userUrl}>{userId}</a>
                     </Breadcrumb.Item>
@@ -225,13 +232,13 @@ const RepositoryPage = (props) => {
                         {repositoryInfo.source === "CLONE" && <div style={{fontSize:"15px"}}>cloned from <a style={{color:"blue"}} href={'/'+repositoryInfo.hostUserId+'/repositories/'+repositoryInfo.name}>{'/'+repositoryInfo.hostUserId+'/repositories/'+repositoryInfo.name}</a></div>}
                     </Breadcrumb.Item>
                 </Breadcrumb>
-                <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px'}}>
+                <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px' }}>
                     <TabPane tab={<span><FileTextOutlined />Description</span>} key="1">
                         <Description>
                             <Row>
                                 <Col flex="980px">
-                                    <Row style={{alignContent:"center", justifyContent:"center"}}>
-                                        {thumbnail !== "" && <img src={thumbnail} alt="Thumbnail" style={{width:"50%", height:"50%"}}/>}
+                                    <Row style={{ alignContent: "center", justifyContent: "center" }}>
+                                        {thumbnail !== "" && <img src={thumbnail} alt="Thumbnail" style={{ width: "50%", height: "50%" }} />}
                                     </Row>
                                     <Row>
                                         <h1>{repositoryInfo.description}</h1>
@@ -255,15 +262,15 @@ const RepositoryPage = (props) => {
                                         </p>
                                         <Divider>Owner</Divider>
                                         <div>
-                                            <h3 style={{textAlign:"left"}}>
+                                            <h3 style={{ textAlign: "left" }}>
                                                 <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
                                                 &nbsp;ghdtjq2038
                                             </h3>
-                                            <h3 style={{textAlign:"left"}}>
+                                            <h3 style={{ textAlign: "left" }}>
                                                 <Avatar style={{ backgroundColor: 'blue' }} icon={<UserOutlined />} />
                                                 &nbsp;doili0552
                                             </h3>
-                                            <h3 style={{textAlign:"left"}}>
+                                            <h3 style={{ textAlign: "left" }}>
                                                 <Avatar style={{ backgroundColor: 'orange' }} icon={<UserOutlined />} />
                                                 &nbsp;88dydfuf
                                             </h3>
@@ -274,7 +281,7 @@ const RepositoryPage = (props) => {
                         </Description>
                     </TabPane>
                     <TabPane tab={<span><EnvironmentOutlined />Map</span>} key="2">
-                        <MapContainer/>
+                        <MapContainer mapId={repositoryInfo.map_id} />
                     </TabPane>
                     <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : {display:"none"}}><ExclamationCircleOutlined />Issues</span>} key="3">
                         <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
@@ -325,9 +332,9 @@ const RepositoryPage = (props) => {
                 </Tabs>
             </CommonLayout>
         );
-    }else{
+    } else {
         return (
-            <div style={isLoading && notFound ? null : {textAlign:"center", lineHeight:"100vh", height:"100vh"}}>
+            <div style={isLoading && notFound ? null : { textAlign: "center", lineHeight: "100vh", height: "100vh" }}>
                 {isLoading && notFound ? <Result
                     status="404"
                     title="404"
