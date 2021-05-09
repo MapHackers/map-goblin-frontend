@@ -189,15 +189,28 @@ const RepositoryPage = (props) => {
                     setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
                 }
 
+                console.log(response.data)
+
                 setIsLoading(false);
             }).catch(error=>{
-                console.log(error);
                 setNotFound(true);
             })
         }
 
         getRepositoryInfo().then();
-    }, [])
+    }, [props])
+
+    const onClickClone = () => {
+        // eslint-disable-next-line no-restricted-globals
+        if(confirm("지도를 클론하시겠습니까?")){
+            Api.post('/repositories/clone', {"repositoryId":repositoryInfo.id}).then(response => {
+                alert("클론이 완료되었습니다. 클론된 지도로 이동합니다.");
+                props.history.push('/'+props.user.userData.data.userId+'/repositories/'+response.data.name);
+            }).catch(error => {
+                alert(error.response.data.message);
+            })
+        }
+    }
 
     if(!isLoading){
         return (
@@ -209,6 +222,7 @@ const RepositoryPage = (props) => {
                     <Breadcrumb.Item>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a href="">{repositoryName}</a>
+                        {repositoryInfo.source === "CLONE" && <div style={{fontSize:"15px"}}>cloned from <a style={{color:"blue"}} href={'/'+repositoryInfo.hostUserId+'/repositories/'+repositoryInfo.name}>{'/'+repositoryInfo.hostUserId+'/repositories/'+repositoryInfo.name}</a></div>}
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px'}}>
@@ -225,7 +239,7 @@ const RepositoryPage = (props) => {
                                 </Col>
                                 <Col flex="auto">
                                     <Info>
-                                        <Button type="primary" size="large" style={{width:"100%"}}>Clone</Button>
+                                        {repositoryInfo.source === "HOST" && <Button type="primary" size="large" style={{width:"100%"}} onClick={onClickClone}>Clone</Button>}
                                         <Divider/>
                                         <Row gutter={16}>
                                             <Col span={12}>
@@ -262,7 +276,7 @@ const RepositoryPage = (props) => {
                     <TabPane tab={<span><EnvironmentOutlined />Map</span>} key="2">
                         <MapContainer/>
                     </TabPane>
-                    <TabPane tab={<span><ExclamationCircleOutlined />Issues</span>} key="3">
+                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : {display:"none"}}><ExclamationCircleOutlined />Issues</span>} key="3">
                         <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
                             <TabPane tab={<span>3 Waiting</span>} key="1">
                                 <Table
@@ -280,7 +294,7 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span><PullRequestOutlined />Pull requests</span>} key="4">
+                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : {display:"none"}}><PullRequestOutlined />Pull requests</span>} key="4">
                         <Tabs defaultActiveKey="1" size="large" style={{padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px'}}>
                             <TabPane tab={<span>2 Waiting</span>} key="1">
                                 <Table
@@ -305,7 +319,7 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.type === "HOST" ? null : {display:"none"}}><SettingOutlined />Settings</span>} key="5">
+                    <TabPane tab={<span style={repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER" ? null : {display:"none"}}><SettingOutlined />Settings</span>} key="5">
                         Settings
                     </TabPane>
                 </Tabs>
