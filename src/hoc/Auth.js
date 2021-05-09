@@ -22,27 +22,20 @@ function withAuthHoc(SepecificComponent, option) {
                     if (option === null){
                         console.log("anyone can access")
                     }
-                    else if (option === true){
-                        if(response.payload.status !== 200){
+                    else if (option === true) {
+                        if (response.payload.status !== 200) {
                             alert('로그인이 필요합니다!')
                             props.history.push('/login')
                         }
-                        else if (option === true){
-                            if(response.payload.status !== 200){
-                                alert('로그인이 필요합니다!')
-                                props.history.push('/login')
-                            }
-                        }
-                        else if(option === false){
+                    }else if(option === false){
                             if(response.payload.status === 200){
                                 alert('접근 불가능!')
                                 props.history.goBack()
                             }
                         }
                     })
-            }
-            auth_dispatch()
         }, [dispatch, props.history])
+
         let user = useSelector(state => state.user)
 
         return(

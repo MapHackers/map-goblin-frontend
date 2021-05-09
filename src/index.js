@@ -10,7 +10,6 @@ import ReduxThunk from 'redux-thunk'
 import Reducer from './_reducers'
 import { BrowserRouter } from 'react-router-dom';
 import logger from 'redux-logger'
-import * as serviceWorker from './serviceWorker'
 
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk, logger)(createStore)
 

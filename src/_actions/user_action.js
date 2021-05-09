@@ -3,9 +3,7 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     AUTH_USER,
-    LOAD_ALARM
 } from './type.js'
-import Api from "../../util/Api";
 
 export function loginUser(dataToSubmit) {
 
@@ -49,16 +47,4 @@ export function auth(token) {
         payload: request
     }
 
-}
-
-export function loadAlarm(userId){
-
-    const request = Api.get(`/${userId}/alarms`)
-        .then(response => response)
-        .catch(error => error)
-
-    return {
-        type: LOAD_ALARM,
-        payload: request
-    }
 }
