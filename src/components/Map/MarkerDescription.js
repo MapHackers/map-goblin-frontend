@@ -35,7 +35,7 @@ const CommentList = ({ comments }) => (
     />
 );
 
-const MarkerDescription = ({ title, description }) => {
+const MarkerDescription = ({ title, description, rating }) => {
 
     const [reviewInput, setreviewInput] = useState("")
     const [value, setValue] = useState(null)
@@ -70,8 +70,8 @@ const MarkerDescription = ({ title, description }) => {
                 <TabPane tab={<span><InfoCircleOutlined /> Information </span>} key="1">
                     <div>
                         <h2> {title} </h2>
-                        <Rate disabled defaultValue={2} style={{ marginBottom: '25px' }} />
-                        <img src="cau.jpg" alt="cau" />
+                        <Rate disabled allowHalf={true} value={rating} style={{ marginBottom: '25px' }} />
+                        <img src="../../cau.jpg" alt="cau" />
                         <h3 style={{ marginTop: '25px' }}> {description} </h3>
                     </div>
                 </TabPane>

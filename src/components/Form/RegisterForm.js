@@ -7,7 +7,7 @@ import {
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux'
-import { registerUser } from '../../redux/_actions/user_action'
+import { registerUser } from '../../_actions/user_action'
 import { withRouter } from 'react-router-dom';
 
 function RegisterForm(props) {
