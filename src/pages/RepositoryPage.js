@@ -250,7 +250,7 @@ const RepositoryPage = (props) => {
                                 </Col>
                                 <Col flex="auto" style={{ marginLeft: '50px', marginRight: '50px' }}>
                                     <Row style={{ alignContent: "center", justifyContent: "center" }}>
-                                        {thumbnail !== "" && <Image src={thumbnail} alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}
+                                        {thumbnail !== "" && <Image preview={false} src={thumbnail} alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}
                                                                     fallback="/no-image.svg"
                                         />}
                                     </Row>
@@ -300,7 +300,7 @@ const RepositoryPage = (props) => {
                         </Description>
                     </TabPane>
                     <TabPane tab={<span><EnvironmentOutlined />Map</span>} key="2">
-                        <MapContainer mapId={repositoryInfo.map_id} />
+                        <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority}/>
                     </TabPane>
                     <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><ExclamationCircleOutlined />Issues</span>} key="3">
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>

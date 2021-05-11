@@ -70,7 +70,7 @@ const MypageTabContainer = (props) => {
         <div style={{ width: '60vw'}}>
             <Tabs defaultActiveKey="1">
                 <TabPane tab={<span><BookOutlined/>Overview</span>} key="1">
-                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>내가 좋아요한 지도들</div>
+                    <div style={{marginBottom:"20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>내 지도 목록</div>
                     <Space size="large" style={{width: "100%"}}>
                         {repoData.map(card => (
                             <Card title={card.name} hashtags={card.description} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={props.userId}/>
