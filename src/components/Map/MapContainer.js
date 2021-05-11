@@ -23,7 +23,6 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
     useEffect(() => {
         dispatch(loadMapData(mapId))
             .then(response => {
-                console.log("loaded data", response.payload.data)
                 response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
             })
 
@@ -59,7 +58,6 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
             "geometry": deleteData[0].latlng,
             "mapDataType": "point"
         }
-        console.log("delete --------------------------- ", dataToSubmit)
         Api.post('/mapdata/delete', dataToSubmit)
             .then(response => {
                 console.log(response)
@@ -142,7 +140,6 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
     }
 
     const handleCreateCancel = () => {
-        console.log("cancle")
         setFileList([])
         setisCreateModalVisible(false)
     }
