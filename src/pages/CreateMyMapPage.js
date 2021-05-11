@@ -48,7 +48,7 @@ const CreateMyMapPage = (props) => {
 
         if (fileList.length > 0) {
             formData.append('file', fileList[0].originFileObj);
-
+            console.log("======================================",values)
             Api.post('/files', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -56,17 +56,18 @@ const CreateMyMapPage = (props) => {
             }).then(response => {
                 console.log(response);
                 values.thumbnail = response.data;
-
+                console.log("-------------------------------------",values)
                 Api.post('/repositories', values).then(response=>{
                     const userId = props.user.userData.data.userId;
                     const repositoryName = response.data.name;
-
+                    console.log(response)
                     props.history.push('/'+userId+'/repositories/'+repositoryName);
                 }).catch(error=>{
                     alert(error.response.data.message);
                 });
             });
         }else{
+            console.log("======================================",values)
             Api.post('/repositories', values).then(response=>{
                 const userId = props.user.userData.data.userId;
                 const repositoryName = response.data.name;
@@ -97,7 +98,7 @@ const CreateMyMapPage = (props) => {
         imgWindow.document.write(image.outerHTML);
     };
 
-    const options = [{ value: '카테고리1' }, { value: '카테고리2' }, { value: '카테고리3' }, { value: '카테고리4' }];
+    const options = [{ value: '대학교' }, { value: '맛집' }, { value: '정보전달' }, { value: '서울' }];
 
     const tagRender = (props) => {
         const { label, closable, onClose } = props;

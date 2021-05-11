@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Tabs, Rate, Divider, Comment, Input, Form, Button, List } from 'antd';
+import { Tabs, Rate, Divider, Comment, Input, Form, Button, List, Image } from 'antd';
 import { InfoCircleOutlined, CommentOutlined, HeartFilled } from '@ant-design/icons'
 import { connect } from 'react-redux'
 import Api from '../../util/Api';
@@ -73,7 +73,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail }) 
                     <div>
                         <h2> {title} </h2>
                         <Rate disabled allowHalf={true} value={rating} style={{ marginBottom: '25px' }} />
-                        <img style={{width: '400px', marginLeft: '30px'}}src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" />
+                        <Image preview={false} style={{width: '400px', marginLeft: '30px'}}src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" fallback="../../no-image.svg"/>
                         <h3 style={{ marginTop: '25px' }}> {description} </h3>
                     </div>
                 </TabPane>

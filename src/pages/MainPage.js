@@ -30,7 +30,7 @@ function MainPage(props) {
     useEffect(() => {
         Api.get('/repositories')
             .then(response => {
-                console.log("-------------------------------", response.data.data)
+                console.log("----------------------------",response.data.data)
                 response.data.data.length > 0 && setThumbCards(response.data.data)
             })
             .catch(err => {
@@ -46,7 +46,7 @@ function MainPage(props) {
                 <div
                     style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1rem 3rem' }}
                 >
-                    <ExpandingText text="내가 최근 방문한 페이지" />
+                    <ExpandingText text="모든 레포지토리 목록" />
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (

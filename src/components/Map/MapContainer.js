@@ -14,7 +14,7 @@ const { kakao } = window;
 const { TextArea } = Input;
 
 
-const MapContainer = ({ isCreate = false, mapId }) => {
+const MapContainer = ({ isCreate = false, mapId, authority }) => {
 
     const dispatch = useDispatch()
 
@@ -59,6 +59,7 @@ const MapContainer = ({ isCreate = false, mapId }) => {
             "geometry": deleteData[0].latlng,
             "mapDataType": "point"
         }
+        console.log("delete --------------------------- ", dataToSubmit)
         Api.post('/mapdata/delete', dataToSubmit)
             .then(response => {
                 console.log(response)
@@ -262,7 +263,7 @@ const MapContainer = ({ isCreate = false, mapId }) => {
                 style={{ width: '95vw', height: '80vh' }}
                 options={{
                     center: mapCenter,
-                    level: 3
+                    level: 2
                 }}
                 onClick={onMapClick}
             >
@@ -282,7 +283,7 @@ const MapContainer = ({ isCreate = false, mapId }) => {
                     <Search placeholder="장소, 주소 검색" size="large" value={searchValue} onChange={(event) => { setsearchValue(event.currentTarget.value) }} onSearch={onSearch} enterButton />
                     <SearchedList searchedPlace={searchedPlace} />
                 </Drawer>
-                <MapController MarkerOnClick={toggleMarkerCreatable} isMarkerCreatable={isMarkerCreatable} />
+                <MapController MarkerOnClick={toggleMarkerCreatable} isMarkerCreatable={isMarkerCreatable} authority={authority}/>
 
                 {markers && markers.map((marker, idx) => (
                     <>
@@ -309,7 +310,7 @@ const MapContainer = ({ isCreate = false, mapId }) => {
                 <Modal title="마커 정보" visible={isDescModalVisible} onOk={handleDescOk} onCancel={handleDescCancel}
                     footer={[
                         <Button type="primary" onClick={handleDescDelete} style={{ background: 'red', border: 'red' }}>
-                            삭제하기
+                            { authority === "OWNER" && `삭제하기`}
                         </Button>,
                         <Button type="primary" onClick={handleDescOk}>
                             OK
