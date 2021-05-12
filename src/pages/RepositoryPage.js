@@ -7,7 +7,7 @@ import CommonLayout from "../components/Layout/CommonLayout";
 import MapContainer from "../components/Map/MapContainer";
 
 import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider, Result, Button, Spin, Statistic, Image } from 'antd';
-import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant-design/icons';
 import Api from "../util/Api";
 
 import { useDispatch } from 'react-redux'
@@ -176,6 +176,7 @@ const RepositoryPage = (props) => {
     const [thumbnail, setThumbnail] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
+    const [actionType, setActionType] = useState(null);
     const { userId, repositoryName } = props.match.params;
     const userUrl = `/${userId}`;
 
@@ -206,7 +207,7 @@ const RepositoryPage = (props) => {
         }
 
         getRepositoryInfo().then();
-    }, [props])
+    }, [props,actionType])
 
     const onClickClone = () => {
         if(repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER"){
@@ -223,6 +224,19 @@ const RepositoryPage = (props) => {
             }
         }
 
+    }
+
+    const onClickLike = (type) => {
+        Api.post(`/${repositoryInfo.id}/like`, {"type":type}).then(response => {
+            if(actionType === type){
+                setActionType(null);
+            }else{
+                setActionType(type)
+            }
+
+        }).catch(error=>{
+            console.log(error);
+        })
     }
 
     if (!isLoading) {
@@ -261,10 +275,10 @@ const RepositoryPage = (props) => {
                                         <Divider />
                                         <Row gutter={16}>
                                             <Col span={12}>
-                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={<LikeOutlined />} />
+                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={repositoryInfo.likeType == "LIKE" ? <LikeTwoTone onClick={()=>{onClickLike("LIKE")}}></LikeTwoTone> : <LikeOutlined onClick={()=>{onClickLike("LIKE")}}/>} />
                                             </Col>
                                             <Col span={12}>
-                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={<DislikeOutlined />} />
+                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={repositoryInfo.likeType == "DISLIKE" ? <DislikeTwoTone onClick={()=>{onClickLike("DISLIKE")}}></DislikeTwoTone> : <DislikeOutlined onClick={()=>{onClickLike("DISLIKE")}}/>} />
                                             </Col>
                                         </Row>
                                         <Divider>카테고리</Divider>
