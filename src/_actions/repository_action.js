@@ -14,38 +14,26 @@ export const addFile = (file) => {
 }
 
 export const fileUpload = (formData) => {
-    Api.post('/files', formData, {
+    const request = Api.post('/files', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         }})
-        .then(response => {
-            console.log("fileUpload action response***********")
-            console.log(response)
+        .then(response => response)
+        .catch(error => error.response);
 
-            return {
-                type: REPOSITORY_FILE_UPLOAD,
-                payload: response
-            }
-    }).catch(error => {
-        console.log("fileUpload action error***********")
-        console.log(error)
-    })
-
+    return {
+        type: REPOSITORY_FILE_UPLOAD,
+        payload: request
+    }
 }
 
 export const saveRepositoryInfo = (values) => {
-    Api.post('/repositories', values)
-        .then(response=>{
-            console.log("saveRepositoryInfo action response***********")
-            console.log(response)
+    const request = Api.post('/repositories', values)
+        .then(response=>response)
+        .catch(error=>error.response);
 
-            return {
-                type: SAVE_REPOSITORY_INFO,
-                payload: response
-            }
-    }).catch(error=>{
-        console.log("saveRepositoryInfo action error***********")
-        console.log(error)
-        alert(error.response.data.message);
-    });
+    return {
+        type: SAVE_REPOSITORY_INFO,
+        payload: request
+    }
 }

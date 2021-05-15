@@ -5,24 +5,25 @@ import {
 } from '../_actions/type'
 
 const initialState = {
-    fileList: []
+    thumbnail: "",
+    fileList: [],
+    info: {}
 }
 
 const repository = (state = initialState, action) => {
     switch (action.type) {
         case REPOSITORY_FILE_UPLOAD:
             console.log("REPOSITORY_FILE_UPLOAD")
-            console.log(action.payload)
-            return { ...state }
+
+            return { ...state, thumbnail: action.payload.data }
         case ADD_UPLOAD_FILE:
             console.log("ADD_UPLOAD_FILE")
-            console.log(action.payload)
-            state.fileList.concat(action.payload)
-            return { ...state }
+
+            return { ...state, fileList: action.payload }
         case SAVE_REPOSITORY_INFO:
             console.log("SAVE_REPOSITORY_INFO")
-            console.log(action.payload)
-            return { ...state }
+
+            return { ...state, info: action.payload.data }
         default:
             return state;
     }
