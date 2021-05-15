@@ -6,12 +6,29 @@ import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, Exclamation
 import CommonLayout from "../components/Layout/CommonLayout";
 import MapContainer from "../components/Map/MapContainer";
 
-import { Breadcrumb, Tabs, Avatar, Table, Tag, Row, Col, Divider, Result, Button, Spin, Statistic, Image } from 'antd';
+import {
+    Breadcrumb,
+    Tabs,
+    Avatar,
+    Table,
+    Tag,
+    Row,
+    Col,
+    Divider,
+    Result,
+    Button,
+    Spin,
+    Statistic,
+    Image,
+    Form, Upload, Input, Select
+} from 'antd';
 import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant-design/icons';
 import Api from "../util/Api";
 
 import { useDispatch } from 'react-redux'
 import { loadMapData } from '../_actions/map_action'
+import ImgCrop from "antd-img-crop";
+import InfoSetting from "../components/Repository/InfoSetting";
 
 
 const { TabPane } = Tabs
@@ -275,10 +292,10 @@ const RepositoryPage = (props) => {
                                         <Divider />
                                         <Row gutter={16}>
                                             <Col span={12}>
-                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={repositoryInfo.likeType == "LIKE" ? <LikeTwoTone onClick={()=>{onClickLike("LIKE")}}></LikeTwoTone> : <LikeOutlined onClick={()=>{onClickLike("LIKE")}}/>} />
+                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={repositoryInfo.likeType === "LIKE" ? <LikeTwoTone onClick={()=>{onClickLike("LIKE")}}></LikeTwoTone> : <LikeOutlined onClick={()=>{onClickLike("LIKE")}}/>} />
                                             </Col>
                                             <Col span={12}>
-                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={repositoryInfo.likeType == "DISLIKE" ? <DislikeTwoTone onClick={()=>{onClickLike("DISLIKE")}}></DislikeTwoTone> : <DislikeOutlined onClick={()=>{onClickLike("DISLIKE")}}/>} />
+                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={repositoryInfo.likeType === "DISLIKE" ? <DislikeTwoTone onClick={()=>{onClickLike("DISLIKE")}}></DislikeTwoTone> : <DislikeOutlined onClick={()=>{onClickLike("DISLIKE")}}/>} />
                                             </Col>
                                         </Row>
                                         <Divider>카테고리</Divider>
@@ -359,8 +376,8 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER" ? null : { display: "none" }}><SettingOutlined />Settings</span>} key="5">
-                        Settings
+                    <TabPane tab={<span style={repositoryInfo.authority === "OWNER" ? null : { display: "none" }}><SettingOutlined />Settings</span>} key="5">
+                        <InfoSetting repositoryInfo={repositoryInfo} thumbnailUrl={thumbnail}/>
                     </TabPane>
                 </Tabs>
             </CommonLayout>
