@@ -1,0 +1,53 @@
+language: node_js
+node_js:
+  - 'stable'
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - node_modules
+script:
+  - npm test
+  - npm run build
+
+before_deploy:
+  - rm -rf node_modules
+  - zip -r travis .
+  - mkdir -p deploy
+  - mv travis.zip deploy/travis.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: mapgoblin-deploy-bucket
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private
+    local_dir : deploy
+    wait-until-deployed: true
+    on:
+      repo: MapHackers/map-goblin-frontend
+      branch: release/0.1
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: mapgoblin-deploy-bucket # S3 버킷
+    key: travis.zip # 빌드 파일을 압축해서 전달
+    bundle_type: zip
+    application: mapgoblin # 웹 콘솔에서 등록한 CodeDeploy 애플리케이션
+    deployment_group: mapgoblin-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      repo: MapHackers/map-goblin-frontend
+      branch: release/0.1
+
+notifications:
+  email:
+    recipients:
+      - 88dydfuf@naver.com
