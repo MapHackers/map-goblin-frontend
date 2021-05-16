@@ -1,29 +1,34 @@
 import {
     REPOSITORY_FILE_UPLOAD,
     ADD_UPLOAD_FILE,
-    SAVE_REPOSITORY_INFO
+    SAVE_REPOSITORY_INFO,
+    ADD_SELECTED_CATEGORY,
+    MODIFY_REPOSITORY_INFO,
+    MODIFY_FILE
 } from '../_actions/type'
 
 const initialState = {
     thumbnail: "",
     fileList: [],
-    info: {}
+    info: {},
+    selectedCategory: [],
+    isModified: false
 }
 
 const repository = (state = initialState, action) => {
     switch (action.type) {
         case REPOSITORY_FILE_UPLOAD:
-            console.log("REPOSITORY_FILE_UPLOAD")
-
             return { ...state, thumbnail: action.payload.data }
         case ADD_UPLOAD_FILE:
-            console.log("ADD_UPLOAD_FILE")
-
             return { ...state, fileList: action.payload }
+        case MODIFY_FILE:
+            return { ...state, isModified: action.payload }
         case SAVE_REPOSITORY_INFO:
-            console.log("SAVE_REPOSITORY_INFO")
-
             return { ...state, info: action.payload.data }
+        case MODIFY_REPOSITORY_INFO:
+            return { ...state, info: action.payload.data }
+        case ADD_SELECTED_CATEGORY:
+            return {...state, selectedCategory: action.payload}
         default:
             return state;
     }
