@@ -1,5 +1,5 @@
-import React from 'react'
-import { LikeOutlined, DislikeOutlined, DownloadOutlined, FileTextOutlined } from '@ant-design/icons';
+import React, { useState } from 'react'
+import { LikeOutlined, DislikeOutlined, DownloadOutlined, FileTextOutlined, LikeTwoTone, DislikeTwoTone } from '@ant-design/icons';
 import { Card } from 'antd';
 import Api from '../../util/Api'
 import { withRouter } from 'react-router-dom'
@@ -10,16 +10,61 @@ function CardView(props) {
 
     const { Meta } = Card;
 
+    const [like, setlike] = useState(props.like)
+    const [dislike, setdislike] = useState(props.dislike)
+    const [id, setid] = useState(props.id)
+    const [likeType, setlikeType] = useState(props.likeType)
+
+    const handleLike = (id, type) => {
+        Api.post(`/${id}/like`, { type: type })
+            .then(response => {
+                if (likeType === "LIKE") {
+                    setlikeType(null)
+                    setlike(like - 1)
+                }
+                else if (likeType === "DISLIKE"){
+                    setlikeType("LIKE")
+                    setlike(like + 1)
+                    setdislike(dislike - 1)
+                }
+                else {
+                    setlikeType("LIKE")
+                    setlike(like + 1)
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleDislike = (id, type) => {
+        Api.post(`/${id}/like`, { type: type })
+            .then(response => {
+                if (likeType === "DISLIKE") {
+                    setlikeType(null)
+                    setdislike(dislike - 1)
+                }
+                else if (likeType === "LIKE"){
+                    setlikeType("DISLIKE")
+                    setlike(like - 1)
+                    setdislike(dislike + 1)
+                }
+                else {
+                    setlikeType("DISLIKE")
+                    setdislike(dislike + 1)
+                }
+            })
+    }
+
     return (
         <Card
             style={{ width: '15rem', marginLeft: '3rem', marginRight: '3rem', marginBottom: '1rem', boxShadow: '6px 6px 10px 0 rgba(169, 169, 169, 0.4)' }}
             cover={
                 <Image
-                    onClick={() => { console.log(props.ownerId)
+                    onClick={() => {
+                        console.log(props.ownerId)
                         props.history.push(`/${props.ownerId}/repositories/${props.title}`)
                     }}
-                    width= '15rem'
-                    height= '15rem'
+                    width='15rem'
+                    height='15rem'
                     alt="example"
                     src={Api.defaults.baseURL + '/files/' + props.thumbnail}
                     fallback="no-image.svg"
@@ -28,12 +73,12 @@ function CardView(props) {
             }
             actions={[
                 <div>
-                    <LikeOutlined key="like" />
-                    <h3> {props.like} </h3>
+                    {likeType === "LIKE" ? <LikeTwoTone key="like" onClick={() => { handleLike(id, "LIKE") }} /> : <LikeOutlined key="like" onClick={() => { handleLike(id, "LIKE") }} />}
+                    <h3> {like} </h3>
                 </div>,
                 <div>
-                    <DislikeOutlined key="disLike" />
-                    <h3> {props.dislike} </h3>
+                    {likeType === "DISLIKE" ? <DislikeTwoTone key="dislike" onClick={() => { handleDislike(id, "DISKLIKE") }} /> : <DislikeOutlined key="dislike" onClick={() => { handleDislike(id, "DISLIKE") }} />}
+                    <h3> {dislike} </h3>
                 </div>,
                 <div>
                     <DownloadOutlined key="clone" />
