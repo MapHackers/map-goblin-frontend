@@ -3,7 +3,9 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     AUTH_USER,
+    EDIT_USER,
 } from './type.js'
+import Api from "../util/Api";
 
 export function loginUser(dataToSubmit) {
 
@@ -47,4 +49,16 @@ export function auth(token) {
         payload: request
     }
 
+}
+
+export function editUser(dataToSubmit) {
+
+    const request = Api.post("/members/profile", dataToSubmit)
+        .then(response => response)
+        .catch(err => err.response)
+
+    return {
+        type: EDIT_USER,
+        payload: request
+    }
 }
