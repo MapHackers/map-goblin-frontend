@@ -188,7 +188,7 @@ const MypageTabContainer = (props) => {
                     <div className="demo-infinite-container" style={{height: "700px", overflow: "auto"}}>
                         <List
                             itemlayout="horizontal"
-                            size="small"
+                            size="medium"
                             layout="vertical"
                             dataSource={alarms}
                             pagination={{
@@ -198,7 +198,9 @@ const MypageTabContainer = (props) => {
                                 pageSize: 8,
                             }}
                             renderItem={alarm => (
-                                <List.Item>
+                                <List.Item
+                                    actions={[<div key="list-vertical-like-o">1day ago</div>]}
+                                >
                                     <List.Item.Meta
                                         avatar={
                                             <Image
@@ -211,9 +213,13 @@ const MypageTabContainer = (props) => {
                                                 preview={false}
                                             />
                                         }
-                                        title={
+                                        title={alarm.read?
                                             <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
                                                style={{marginLeft:"10px", fontSize:"14px"}}>
+                                                {alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}
+                                            </a>:
+                                            <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
+                                               style={{marginLeft:"10px", fontSize:"14px", color:'#36A2EB'}}>
                                                 {alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}
                                             </a>
                                         }

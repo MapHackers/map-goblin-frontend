@@ -20,7 +20,16 @@ function UserIcon(props) {
 
     const UserMenu = (
         <Menu>
-            <Menu.Item key="0">
+            <Menu.Item key="0" style={{verticalAlign:'center'}}>
+                {
+                    props.profile ?
+                        <Image alt="example"
+                               src={Api.defaults.baseURL + '/files/' + props.profile}
+                               preview={false}
+                               style={{ borderRadius:"5%", width:"4rem", height:"4rem" }}
+                        />
+                        : <UserOutlined style={{ fontSize: '2rem' }} />
+                }
                 <div>
                     User Icon
                 </div>
@@ -42,8 +51,6 @@ function UserIcon(props) {
                                src={Api.defaults.baseURL + '/files/' + props.profile}
                                preview={false}
                                style={{ borderRadius:"1.3rem", width:"2.6rem", height:"2.6rem" }}
-                            //style={{ width: '2vw', height: '2vh', borderRadius: '10%' }}
-                            //fallback="no-image.svg"
                         />
                         : <UserOutlined style={{ fontSize: '2rem' }} />
                 }
