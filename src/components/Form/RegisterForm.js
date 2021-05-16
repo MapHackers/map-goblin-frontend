@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Form,
     Input,
@@ -9,9 +9,39 @@ import * as Yup from 'yup';
 import { useDispatch } from 'react-redux'
 import { registerUser } from '../../_actions/user_action'
 import { withRouter } from 'react-router-dom';
+import axios from 'axios'
 
 function RegisterForm(props) {
     const dispatch = useDispatch()
+    const [submitEmail, setsubmitEmail] = useState(false)
+
+
+    const handleEmailAuth = (email, id) => {
+
+        axios.post(`/api/find`, { email: email, userId: id })
+            .then(response => {
+                alert("해당 이메일로 이미 가입된 아이디가 있습니다.")
+            })
+            .catch(err => {
+                setsubmitEmail(true)
+                alert("가입한 이메일을 확인하여 코드를 입력해 주세요.")
+                axios.post(`/api/email`, {email: email})
+            })
+    }
+
+    const handleCodeAuth = (email, code) => {
+        console.log("email",email,"code",code)
+        axios.post(`/api/checkNumber`, {email: email, code : code})
+        .then(response => {
+            if( response.status === 200){
+                alert("이메일 인증 완료!")
+                setsubmitEmail(false)
+            }
+        })
+        .catch(err => {
+            alert("잘못된 인증번호입니다.")
+        })
+    }
 
     return (
         <div>
@@ -22,6 +52,7 @@ function RegisterForm(props) {
                     confirmPassword: '',
                     name: '',
                     email: '',
+                    code: ''
                 }}
                 validationSchema={Yup.object().shape({
                     id: Yup.string()
@@ -100,7 +131,7 @@ function RegisterForm(props) {
                                     )}
                                 </Form.Item>
 
-                                <Form.Item required label="비밀번호" hasFeedback validateStatus={errors.password && touched.password ? "error" : 'success'}>
+                                <Form.Item required label="비밀번호" validateStatus={errors.password && touched.password ? "error" : 'success'}>
                                     <Input
                                         id="password"
                                         placeholder="비밀번호"
@@ -154,7 +185,7 @@ function RegisterForm(props) {
                                     )}
                                 </Form.Item>
 
-                                <Form.Item required label="이메일" hasFeedback validateStatus={errors.email && touched.email ? "error" : 'success'}>
+                                <Form.Item style={{ display: 'flex' }} required label="이메일" validateStatus={errors.email && touched.email ? "error" : 'success'}>
                                     <Input
                                         id="email"
                                         placeholder="이메일"
@@ -166,11 +197,38 @@ function RegisterForm(props) {
                                             errors.email && touched.email ? 'text-input error' : 'text-input'
                                         }
                                         size="large"
+                                        style={{ width: '76%' }}
                                     />
+
+                                    <Button type="primary" onClick={() => {handleEmailAuth(values.email)}} size="large">
+                                        이메일 인증
+                                    </Button>
+
                                     {errors.email && touched.email && (
                                         <div className="input-feedback">{errors.email}</div>
                                     )}
+
                                 </Form.Item>
+                                {submitEmail ?
+                                    <Form.Item style={{ display: 'flex' }} required label="코드">
+                                        <Input
+                                            id="code"
+                                            placeholder="이메일"
+                                            value={values.code}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            size="large"
+                                            style={{ width: '76%' }}
+                                        />
+
+                                        <Button type="primary" onClick={() => {handleCodeAuth(values.email, values.code)}} size="large">
+                                            코드 확인
+                                        </Button>
+                                    </Form.Item>
+                                    :
+                                    <></>
+                                }
+
                                 <Form.Item >
                                     <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
                                         회원 가입
