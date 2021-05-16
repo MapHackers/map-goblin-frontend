@@ -17,7 +17,7 @@ function ButtonBox(props) {
                     props.history.push(`/new`)
                 }}
             >
-                Create-My-Map
+                내 지도 만들기
         </Button>
         </ButtonContainer>
     )

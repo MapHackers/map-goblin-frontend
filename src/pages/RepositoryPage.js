@@ -264,12 +264,12 @@ const RepositoryPage = (props) => {
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px' }}>
-                    <TabPane tab={<span><FileTextOutlined />Description</span>} key="1">
+                    <TabPane tab={<span><FileTextOutlined />지도 소개</span>} key="1">
                         <Description>
                             <Row>
                                 <Col flex="auto" style={{ width: '200px' }}>
                                     <Row>
-                                        <h1 style={{ marginBottom: '50px', fontSize: '2rem', fontWeight: '2rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}> Information </h1>
+                                        <h1 style={{ marginBottom: '50px', fontSize: '2rem', fontWeight: '2rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}> 상세설명 </h1>
                                         <h2 style={{ fontSize: '1.1rem', lineHeight: '2rem' }}>{repositoryInfo.description}</h2>
                                     </Row>
                                 </Col>
@@ -282,7 +282,7 @@ const RepositoryPage = (props) => {
                                 </Col>
                                 <Col flex="auto">
                                     <Info>
-                                        {repositoryInfo.source === "HOST" && <Button type="primary" size="large" style={{ width: "100%" }} onClick={onClickClone}>Clone</Button>}
+                                        {repositoryInfo.source === "HOST" && <Button type="primary" size="large" style={{ width: "100%" }} onClick={onClickClone}>내 지도로 가져오기</Button>}
                                         <Divider />
                                         <Row gutter={16}>
                                             <Col span={12}>
@@ -322,10 +322,10 @@ const RepositoryPage = (props) => {
                             </Row>
                         </Description>
                     </TabPane>
-                    <TabPane tab={<span><EnvironmentOutlined />Map</span>} key="2">
+                    <TabPane tab={<span><EnvironmentOutlined />지도</span>} key="2">
                         <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority}/>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><ExclamationCircleOutlined />Issues</span>} key="3">
+                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><ExclamationCircleOutlined />지적하기</span>} key="3">
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>3 Waiting</span>} key="1">
                                 <Table
@@ -343,7 +343,7 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><PullRequestOutlined />Pull requests</span>} key="4">
+                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><PullRequestOutlined />변경 요청</span>} key="4">
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>2 Waiting</span>} key="1">
                                 <Table
@@ -368,7 +368,7 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.authority === "OWNER" ? null : { display: "none" }}><SettingOutlined />Settings</span>} key="5">
+                    <TabPane tab={<span style={repositoryInfo.authority === "OWNER" ? null : { display: "none" }}><SettingOutlined />설정</span>} key="5">
                         <InfoSetting repositoryInfo={repositoryInfo} thumbnailUrl={thumbnail}/>
                     </TabPane>
                 </Tabs>

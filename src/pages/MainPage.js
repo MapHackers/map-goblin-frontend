@@ -46,7 +46,7 @@ function MainPage(props) {
                 <div
                     style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1rem 3rem' }}
                 >
-                    <ExpandingText text="모든 레포지토리 목록" />
+                    <ExpandingText text="모든 지도 목록" />
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (

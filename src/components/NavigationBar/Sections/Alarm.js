@@ -15,9 +15,9 @@ function Alarm(props) {
 
     const typemap = {
         'LIKE' : '를 좋아합니다.',
-        'CLONE' : '를 클론하였습니다.',
-        'REQUEST' : '에 요청을 남겼습니다.',
-        'ISSUE' : '에 이슈를 남겼습니다.'
+        'CLONE' : '를 가져갔습니다.',
+        'REQUEST' : '에 변경 요청을 남겼습니다.',
+        'ISSUE' : '를 지적했습니다.'
     }
 
     const onClickAlarm = (values) => {

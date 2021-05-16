@@ -20,7 +20,7 @@ function SearchByRepoName(props) {
 
     return (
         <SearchContainer>
-            <Search placeholder="레포지토리명으로 검색" onSearch={onSearch} size="large" value={searchValue} onChange={onChange} />
+            <Search placeholder="지도명으로 검색" onSearch={onSearch} size="large" value={searchValue} onChange={onChange} />
         </SearchContainer>
     )
 }
