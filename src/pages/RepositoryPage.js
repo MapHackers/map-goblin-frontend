@@ -260,7 +260,7 @@ const RepositoryPage = (props) => {
                     <Breadcrumb.Item>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a href="">{repositoryName}</a>
-                        {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>cloned from <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.name}>{'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.name}</a></div>}
+                        {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>원본 지도 : <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.name}>{'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.name}</a></div>}
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px' }}>
@@ -325,25 +325,27 @@ const RepositoryPage = (props) => {
                     <TabPane tab={<span><EnvironmentOutlined />지도</span>} key="2">
                         <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority}/>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><ExclamationCircleOutlined />지적하기</span>} key="3">
-                        <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
-                            <TabPane tab={<span>3 Waiting</span>} key="1">
-                                <Table
-                                    columns={columns}
-                                    pagination={{ position: ['bottomCenter'] }}
-                                    dataSource={issueWaitingData}
-                                />
-                            </TabPane>
-                            <TabPane tab={<span>2 Checked</span>} key="2">
-                                <Table
-                                    columns={columns}
-                                    pagination={{ position: ['bottomCenter'] }}
-                                    dataSource={issueCheckedData}
-                                />
-                            </TabPane>
-                        </Tabs>
-                    </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.source === "HOST" ? null : { display: "none" }}><PullRequestOutlined />변경 요청</span>} key="4">
+                    {
+                        repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
+                            <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
+                                <TabPane tab={<span>3 Waiting</span>} key="1">
+                                    <Table
+                                        columns={columns}
+                                        pagination={{ position: ['bottomCenter'] }}
+                                        dataSource={issueWaitingData}
+                                    />
+                                </TabPane>
+                                <TabPane tab={<span>2 Checked</span>} key="2">
+                                    <Table
+                                        columns={columns}
+                                        pagination={{ position: ['bottomCenter'] }}
+                                        dataSource={issueCheckedData}
+                                    />
+                                </TabPane>
+                            </Tabs>
+                        </TabPane>
+                    }
+                    { repositoryInfo.source === "HOST" && <TabPane tab={<span><PullRequestOutlined />변경 요청</span>} key="4">
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>2 Waiting</span>} key="1">
                                 <Table
@@ -368,9 +370,12 @@ const RepositoryPage = (props) => {
                             </TabPane>
                         </Tabs>
                     </TabPane>
-                    <TabPane tab={<span style={repositoryInfo.authority === "OWNER" ? null : { display: "none" }}><SettingOutlined />설정</span>} key="5">
+                    }
+                    { repositoryInfo.authority === "OWNER" && <TabPane tab={<span><SettingOutlined />설정</span>} key="5">
                         <InfoSetting repositoryInfo={repositoryInfo} thumbnailUrl={thumbnail}/>
                     </TabPane>
+                    }
+
                 </Tabs>
             </CommonLayout>
         );
