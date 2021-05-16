@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { BellOutlined } from '@ant-design/icons';
 import styled from 'styled-components'
-import { Badge, Menu, Dropdown, Divider } from 'antd'
+import {Badge, Menu, Dropdown, Divider, Image} from 'antd'
 import {connect, useSelector} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import Api from "../../../util/Api";
@@ -38,9 +38,26 @@ function Alarm(props) {
                 alarms.map((alarm, idx) => {
                     if(alarm.read === false){
                         alarmCount += 1;
-                        return (<Menu.Item key={alarm.id} title={alarm.spaceName} onClick={onClickAlarm}>
-                            <a href={`/${props.user.userId}/repositories/${alarm.spaceName}`}>{alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}</a>
-                        </Menu.Item>)
+                        return (
+                            <Menu.Item key={alarm.id}
+                                       icon={
+                                           <Image
+                                               width= '1.5rem'
+                                               height= '1.5rem'
+                                               alt="example"
+                                               src={Api.defaults.baseURL + '/files/' + alarm.thumbnail}
+                                               style={{borderRadius:"10%"}}
+                                               fallback="no-image.svg"
+                                               preview={false}
+                                           />
+                                       }
+                                       title={alarm.spaceName}
+                                       onClick={onClickAlarm}>
+                                <a href={`/${props.user.userId}/repositories/${alarm.spaceName}`} style={{marginLeft:'8px'}}>
+                                    {alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}
+                                </a>
+                            </Menu.Item>
+                        )
                     }
                 })
             }
