@@ -7,6 +7,7 @@ import CreateFormItem from "./CreateFormItem";
 import SelectCategory from "./SelectCategory";
 import {useDispatch, useSelector} from "react-redux";
 import {addFile, modifiedFile} from "../../_actions/repository_action";
+import Api from "../../util/Api";
 
 const { TextArea } = Input;
 
@@ -57,7 +58,17 @@ const InfoSetting = (props) => {
     }, [])
 
     const onClick = () => {
-        console.log("onclick")
+        // eslint-disable-next-line no-restricted-globals
+        if(confirm("정말 삭제하시겠습니까?")){
+            Api.post(`/repositories/${props.repositoryInfo.id}/delete`)
+                .then(response => {
+                    props.history.push('/main');
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+
     }
 
     return (
