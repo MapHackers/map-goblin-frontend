@@ -1,4 +1,7 @@
-import {LOAD_ALARM} from "./type";
+import {
+    LOAD_ALARM,
+    DELETE_ALL_ALARM
+} from "./type";
 import Api from "../util/Api";
 
 export function loadAlarm(userId){
@@ -10,5 +13,11 @@ export function loadAlarm(userId){
     return {
         type: LOAD_ALARM,
         payload: request
+    }
+}
+
+export function deleteAllAlarm(){
+    return{
+        type: DELETE_ALL_ALARM
     }
 }
