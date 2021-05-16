@@ -250,6 +250,9 @@ const RepositoryPage = (props) => {
         })
     }
 
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    console.log(repositoryInfo)
+
     if (!isLoading) {
         return (
             <CommonLayout>
@@ -260,7 +263,7 @@ const RepositoryPage = (props) => {
                     <Breadcrumb.Item>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a href="">{repositoryName}</a>
-                        {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>원본 지도 : <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.name}>{'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.name}</a></div>}
+                        {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>원본 지도 : <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.hostRepoName}>{`/${repositoryInfo.hostUserId}/repositories/${repositoryInfo.hostRepoName}`}</a></div>}
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px' }}>
