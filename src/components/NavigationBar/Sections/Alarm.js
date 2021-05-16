@@ -2,11 +2,14 @@ import React, {useEffect, useState} from 'react'
 import { BellOutlined } from '@ant-design/icons';
 import styled from 'styled-components'
 import {Badge, Menu, Dropdown, Divider, Image} from 'antd'
-import {connect, useSelector} from 'react-redux'
+import {connect, useSelector, useDispatch} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import Api from "../../../util/Api";
+import {deleteAllAlarm} from "../../../_actions/alram_action";
 
 function Alarm(props) {
+
+    const dispatch = useDispatch()
 
     const alarms = useSelector(state => state.alarm.userAlarm.data)
 
@@ -32,10 +35,11 @@ function Alarm(props) {
 
     let alarmCount = 0
 
+
     const AlarmList = (
         <Menu>
             {
-                alarms.map((alarm, idx) => {
+                alarms !== null && alarms.map((alarm, idx) => {
                     if(alarm.read === false){
                         alarmCount += 1;
                         return (
@@ -60,6 +64,20 @@ function Alarm(props) {
                         )
                     }
                 })
+            }
+            {
+                alarmCount !== 0 &&
+                    <Menu.Item style={{color:'#999999'}}
+                               onClick={() => {
+                                   Api.post(`/${props.user.userId}/alarms`)
+                                       .then(response => {
+                                           dispatch(deleteAllAlarm())
+                                       })
+                                       .catch(err => err)
+                               }}
+                        >
+                        알람 모두 읽음으로 표시
+                    </Menu.Item>
             }
         </Menu>
     )
