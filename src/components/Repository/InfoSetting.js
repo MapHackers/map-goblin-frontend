@@ -71,24 +71,32 @@ const InfoSetting = (props) => {
 
     }
 
+    const initialValues = {
+        "name": props.repositoryInfo.name,
+        "description": props.repositoryInfo.description,
+        "categories": props.repositoryInfo.categories,
+        "oneWord": props.repositoryInfo.oneWord,
+        "thumbnail": props.repositoryInfo.thumbnail
+    }
+
     return (
         <Row style={{textAlign:'center'}}>
             <Col span={5}></Col>
             <Col span={14}>
-                <CreateForm formName="modify" repository={repository} user={user} repositoryInfo={props.repositoryInfo}>
+                <CreateForm formName="modify" repository={repository} user={user} repositoryInfo={props.repositoryInfo} initialValues={initialValues}>
                     <Row>
                         <Col span={14}>
                             <CreateFormItem label="지도 이름" name="name" >
-                                <Input defaultValue={props.repositoryInfo.name} value={props.repositoryInfo.name}/>
+                                <Input />
                             </CreateFormItem>
                             <CreateFormItem label="설명" name="description">
-                                <TextArea rows={10} defaultValue={props.repositoryInfo.description} value={props.repositoryInfo.description}/>
+                                <TextArea rows={10} />
                             </CreateFormItem>
                             <CreateFormItem label="카테고리" name="categories">
                                 <SelectCategory categories={props.repositoryInfo.categories}/>
                             </CreateFormItem>
                             <CreateFormItem label="Owner의 한마디" name="oneWord">
-                                <TextArea showCount maxLength={20} defaultValue={props.repositoryInfo.oneWord} value={props.repositoryInfo.oneWord}/>
+                                <TextArea showCount maxLength={20}/>
                             </CreateFormItem>
                             <CreateFormItem wrapperCol={tailFormItemLayout}>
                                 <Button type="primary" htmlType="submit" style={{marginTop:"20px"}}>

@@ -23,11 +23,7 @@ const CreateForm = (props) => {
 
     const onFinish = (values) => {
 
-        if(values.name === undefined) values.name = props.repositoryInfo.name;
-        if(values.description === undefined) values.description = props.repositoryInfo.description;
-        if(values.thumbnail === undefined) values.thumbnail = props.repositoryInfo.thumbnail;
-        if(values.oneWord === undefined) values.oneWord = props.repositoryInfo.oneWord;
-        if(values.categories === undefined) values.categories = selectedCategories;
+        values.categories = selectedCategories;
 
         const formData = new FormData();
 
@@ -43,6 +39,7 @@ const CreateForm = (props) => {
                         dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
                             .then(response => {
                                 props.history.push(`/${props.user.userId}/repositories/${values.name}`);
+                                window.location.reload();
                             })
                     }else{
                         dispatch(saveRepositoryInfo(values))
@@ -59,6 +56,7 @@ const CreateForm = (props) => {
                 dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
                     .then(response => {
                         props.history.push(`/${props.user.userId}/repositories/${values.name}`);
+                        window.location.reload();
                     });
             }else{
                 dispatch(saveRepositoryInfo(values))
@@ -78,7 +76,7 @@ const CreateForm = (props) => {
               name="basic"
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
-              initialValues={{ remember: true }}>
+              initialValues={props.initialValues}>
 
             {props.children}
 
