@@ -20,14 +20,10 @@ import {
     Spin,
     Statistic,
     Image,
-    Form, Upload, Input, Select
 } from 'antd';
 import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant-design/icons';
 import Api from "../util/Api";
 
-import { useDispatch } from 'react-redux'
-import { loadMapData } from '../_actions/map_action'
-import ImgCrop from "antd-img-crop";
 import InfoSetting from "../components/Repository/InfoSetting";
 
 
@@ -209,8 +205,6 @@ const RepositoryPage = (props) => {
             await Api.get(`/${userId}/repositories/${repositoryName}`).then(response => {
                 setRepositoryInfo(response.data);
 
-                console.log(response.data);
-
                 if (response.data.thumbnail !== null) {
                     setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
                 }else{
@@ -292,10 +286,10 @@ const RepositoryPage = (props) => {
                                         <Divider />
                                         <Row gutter={16}>
                                             <Col span={12}>
-                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={repositoryInfo.likeType === "LIKE" ? <LikeTwoTone onClick={()=>{onClickLike("LIKE")}}></LikeTwoTone> : <LikeOutlined onClick={()=>{onClickLike("LIKE")}}/>} />
+                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={repositoryInfo.likeType === "LIKE" ? <LikeTwoTone onClick={()=>{onClickLike("LIKE")}}/> : <LikeOutlined onClick={()=>{onClickLike("LIKE")}}/>} />
                                             </Col>
                                             <Col span={12}>
-                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={repositoryInfo.likeType === "DISLIKE" ? <DislikeTwoTone onClick={()=>{onClickLike("DISLIKE")}}></DislikeTwoTone> : <DislikeOutlined onClick={()=>{onClickLike("DISLIKE")}}/>} />
+                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={repositoryInfo.likeType === "DISLIKE" ? <DislikeTwoTone onClick={()=>{onClickLike("DISLIKE")}}/> : <DislikeOutlined onClick={()=>{onClickLike("DISLIKE")}}/>} />
                                             </Col>
                                         </Row>
                                         <Divider>카테고리</Divider>
@@ -308,22 +302,20 @@ const RepositoryPage = (props) => {
                                         }
                                         <Divider>Owner의 한마디</Divider>
                                         <p>
-                                            우리 함께 중앙대학교 지도를 만들어봐요!
+                                            {repositoryInfo.oneWord}
                                         </p>
                                         <Divider>Owner</Divider>
                                         <div>
-                                            <h3 style={{ textAlign: "left" }}>
-                                                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-                                                &nbsp;ghdtjq2038
-                                            </h3>
-                                            <h3 style={{ textAlign: "left" }}>
-                                                <Avatar style={{ backgroundColor: 'blue' }} icon={<UserOutlined />} />
-                                                &nbsp;doili0552
-                                            </h3>
-                                            <h3 style={{ textAlign: "left" }}>
-                                                <Avatar style={{ backgroundColor: 'orange' }} icon={<UserOutlined />} />
-                                                &nbsp;88dydfuf
-                                            </h3>
+                                            {
+                                                repositoryInfo.owners.map((ownerId, idx)=>{
+                                                    return(
+                                                        <h3 style={{ textAlign: "left" }}>
+                                                            <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                                                            &nbsp;{ownerId}
+                                                        </h3>
+                                                    )
+                                                })
+                                            }
                                         </div>
                                     </Info>
                                 </Col>
