@@ -50,7 +50,7 @@ function MainPage(props) {
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
-                        <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={card.ownerId}/>
+                        <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType}/>
                     ))}
                 </Slider>
             </div>
