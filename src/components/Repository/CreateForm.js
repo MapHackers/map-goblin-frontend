@@ -61,7 +61,8 @@ const CreateForm = (props) => {
             }else{
                 dispatch(saveRepositoryInfo(values))
                     .then(response => {
-                        props.history.push(`/${props.user.userId}/repositories/${response.data.name}`);
+                        const payload = response.payload;
+                        props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
                     });
             }
         }
