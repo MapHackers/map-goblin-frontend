@@ -39,6 +39,8 @@ const MypageTabContainer = (props) => {
 
     const alarms = useSelector(state => state.alarm.userAlarm.data)
 
+    const cloneObj = obj => JSON.parse(JSON.stringify(obj))
+
     let likeChartData = {
         labels : labels,
         datasets : [
@@ -92,8 +94,8 @@ const MypageTabContainer = (props) => {
                 let tmpDislikes = []
 
                 repoDatas = response.data.data
-                repoOrderbyLike = repoDatas
-                console.log("GET REPO//////////////", repoDatas)
+                repoOrderbyLike = cloneObj(repoDatas)
+
                 setRepoData(response.data.data)
 
                 repoOrderbyLike.sort(function(a,b){

@@ -6,14 +6,7 @@ import { Row, Col } from 'antd';
 import {useSelector, connect, useDispatch} from "react-redux";
 import Api from "../util/Api";
 import {loadAlarm} from "../_actions/alram_action";
-//
-// const mapStateToProps = state => ({
-//     userId: state.user.userId,
-//     userName: state.user.userName,
-//     userEmail: state.user.userEmail,
-//     userDescription: state.user.userDescription,
-//     userAlarm: state.user.userAlarm
-// })
+
 
 const MyPage = ({userId, userName, userEmail, userDescription, userAlarm}) => {
 
