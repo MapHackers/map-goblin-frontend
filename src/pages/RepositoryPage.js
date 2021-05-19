@@ -250,9 +250,6 @@ const RepositoryPage = (props) => {
         })
     }
 
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    console.log(repositoryInfo)
-
     if (!isLoading) {
         return (
             <CommonLayout>
