@@ -15,6 +15,17 @@ const { TextArea } = Input;
 
 
 const MapContainer = ({ isCreate = false, mapId, authority }) => {
+//    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
+    const [gpsLat, setgpsLat] = useState(37.504877390232885)
+    const [gpsLng, setgpsLng] = useState(126.9550496072659)
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            console.log("Latitude is :", position.coords.latitude);
+            console.log("Longitude is :", position.coords.longitude);
+            setgpsLat(position.coords.latitude)
+            setgpsLng(position.coords.longitude)
+        })
+    }, [])
 
     const dispatch = useDispatch()
 
@@ -32,6 +43,19 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
 
     const toggleMarkerCreatable = () => {
         setisMarkerCreatable(!isMarkerCreatable)
+    }
+
+    const GpsOnClick = () => {
+        console.log("GPS ONCLICK")
+        if (navigator.geolocation) {
+            console.log("in IF")
+            navigator.geolocation.getCurrentPosition(function (position) {
+                setmapCenter(new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude))
+                console.log(mapCenter)
+            })
+        }else{
+            alert("GPS 지원하지 않습니다.")
+        }
     }
 
     const [isDescModalVisible, setIsDescModalVisible] = useState(false);
@@ -120,7 +144,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                 .catch(err => {
                     alert(err.response.data.message)
                 })
-        } else{
+        } else {
             console.log("data To Submit : ", dataToSubmit)
             Api.post('/mapdata', dataToSubmit)
                 .then(response => {
@@ -190,8 +214,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
         ps.keywordSearch(searchValue, placesSearchCB);
         console.log(searchedPlace)
     }
-
-    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(37.504877390232885, 126.9550496072659))
+ const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
 
     const SearchedList = ({ searchedPlace }) => (
         <List
@@ -280,7 +303,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                     <Search placeholder="장소, 주소 검색" size="large" value={searchValue} onChange={(event) => { setsearchValue(event.currentTarget.value) }} onSearch={onSearch} enterButton />
                     <SearchedList searchedPlace={searchedPlace} />
                 </Drawer>
-                <MapController MarkerOnClick={toggleMarkerCreatable} isMarkerCreatable={isMarkerCreatable} authority={authority}/>
+                <MapController MarkerOnClick={toggleMarkerCreatable} GpsOnClick={GpsOnClick} isMarkerCreatable={isMarkerCreatable} authority={authority} />
 
                 {markers && markers.map((marker, idx) => (
                     <>
@@ -307,14 +330,14 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                 <Modal title="마커 정보" visible={isDescModalVisible} onOk={handleDescOk} onCancel={handleDescCancel}
                     footer={[
                         <Button type="primary" onClick={handleDescDelete} style={{ background: 'red', border: 'red' }}>
-                            { authority === "OWNER" && `삭제하기`}
+                            {authority === "OWNER" && `삭제하기`}
                         </Button>,
                         <Button type="primary" onClick={handleDescOk}>
                             OK
                         </Button>
                     ]}
                 >
-                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} thumbnail={clickedMarker[0].thumbnail} />}
+                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} thumbnail={clickedMarker[0].thumbnail} latlng={clickedMarker[0].latlng}/>}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
