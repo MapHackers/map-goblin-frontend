@@ -19,9 +19,6 @@ const MyPage = ({userId, userName, userEmail, userDescription, userAlarm}) => {
     useEffect(() => {
         dispatch(loadAlarm(user.userId))
             .then(response => {
-                console.log("myresponse/////////////////////////")
-                console.log(response)
-
                 setIsLoading(false);
             })
     }, [])

@@ -66,8 +66,7 @@ function CardView(props) {
                     width='15rem'
                     height='15rem'
                     alt="example"
-                    src={Api.defaults.baseURL + '/files/' + props.thumbnail}
-                    fallback="no-image.svg"
+                    src={props.thumbnail ? Api.defaults.baseURL + '/files/' + props.thumbnail : "no-image.svg"}
                     preview={false}
                 />
             }

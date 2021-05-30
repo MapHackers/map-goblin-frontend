@@ -18,9 +18,6 @@ function NavigationBar(props) {
     useEffect(() => {
         dispatch(loadAlarm(user.userId))
             .then(response => {
-                console.log("response/////////////////////////")
-                console.log(response)
-
                 setIsLoading(false);
             })
     }, [])
