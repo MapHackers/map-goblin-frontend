@@ -11,12 +11,13 @@ export default function (state = {
         case LOAD_ALARM:
             return {
                 ...state,
-                userAlarm: action.payload.data
+                userAlarm: action.payload.data,
+                navAlarm: action.payload.data
             }
         case DELETE_ALL_ALARM:
             return{
                 ...state,
-                userAlarm: {data: []}
+                navAlarm: {data: []}
             }
         default:
             return state;

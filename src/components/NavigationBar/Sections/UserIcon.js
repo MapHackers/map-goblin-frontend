@@ -23,16 +23,13 @@ function UserIcon(props) {
             <Menu.Item key="0" style={{verticalAlign:'center'}}>
                 {
                     props.profile ?
-                        <Image alt="example"
+                        <Image alt="user icon"
                                src={Api.defaults.baseURL + '/files/' + props.profile}
                                preview={false}
-                               style={{ borderRadius:"5%", width:"4rem", height:"4rem" }}
+                               style={{ borderRadius:"5%", width:"5rem", height:"5rem" }}
                         />
                         : <UserOutlined style={{ fontSize: '2rem' }} />
                 }
-                <div>
-                    User Icon
-                </div>
             </Menu.Item>
             <Menu.Divider />
             <Menu.Item key="1" onClick={onClickMyPageHandler}>
@@ -47,7 +44,7 @@ function UserIcon(props) {
             <UserIconContainer>
                 {
                     props.profile ?
-                        <Image alt="example"
+                        <Image alt="user icon"
                                src={Api.defaults.baseURL + '/files/' + props.profile}
                                preview={false}
                                style={{ borderRadius:"1.3rem", width:"2.6rem", height:"2.6rem" }}

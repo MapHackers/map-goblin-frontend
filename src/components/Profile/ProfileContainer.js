@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Card, Image, Upload, Input, Button, Avatar} from 'antd';
 import { EditOutlined, UserOutlined } from '@ant-design/icons';
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { editUser } from "../../_actions/user_action";
 import styled from "styled-components";
 import ImgCrop from 'antd-img-crop';
 import Api from "../../util/Api";
+import {addFile, modifiedFile} from "../../_actions/repository_action";
+import ImgUpload from "../Repository/ImgUpload";
 
 const { Meta } = Card;
 
@@ -29,42 +31,62 @@ const ProfileContainer = (props) => {
     const dispatch = useDispatch()
     const onClick = () => setShowResults(!editData)
 
-    const [fileList, setFileList] = useState([]);
+    //const [fileList, setFileList] = useState([]);
 
-    const onChange = ({ fileList: newFileList }) => {
-        setFileList(newFileList);
+    const fileList = useSelector(state => state.repository.fileList)
 
-        return false;
-    };
+
+    // const onChange = ({ fileList: newFileList }) => {
+    //     // console.log("before SET", fileList)
+    //     // setFileList(newFileList);
+    //     // console.log("after SET", fileList)
+    //     // return false;
+    //     dispatch(addFile(newFileList));
+    //     dispatch(modifiedFile(true));
+    // };
 
     const onClickEdit = () => {
-        //// 유저 상태 변환 시켜주기...
-
         const formData = new FormData
+        console.log("FILELIST", fileList)
         if (fileList.length > 0) {
-            formData.append('file', fileList[0].originFileObj);
-
-            Api.post('/files', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
-            }).then(response => {
-                console.log("profile:",response)
-                setProfile(response.data)
-                console.log("Edit Clicked", userName, userDescription)
+            if (fileList[0].originFileObj){
+                formData.append('file', fileList[0].originFileObj);
+                Api.post('/files', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                }).then(response => {
+                    console.log("profile:",response)
+                    setProfile(response.data)
+                    console.log("Edit Clicked", userName, userDescription)
+                    console.log("FILELIST 1", fileList)
+                    let dataToSubmit = {
+                        userId: props.user.userId,
+                        userName: userName,
+                        description: userDescription,
+                        profile: response.data
+                    }
+                    dispatch(editUser(dataToSubmit))
+                        .then(response => console.log("Edit:",response))
+                        .catch(error => error)
+                })
+            }
+            else{
                 let dataToSubmit = {
                     userId: props.user.userId,
                     userName: userName,
                     description: userDescription,
-                    profile: response.data
+                    profile: null
                 }
                 dispatch(editUser(dataToSubmit))
-                    .then(response => console.log("Edit:",response))
+                    .then(response => console.log("FILELIST 2",fileList))
                     .catch(error => error)
-            })
+            }
+
         }else{
-            setProfile(null)
-            console.log("Edit Clicked", userName, userDescription)
+            // setProfile(null)
+            console.log("No FileList", userName, userDescription)
+            console.log("FILELIST 3", fileList)
             let dataToSubmit = {
                 userId: props.user.userId,
                 userName: userName,
@@ -82,10 +104,21 @@ const ProfileContainer = (props) => {
         setUserName(props.user.userName)
         setUserDescription(props.user.description)
         setProfile(props.user.profile)
+        //props.user.profile && setFileList(fileList.concat(props.user.profile))
+
+            let newFileList = [{
+                uid: '-1',
+                name: 'image.png',
+                status: 'done',
+                url: props.user.profile,
+            }];
+
+            dispatch(addFile(newFileList));
+
+            dispatch(modifiedFile(false));
+
         }
     , [])
-
-
 
     return (
         <Card
@@ -93,19 +126,21 @@ const ProfileContainer = (props) => {
             cover={
                 editData ?
                     <span id="create-map-upload" style={{marginLeft: '25px', marginTop: '25px', width:"100%"}}>
-                        <ImgCrop rotate>
-                            <Upload
-                                listType="picture-card"
-                                fileList={fileList}
-                                onChange={onChange}
-                                beforeUpload={file => {
-                                    setFileList(fileList.concat(file));
-                                    return false;
-                                }}
-                            >
-                                {fileList.length < 1 && '+ Upload'}
-                            </Upload>
-                        </ImgCrop>
+                        <ImgUpload />
+                        {/*<ImgCrop rotate>*/}
+                        {/*    <Upload*/}
+                        {/*        listType="picture-card"*/}
+                        {/*        fileList={fileList}*/}
+                        {/*        onChange={onChange}*/}
+                        {/*        beforeUpload={() => {return false}}*/}
+                        {/*        // beforeUpload={file => {*/}
+                        {/*        //     setFileList(fileList.concat(file));*/}
+                        {/*        //     return false;*/}
+                        {/*        // }}*/}
+                        {/*    >*/}
+                        {/*        {fileList.length < 1 && '+ Upload'}*/}
+                        {/*    </Upload>*/}
+                        {/*</ImgCrop>*/}
                     </span> :
 
                     <div>

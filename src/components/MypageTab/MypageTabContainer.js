@@ -29,6 +29,27 @@ const IconText = ({ icon, text }) => (
 );
 
 
+
+function alarmCalculate(date) {
+    const cur_date = new Date();
+    const time_val =  cur_date.getTime() - Date.parse(date)
+    const min = 60000
+    const hour = 3600000
+    const day = 86400000
+    const week = day * 7
+    const month = day * 30
+    const year = day * 365
+
+    if (time_val < min) return '방금 전'
+    else if (time_val < hour) return Math.round(time_val / min) + '분 전'
+    else if (time_val < day) return Math.round(time_val / hour) + '시간 전'
+    else if (time_val < week) return Math.round(time_val / day) + '일 전'
+    else if (time_val < month) return Math.round(time_val / week) + '주 전'
+    else if (time_val < year) return Math.round(time_val / month) + '개월 전'
+    else return Math.round(time_val / year) + '년 전'
+}
+
+
 const MypageTabContainer = (props) => {
     let repoDatas = []
     //const [alarmData, setAlarmData] = useState()
@@ -166,9 +187,8 @@ const MypageTabContainer = (props) => {
                                                 width= '2rem'
                                                 height= '2rem'
                                                 alt="example"
-                                                src={Api.defaults.baseURL + '/files/' + item.thumbnail}
+                                                src={item.thumbnail ? Api.defaults.baseURL + '/files/' + item.thumbnail : "no-image.svg"}
                                                 style={{borderRadius:"10%"}}
-                                                fallback="no-image.svg"
                                                 preview={false}
                                             />
                                         }
@@ -201,7 +221,7 @@ const MypageTabContainer = (props) => {
                             }}
                             renderItem={alarm => (
                                 <List.Item
-                                    actions={[<div key="list-vertical-like-o">1day ago</div>]}
+                                    actions={[<div key="list-vertical-like-o">{alarmCalculate(alarm.date)}</div>]}
                                 >
                                     <List.Item.Meta
                                         avatar={
@@ -218,11 +238,13 @@ const MypageTabContainer = (props) => {
                                         title={alarm.read?
                                             <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
                                                style={{marginLeft:"10px", fontSize:"14px"}}>
-                                                {alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}
+                                                <text style={{fontWeight:"bold"}}>{alarm.srcMemberName}</text>
+                                                님이 회원님의 지도{typemap[alarm.alarmType]}
                                             </a>:
                                             <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
                                                style={{marginLeft:"10px", fontSize:"14px", color:'#36A2EB'}}>
-                                                {alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}
+                                                <text style={{fontWeight:"bold"}}>{alarm.srcMemberName}</text>
+                                                님이 회원님의 지도{typemap[alarm.alarmType]}
                                             </a>
                                         }
                                     />

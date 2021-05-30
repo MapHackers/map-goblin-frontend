@@ -11,7 +11,7 @@ function Alarm(props) {
 
     const dispatch = useDispatch()
 
-    const alarms = useSelector(state => state.alarm.userAlarm.data)
+    const alarms = useSelector(state => state.alarm.navAlarm.data)
 
     const typemap = {
         'LIKE' : '를 좋아합니다.',
@@ -35,7 +35,6 @@ function Alarm(props) {
 
     let alarmCount = 0
 
-
     const AlarmList = (
         <Menu>
             {
@@ -49,16 +48,16 @@ function Alarm(props) {
                                                width= '1.5rem'
                                                height= '1.5rem'
                                                alt="example"
-                                               src={Api.defaults.baseURL + '/files/' + alarm.thumbnail}
+                                               src={alarm.thumbnail !== null ? Api.defaults.baseURL + '/files/' + alarm.thumbnail : "no-image.svg"}
                                                style={{borderRadius:"10%"}}
-                                               fallback="no-image.svg"
                                                preview={false}
                                            />
                                        }
                                        title={alarm.spaceName}
                                        onClick={onClickAlarm}>
                                 <a href={`/${props.user.userId}/repositories/${alarm.spaceName}`} style={{marginLeft:'8px'}}>
-                                    {alarm.srcMemberName}님이 회원님의 지도{typemap[alarm.alarmType]}
+                                    <text style={{fontWeight:"bold"}}>{alarm.srcMemberName}</text>
+                                    님이 회원님의 지도{typemap[alarm.alarmType]}
                                 </a>
                             </Menu.Item>
                         )
@@ -81,7 +80,6 @@ function Alarm(props) {
             }
         </Menu>
     )
-
 
     return (
 
