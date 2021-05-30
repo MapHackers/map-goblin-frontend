@@ -15,7 +15,7 @@ const { TextArea } = Input;
 
 
 const MapContainer = ({ isCreate = false, mapId, authority }) => {
-//    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
+    //    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
     const [gpsLat, setgpsLat] = useState(37.504877390232885)
     const [gpsLng, setgpsLng] = useState(126.9550496072659)
     useEffect(() => {
@@ -53,7 +53,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                 setmapCenter(new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude))
                 console.log(mapCenter)
             })
-        }else{
+        } else {
             alert("GPS 지원하지 않습니다.")
         }
     }
@@ -125,6 +125,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                 .then(response => {
                     dataToSubmit.thumbnail = response.data
                     console.log("data To Submit : ", dataToSubmit)
+
                     Api.post('/mapdata', dataToSubmit)
                         .then(response => {
                             console.log(response)
@@ -146,15 +147,32 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                 })
         } else {
             console.log("data To Submit : ", dataToSubmit)
+            console.log("Clicked marker info", createMarkerInfo)
+            console.log("LatLng", createMarkerInfo.latlng.split(",")[0], createMarkerInfo.latlng.split(",")[1])
+            var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
+                staticMapOption = {
+                    center: new kakao.maps.LatLng(createMarkerInfo.latlng.split(",")[0], createMarkerInfo.latlng.split(",")[1]), // 이미지 지도의 중심좌표
+                    level: 1 // 이미지 지도의 확대 레벨
+                };
+
+            // 이미지 지도를 표시할 div와 옵션으로 이미지 지도를 생성합니다
+            var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+            console.log("staticmap", staticMap)
+            let src = staticMap?.a.innerHTML.replaceAll('&amp;', '&').match(/src=[\"']?([^>\"']+)[\"'\?[^>]*/gm)[0].replaceAll("src", "").replaceAll("\"", "").slice(1).replace("IW=0", "IW=400").replace("IH=0", "IH=400")
+            dataToSubmit.thumbnail = src
+
+            console.log(dataToSubmit)
             Api.post('/mapdata', dataToSubmit)
                 .then(response => {
-                    console.log(response)
+                    console.log("response : ",response)
                     setmarkers([...markers, {
                         name: createMarkerInfo.title,
                         latlng: createMarkerInfo.latlng,
                         description: createMarkerInfo.description,
                         rating: createMarkerInfo.rating,
+                        thumbnail: dataToSubmit.thumbnail
                     }])
+                    console.log("markers : ",markers)
                 })
                 .catch(error => {
                     console.log(error)
@@ -214,7 +232,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
         ps.keywordSearch(searchValue, placesSearchCB);
         console.log(searchedPlace)
     }
- const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
+    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
 
     const SearchedList = ({ searchedPlace }) => (
         <List
@@ -279,6 +297,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
 
     return (
         <>
+            <div id="staticMap" style={{ width: '400px', height: '400px', display: 'none' }}></div>
             <Map
                 style={{ width: '95vw', height: '80vh' }}
                 options={{
@@ -320,7 +339,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                             }}
                             onClick={() => {
                                 setclickedMarker([marker, idx])
-                                console.log(marker.thumbnail)
+                                console.log("----------------------------------",marker.thumbnail)
                                 showDescModal()
                             }}
                         />
@@ -337,7 +356,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                         </Button>
                     ]}
                 >
-                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} thumbnail={clickedMarker[0].thumbnail} latlng={clickedMarker[0].latlng}/>}
+                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} thumbnail={clickedMarker[0].thumbnail} latlng={clickedMarker[0].latlng} />}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>

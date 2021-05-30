@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Tabs, Rate, Divider, Comment, Input, Form, Button, List, Image } from 'antd';
 import { InfoCircleOutlined, CommentOutlined, HeartFilled } from '@ant-design/icons'
 import { connect } from 'react-redux'
@@ -7,8 +7,6 @@ import Api from '../../util/Api';
 const { TabPane } = Tabs;
 
 const { TextArea } = Input;
-
-const { kakao } = window;
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <>
@@ -65,21 +63,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, la
     const handleRatingChange = async (value) => {
         setValue(value)
     }
-    const file = Api.defaults.baseURL + '/files/' + thumbnail
-    console.log("API FILE", Api.defaults.baseURL + '/files/' + thumbnail)
 
-    useEffect(() => {
-        var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
-            staticMapOption = {
-                center: new kakao.maps.LatLng(latlng.split(",")[0], latlng.split(",")[1]), // 이미지 지도의 중심좌표
-                level: 1 // 이미지 지도의 확대 레벨
-            };
-
-        // 이미지 지도를 표시할 div와 옵션으로 이미지 지도를 생성합니다
-        var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-    }, [])
-
-    console.log("latlng : ",latlng.split(",")[0])
     return (
         <div style={{ padding: '0', marginTop: '-25px' }}>
             <Tabs defaultActiveKey="1"
@@ -88,8 +72,8 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, la
                     <div>
                         <h2> {title} </h2>
                         <Rate disabled allowHalf={true} value={rating} style={{ marginBottom: '25px' }} />
-                        {file === "http://localhost:8080/api/files/null" ?
-                            <div style={{ width: '400px', height: '400px', marginLeft: '30px' }} id="staticMap" />
+                        {thumbnail.substr(0,4) === "http" ?
+                            <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={thumbnail} alt="staticImage"/>
                             :
                             <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" fallback="../../no-image.svg" />
                         }
