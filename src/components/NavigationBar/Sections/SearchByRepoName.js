@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import { Input } from 'antd'
 import {withRouter} from 'react-router-dom';
 import styled from 'styled-components'
+import {useDispatch} from "react-redux";
+import {searchRepository, searchUser} from "../../../_actions/search_action";
 
 const { Search } = Input;
 
@@ -9,12 +11,19 @@ function SearchByRepoName(props) {
 
     const [searchValue, setsearchValue] = useState('')
 
+    const dispatch = useDispatch()
+
     const onChange = (event) => {
         setsearchValue(event.currentTarget.value)
     }
 
     const onSearch = (value, e) => {
         props.history.push(`/search?q=${value}`)
+
+        dispatch(searchUser(searchValue))
+            .then(response => console.log("FIND USER",response))
+        dispatch(searchRepository(searchValue))
+            .then(response => console.log("FIND SEARCH",response))
     }
 
 
