@@ -14,7 +14,7 @@ const { kakao } = window;
 const { TextArea } = Input;
 
 
-const MapContainer = ({ isCreate = false, mapId, authority }) => {
+const MapContainer = ({mapId, authority }) => {
     //    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
     const [gpsLat, setgpsLat] = useState(37.504877390232885)
     const [gpsLng, setgpsLng] = useState(126.9550496072659)
@@ -34,6 +34,7 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
     useEffect(() => {
         dispatch(loadMapData(mapId))
             .then(response => {
+                console.log("response",response)
                 response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
             })
 
@@ -70,10 +71,9 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
     };
 
     const handleDescCancel = () => {
-
         setIsDescModalVisible(false);
     };
-
+    
     const handleDescDelete = async () => {
         let deleteData = markers.splice(clickedMarker[1], 1)
         let dataToSubmit = {
@@ -356,7 +356,9 @@ const MapContainer = ({ isCreate = false, mapId, authority }) => {
                         </Button>
                     ]}
                 >
-                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }} title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} thumbnail={clickedMarker[0].thumbnail} latlng={clickedMarker[0].latlng} />}
+                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }}
+                    title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} 
+                    thumbnail={clickedMarker[0].thumbnail} mapId={mapId} latLng={clickedMarker[0].latlng}/>}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>

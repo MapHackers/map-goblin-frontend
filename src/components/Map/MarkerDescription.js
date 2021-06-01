@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Tabs, Rate, Divider, Comment, Input, Form, Button, List, Image } from 'antd';
 import { InfoCircleOutlined, CommentOutlined, HeartFilled } from '@ant-design/icons'
 import { connect } from 'react-redux'
@@ -36,17 +36,63 @@ const CommentList = ({ comments }) => (
     />
 );
 
-const MarkerDescription = ({ title, description, rating, userName, thumbnail, latlng }) => {
+const MarkerDescription = ({ title, description, rating, userName, thumbnail, mapId, latLng }) => {
 
     const [reviewInput, setreviewInput] = useState("")
     const [value, setValue] = useState(null)
     const [reviewList, setreviewList] = useState([])
     const [submitting, setsubmitting] = useState(false)
 
-    const handleReviewSubmit = () => {
+    useEffect(() => {
+        console.log("reviewList : ", reviewList)
+        let dataToSubmit = {
+            "mapId": mapId,
+            "layerName": "default1",
+            "geometry": latLng
+        }
+        console.log("dataToSubmit", dataToSubmit)
+        Api.post(`/review/mapData`, dataToSubmit)
+            .then(response => {
+                console.log("review : ", response)
+                let temp = []
+                console.log(response?.data.data)
+                response?.data.data.reverse().map((review, idx) => (
+                    temp.push(
+                        {
+                            author: <span style={{ display: 'flex' }}><p>{review.author}</p> <Rate style={{ marginLeft: '16px', fontSize: '14px' }} disabled allowHalf value={review.rating} /></span>,
+                            content: <p>{review.content}</p>
+                        }
+                    )
+                ))
+                setreviewList(temp)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }, [latLng])
+
+    const handleReviewSubmit = async () => {
         if (!reviewInput) {
             return
         }
+
+        let dataToSubmit = {
+            "mapId": mapId,
+            "layerName": "default1",
+            "geometry": latLng,
+            "author": userName,
+            "content": reviewInput,
+            "rating": value
+        }
+        console.log("dataToSubmit", dataToSubmit)
+        await Api.post(`/review`, dataToSubmit)
+            .then(response => {
+                console.log("review : ", response)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+
         setsubmitting(true)
         setTimeout(() => {
             setsubmitting(false)
@@ -72,8 +118,8 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, la
                     <div>
                         <h2> {title} </h2>
                         <Rate disabled allowHalf={true} value={rating} style={{ marginBottom: '25px' }} />
-                        {thumbnail.substr(0,4) === "http" ?
-                            <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={thumbnail} alt="staticImage"/>
+                        {thumbnail.substr(0, 4) === "http" ?
+                            <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={thumbnail} alt="staticImage" />
                             :
                             <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" fallback="../../no-image.svg" />
                         }

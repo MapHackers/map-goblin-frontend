@@ -11,12 +11,12 @@ export default function(state = {
         case SEARCH_REPOSITORY:
             return {
                 ...state,
-                searchRepo: action.payload.data.data
+                searchRepo: action.payload?.data.data
             }
         case SEARCH_USER:
             return {
                 ...state,
-                searchUser: action.payload.data.data
+                searchUser: action.payload?.data.data
             }
         default:
             return state
