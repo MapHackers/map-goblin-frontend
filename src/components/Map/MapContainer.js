@@ -14,7 +14,7 @@ const { kakao } = window;
 const { TextArea } = Input;
 
 
-const MapContainer = ({mapId, authority }) => {
+const MapContainer = ({ mapId, authority }) => {
     //    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
     const [gpsLat, setgpsLat] = useState(37.504877390232885)
     const [gpsLng, setgpsLng] = useState(126.9550496072659)
@@ -34,7 +34,7 @@ const MapContainer = ({mapId, authority }) => {
     useEffect(() => {
         dispatch(loadMapData(mapId))
             .then(response => {
-                console.log("response",response)
+                console.log("response", response)
                 response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
             })
 
@@ -73,7 +73,7 @@ const MapContainer = ({mapId, authority }) => {
     const handleDescCancel = () => {
         setIsDescModalVisible(false);
     };
-    
+
     const handleDescDelete = async () => {
         let deleteData = markers.splice(clickedMarker[1], 1)
         let dataToSubmit = {
@@ -158,13 +158,13 @@ const MapContainer = ({mapId, authority }) => {
             // 이미지 지도를 표시할 div와 옵션으로 이미지 지도를 생성합니다
             var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
             console.log("staticmap", staticMap)
-            let src = staticMap?.a.innerHTML.replaceAll('&amp;', '&').match(/src=[\"']?([^>\"']+)[\"'\?[^>]*/gm)[0].replaceAll("src", "").replaceAll("\"", "").slice(1).replace("IW=0", "IW=400").replace("IH=0", "IH=400")
+            let src = staticMap?.a.innerHTML.replaceAll('&amp;', '&').match(/src=["']?([^>"']+)["'?[^>]*/gm)[0].replaceAll("src", "").replaceAll("\"", "").slice(1).replace("IW=0", "IW=400").replace("IH=0", "IH=400")
             dataToSubmit.thumbnail = src
 
             console.log(dataToSubmit)
             Api.post('/mapdata', dataToSubmit)
                 .then(response => {
-                    console.log("response : ",response)
+                    console.log("response : ", response)
                     setmarkers([...markers, {
                         name: createMarkerInfo.title,
                         latlng: createMarkerInfo.latlng,
@@ -172,7 +172,7 @@ const MapContainer = ({mapId, authority }) => {
                         rating: createMarkerInfo.rating,
                         thumbnail: dataToSubmit.thumbnail
                     }])
-                    console.log("markers : ",markers)
+                    console.log("markers : ", markers)
                 })
                 .catch(error => {
                     console.log(error)
@@ -245,13 +245,14 @@ const MapContainer = ({mapId, authority }) => {
                 },
                 pageSize: 5
             }}
-            renderItem={item => (
-                <>
+            renderItem={(item, idx )=> (
+            
                     <div style={{ marginBottom: '10px', marginTop: '10px' }}
                         onClick={() => {
                             setmapCenter(new kakao.maps.LatLng(item.y, item.x))
                             setsearchdAndClickedPlace({ latlng: new kakao.maps.LatLng(item.y, item.x) })
                         }}
+                        key={idx}
                     >
                         <div className="head_item">
                             <strong style={{ fontSize: '1.2rem' }}> {item.place_name} </strong>
@@ -267,7 +268,7 @@ const MapContainer = ({mapId, authority }) => {
                             </div>
                         </div>
                     </div>
-                </>
+                
             )}
         />
     );
@@ -325,8 +326,8 @@ const MapContainer = ({mapId, authority }) => {
                 <MapController MarkerOnClick={toggleMarkerCreatable} GpsOnClick={GpsOnClick} isMarkerCreatable={isMarkerCreatable} authority={authority} />
 
                 {markers && markers.map((marker, idx) => (
-                    <>
-                        <Marker key={marker.id}
+                    <React.Fragment key={idx}>
+                        <Marker
                             options={{
                                 title: marker.name,
                                 position: new kakao.maps.LatLng(marker.latlng.split(",")[0], marker.latlng.split(",")[1]),
@@ -339,11 +340,12 @@ const MapContainer = ({mapId, authority }) => {
                             }}
                             onClick={() => {
                                 setclickedMarker([marker, idx])
-                                console.log("----------------------------------",marker.thumbnail)
+                                console.log("----------------------------------", marker.thumbnail)
                                 showDescModal()
                             }}
+
                         />
-                    </>
+                    </React.Fragment>
                 ))}
 
                 <Modal title="마커 정보" visible={isDescModalVisible} onOk={handleDescOk} onCancel={handleDescCancel}
@@ -357,8 +359,8 @@ const MapContainer = ({mapId, authority }) => {
                     ]}
                 >
                     {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }}
-                    title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating} 
-                    thumbnail={clickedMarker[0].thumbnail} mapId={mapId} latLng={clickedMarker[0].latlng}/>}
+                        title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating}
+                        thumbnail={clickedMarker[0].thumbnail} mapId={mapId} latLng={clickedMarker[0].latlng} />}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
