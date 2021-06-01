@@ -69,6 +69,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, ma
             .catch(e => {
                 console.log(e)
             })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [latLng])
 
     const handleReviewSubmit = async () => {

@@ -296,7 +296,7 @@ const RepositoryPage = (props) => {
                                         {
                                             repositoryInfo.categories.map((category, idx)=>{
                                                 return (
-                                                    <Tag color='geekblue'>{category}</Tag>
+                                                    <Tag color='geekblue' key={idx}>{category}</Tag>
                                                 )
                                             })
                                         }
@@ -309,9 +309,10 @@ const RepositoryPage = (props) => {
                                             {
                                                 repositoryInfo.owners.map((ownerId, idx)=>{
                                                     return(
-                                                        <h3 style={{ textAlign: "left" }}>
+                                                        <h3 style={{ textAlign: "left" }} key={idx}>
                                                             <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
                                                             &nbsp;{ownerId}
+                                                            
                                                         </h3>
                                                     )
                                                 })
@@ -323,7 +324,7 @@ const RepositoryPage = (props) => {
                         </Description>
                     </TabPane>
                     <TabPane tab={<span><EnvironmentOutlined />지도</span>} key="2">
-                        <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority}/>
+                        <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority} key="mapContainer"/>
                     </TabPane>
                     {
                         repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
