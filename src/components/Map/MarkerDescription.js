@@ -8,8 +8,6 @@ const { TabPane } = Tabs;
 
 const { TextArea } = Input;
 
-const { kakao } = window;
-
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <>
         <Form.Item>
@@ -38,17 +36,63 @@ const CommentList = ({ comments }) => (
     />
 );
 
-const MarkerDescription = ({ title, description, rating, userName, thumbnail, latlng }) => {
+const MarkerDescription = ({ title, description, rating, userName, thumbnail, mapId, latLng }) => {
 
     const [reviewInput, setreviewInput] = useState("")
     const [value, setValue] = useState(null)
     const [reviewList, setreviewList] = useState([])
     const [submitting, setsubmitting] = useState(false)
 
-    const handleReviewSubmit = () => {
+    useEffect(() => {
+        console.log("reviewList : ", reviewList)
+        let dataToSubmit = {
+            "mapId": mapId,
+            "layerName": "default1",
+            "geometry": latLng
+        }
+        console.log("dataToSubmit", dataToSubmit)
+        Api.post(`/review/mapData`, dataToSubmit)
+            .then(response => {
+                console.log("review : ", response)
+                let temp = []
+                console.log(response?.data.data)
+                response?.data.data.reverse().map((review, idx) => (
+                    temp.push(
+                        {
+                            author: <span style={{ display: 'flex' }}><p>{review.author}</p> <Rate style={{ marginLeft: '16px', fontSize: '14px' }} disabled allowHalf value={review.rating} /></span>,
+                            content: <p>{review.content}</p>
+                        }
+                    )
+                ))
+                setreviewList(temp)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }, [latLng])
+
+    const handleReviewSubmit = async () => {
         if (!reviewInput) {
             return
         }
+
+        let dataToSubmit = {
+            "mapId": mapId,
+            "layerName": "default1",
+            "geometry": latLng,
+            "author": userName,
+            "content": reviewInput,
+            "rating": value
+        }
+        console.log("dataToSubmit", dataToSubmit)
+        await Api.post(`/review`, dataToSubmit)
+            .then(response => {
+                console.log("review : ", response)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+
         setsubmitting(true)
         setTimeout(() => {
             setsubmitting(false)
@@ -65,21 +109,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, la
     const handleRatingChange = async (value) => {
         setValue(value)
     }
-    const file = Api.defaults.baseURL + '/files/' + thumbnail
-    console.log("API FILE", Api.defaults.baseURL + '/files/' + thumbnail)
 
-    useEffect(() => {
-        var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
-            staticMapOption = {
-                center: new kakao.maps.LatLng(latlng.split(",")[0], latlng.split(",")[1]), // 이미지 지도의 중심좌표
-                level: 1 // 이미지 지도의 확대 레벨
-            };
-
-        // 이미지 지도를 표시할 div와 옵션으로 이미지 지도를 생성합니다
-        var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-    }, [])
-
-    console.log("latlng : ",latlng.split(",")[0])
     return (
         <div style={{ padding: '0', marginTop: '-25px' }}>
             <Tabs defaultActiveKey="1"
@@ -88,8 +118,8 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, la
                     <div>
                         <h2> {title} </h2>
                         <Rate disabled allowHalf={true} value={rating} style={{ marginBottom: '25px' }} />
-                        {file === "http://localhost:8080/api/files/null" ?
-                            <div style={{ width: '400px', height: '400px', marginLeft: '30px' }} id="staticMap" />
+                        {thumbnail.substr(0, 4) === "http" ?
+                            <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={thumbnail} alt="staticImage" />
                             :
                             <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" fallback="../../no-image.svg" />
                         }

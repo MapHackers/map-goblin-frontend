@@ -68,7 +68,6 @@ function SearchPage({ location }) {
                                 renderItem={item => (
                                     <List.Item
                                         actions={[
-
                                             <IconText icon={LikeOutlined} text={item.likeCount} key="list-vertical-star-o" />,
                                             <IconText icon={DislikeOutlined} text={item.dislikeCount} key="list-vertical-like-o" />,
                                             <IconText icon={DownloadOutlined} text="2" key="list-vertical-message" />,
