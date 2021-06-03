@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Map, Marker } from '@ref/react-kakao-maps'
 import MapController from './MapController';
-import { Modal, Input, Button, Rate, Upload, Drawer, List } from 'antd';
+import { Modal, Input, Button, Rate, Upload, Drawer, List, Select } from 'antd';
 import MarkerDescription from './MarkerDescription';
 import { HeartFilled } from '@ant-design/icons'
 import { useDispatch } from 'react-redux'
@@ -12,7 +12,7 @@ import ImgCrop from 'antd-img-crop';
 const { kakao } = window;
 
 const { TextArea } = Input;
-
+const { Option } = Select;
 
 const MapContainer = ({ mapId, authority }) => {
     //    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
@@ -20,8 +20,6 @@ const MapContainer = ({ mapId, authority }) => {
     const [gpsLng, setgpsLng] = useState(126.9550496072659)
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(function (position) {
-            console.log("Latitude is :", position.coords.latitude);
-            console.log("Longitude is :", position.coords.longitude);
             setgpsLat(position.coords.latitude)
             setgpsLng(position.coords.longitude)
         })
@@ -30,12 +28,26 @@ const MapContainer = ({ mapId, authority }) => {
     const dispatch = useDispatch()
 
     const [markers, setmarkers] = useState([])
+    // const [L1markers, setL1markers] = useState([])
+    // const [L2markers, setL2markers] = useState([])
+    // const [L3markers, setL3markers] = useState([])
 
     useEffect(() => {
+        console.log("USeeffect")
         dispatch(loadMapData(mapId))
             .then(response => {
                 console.log("response", response)
-                response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
+                // response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
+                let temp = []
+                response.payload?.data.data.map((layer, idx) => {
+                    console.log("temp : ", temp)
+                    console.log("layer.mapDatas : ", layer.mapDatas)
+                    temp = temp.concat(layer.mapDatas)
+                    console.log("markers + layer.mapDatas : ", temp)
+                    return null
+                })
+                setmarkers(temp)
+                console.log("after mapping", temp)
             })
 
     }, [dispatch, mapId])
@@ -78,10 +90,11 @@ const MapContainer = ({ mapId, authority }) => {
         let deleteData = markers.splice(clickedMarker[1], 1)
         let dataToSubmit = {
             "mapId": mapId,
-            "layerName": "default1",
+            "layerName": deleteData[0].layerName,
             "geometry": deleteData[0].latlng,
             "mapDataType": "point"
         }
+        console.log({ dataToSubmit })
         Api.post('/mapdata/delete', dataToSubmit)
             .then(response => {
                 console.log(response)
@@ -99,11 +112,22 @@ const MapContainer = ({ mapId, authority }) => {
         setisCreateModalVisible(true)
     }
 
+    const onCreateMarkerLayerChange = (value) => {
+        console.log(`selected ${value}`);
+        setcreateMarkerInfo({
+            latlng: createMarkerInfo.latlng,
+            title: createMarkerInfo.title,
+            description: createMarkerInfo.description,
+            rating: createMarkerInfo.rating,
+            layer: value
+        })
+    }
+
     const handleCreateOk = async () => {
         setisCreateModalVisible(false)
         let dataToSubmit = {
             "mapId": mapId,
-            "layerName": "default1",
+            "layerName": createMarkerInfo.layer,
             "title": createMarkerInfo.title,
             "description": createMarkerInfo.description,
             "rating": createMarkerInfo.rating,
@@ -128,13 +152,14 @@ const MapContainer = ({ mapId, authority }) => {
 
                     Api.post('/mapdata', dataToSubmit)
                         .then(response => {
-                            console.log(response)
+                            console.log({ createMarkerInfo })
                             setmarkers([...markers, {
                                 name: createMarkerInfo.title,
                                 latlng: createMarkerInfo.latlng,
                                 description: createMarkerInfo.description,
                                 rating: createMarkerInfo.rating,
-                                thumbnail: dataToSubmit.thumbnail
+                                thumbnail: dataToSubmit.thumbnail,
+                                layerName: createMarkerInfo.layer
                             }])
                         })
                         .catch(error => {
@@ -157,19 +182,19 @@ const MapContainer = ({ mapId, authority }) => {
 
             // 이미지 지도를 표시할 div와 옵션으로 이미지 지도를 생성합니다
             var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-            console.log("staticmap", staticMap)
             let src = staticMap?.a.innerHTML.replaceAll('&amp;', '&').match(/src=["']?([^>"']+)["'?[^>]*/gm)[0].replaceAll("src", "").replaceAll("\"", "").slice(1).replace("IW=0", "IW=400").replace("IH=0", "IH=400")
             dataToSubmit.thumbnail = src
 
             console.log(dataToSubmit)
             Api.post('/mapdata', dataToSubmit)
                 .then(response => {
-                    console.log("response : ", response)
+                    console.log("response : ", response, "LayerName : ", createMarkerInfo.layer)
                     setmarkers([...markers, {
                         name: createMarkerInfo.title,
                         latlng: createMarkerInfo.latlng,
                         description: createMarkerInfo.description,
                         rating: createMarkerInfo.rating,
+                        layerName: createMarkerInfo.layer,
                         thumbnail: dataToSubmit.thumbnail
                     }])
                     console.log("markers : ", markers)
@@ -186,7 +211,13 @@ const MapContainer = ({ mapId, authority }) => {
         setisCreateModalVisible(false)
     }
 
-    const [createMarkerInfo, setcreateMarkerInfo] = useState({ title: "", latlng: "", description: "", rating: null })
+    const [layerArr, setlayerArr] = useState(['Layer1'])
+    const onLayerCheckBoxClick = (checkedValues) => {
+        console.log('checked = ', checkedValues);
+        setlayerArr(checkedValues)
+    }
+
+    const [createMarkerInfo, setcreateMarkerInfo] = useState({ title: "", latlng: "", description: "", rating: 0, layer: "Layer1" })
 
     function onMapClick(e) {
         if (isMarkerCreatable) {
@@ -198,6 +229,10 @@ const MapContainer = ({ mapId, authority }) => {
             toggleMarkerCreatable()
         }
     }
+
+    useEffect(() => {
+        console.log({ clickedMarker })
+    }, [clickedMarker])
 
     // 검색을 위한 기능
     var ps = new kakao.maps.services.Places();
@@ -245,30 +280,30 @@ const MapContainer = ({ mapId, authority }) => {
                 },
                 pageSize: 5
             }}
-            renderItem={(item, idx )=> (
-            
-                    <div style={{ marginBottom: '10px', marginTop: '10px' }}
-                        onClick={() => {
-                            setmapCenter(new kakao.maps.LatLng(item.y, item.x))
-                            setsearchdAndClickedPlace({ latlng: new kakao.maps.LatLng(item.y, item.x) })
-                        }}
-                        key={idx}
-                    >
-                        <div className="head_item">
-                            <strong style={{ fontSize: '1.2rem' }}> {item.place_name} </strong>
-                            <span style={{ fontSize: '0.9rem', marginLeft: '3px' }}> {item.category_name.split(" ")[item.category_name.split(" ").length - 1]}</span>
+            renderItem={(item, idx) => (
+
+                <div style={{ marginBottom: '10px', marginTop: '10px' }}
+                    onClick={() => {
+                        setmapCenter(new kakao.maps.LatLng(item.y, item.x))
+                        setsearchdAndClickedPlace({ latlng: new kakao.maps.LatLng(item.y, item.x) })
+                    }}
+                    key={idx}
+                >
+                    <div className="head_item">
+                        <strong style={{ fontSize: '1.2rem' }}> {item.place_name} </strong>
+                        <span style={{ fontSize: '0.9rem', marginLeft: '3px' }}> {item.category_name.split(" ")[item.category_name.split(" ").length - 1]}</span>
+                    </div>
+                    <div className="info">
+                        <div className="address">
+                            <p style={{ margin: 0, padding: 0, color: 'GrayText' }}> {item.road_address_name}</p>
+                            <p style={{ margin: 0, padding: 0, color: 'GrayText' }}> {item.address_name} </p>
                         </div>
-                        <div className="info">
-                            <div className="address">
-                                <p style={{ margin: 0, padding: 0, color: 'GrayText' }}> {item.road_address_name}</p>
-                                <p style={{ margin: 0, padding: 0, color: 'GrayText' }}> {item.address_name} </p>
-                            </div>
-                            <div>
-                                <span style={{ color: 'green', fontSize: '0.8rem' }}> {item.phone} </span>
-                            </div>
+                        <div>
+                            <span style={{ color: 'green', fontSize: '0.8rem' }}> {item.phone} </span>
                         </div>
                     </div>
-                
+                </div>
+
             )}
         />
     );
@@ -323,31 +358,34 @@ const MapContainer = ({ mapId, authority }) => {
                     <Search placeholder="장소, 주소 검색" size="large" value={searchValue} onChange={(event) => { setsearchValue(event.currentTarget.value) }} onSearch={onSearch} enterButton />
                     <SearchedList searchedPlace={searchedPlace} />
                 </Drawer>
-                <MapController MarkerOnClick={toggleMarkerCreatable} GpsOnClick={GpsOnClick} isMarkerCreatable={isMarkerCreatable} authority={authority} />
+                <MapController
+                    MarkerOnClick={toggleMarkerCreatable} GpsOnClick={GpsOnClick} isMarkerCreatable={isMarkerCreatable}
+                    authority={authority} onLayerCheckBoxClick={onLayerCheckBoxClick} />
 
                 {markers && markers.map((marker, idx) => (
                     <React.Fragment key={idx}>
-                        <Marker
-                            options={{
-                                title: marker.name,
-                                position: new kakao.maps.LatLng(marker.latlng.split(",")[0], marker.latlng.split(",")[1]),
-                                clickable: true,
-                                image: new kakao.maps.MarkerImage(
-                                    '../../Logo.png',
-                                    new kakao.maps.Size(44, 44),
-                                    { offset: new kakao.maps.Point(20, 44) }
-                                )
-                            }}
-                            onClick={() => {
-                                setclickedMarker([marker, idx])
-                                console.log("----------------------------------", marker.thumbnail)
-                                showDescModal()
-                            }}
+                        {layerArr.includes(marker.layerName) &&
+                            <Marker
+                                options={{
+                                    title: marker.name,
+                                    position: new kakao.maps.LatLng(marker.latlng.split(",")[0], marker.latlng.split(",")[1]),
+                                    clickable: true,
+                                    image: new kakao.maps.MarkerImage(
+                                        '../../Logo.png',
+                                        new kakao.maps.Size(44, 44),
+                                        { offset: new kakao.maps.Point(20, 44) }
+                                    )
+                                }}
+                                onClick={() => {
+                                    setclickedMarker([marker, idx])
+                                    showDescModal()
+                                }}
 
-                        />
+                            />
+                        }
+
                     </React.Fragment>
                 ))}
-
                 <Modal title="마커 정보" visible={isDescModalVisible} onOk={handleDescOk} onCancel={handleDescCancel}
                     footer={[
                         <Button type="primary" onClick={handleDescDelete} style={{ background: 'red', border: 'red' }}>
@@ -360,7 +398,8 @@ const MapContainer = ({ mapId, authority }) => {
                 >
                     {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }}
                         title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating}
-                        thumbnail={clickedMarker[0].thumbnail} mapId={mapId} latLng={clickedMarker[0].latlng} />}
+                        thumbnail={clickedMarker[0].thumbnail} mapId={mapId} latLng={clickedMarker[0].latlng} layer={clickedMarker[0].layerName}
+                    />}
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
@@ -393,7 +432,7 @@ const MapContainer = ({ mapId, authority }) => {
                         <div style={{ display: 'flex' }}>
                             <Rate character={<HeartFilled />} allowHalf
                                 allowClear={false} defaultValue={5}
-                                style={{ fontSize: '40px', marginBottom: '25px' }}
+                                style={{ fontSize: '30px', marginBottom: '25px' }}
                                 onChange={(value) => {
                                     setcreateMarkerInfo({
                                         latlng: createMarkerInfo.latlng,
@@ -418,6 +457,15 @@ const MapContainer = ({ mapId, authority }) => {
                                     </Upload>
                                 </ImgCrop>
                             </div>
+                        </div>
+                        <div style={{ marginTop: '-70px' }}>
+                            <h2 style={{ marginTop: '20px' }}> Layer </h2>
+
+                            <Select defaultValue="Layer1" style={{ width: 120, marginTop: '10px' }} onChange={onCreateMarkerLayerChange}>
+                                <Option value="Layer1">Layer1</Option>
+                                <Option value="Layer2">Layer2</Option>
+                                <Option value="Layer3">Layer3</Option>
+                            </Select>
                         </div>
                     </div>
                 </Modal>
