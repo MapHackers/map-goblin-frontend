@@ -36,7 +36,7 @@ const CommentList = ({ comments }) => (
     />
 );
 
-const MarkerDescription = ({ title, description, rating, userName, thumbnail, mapId, latLng }) => {
+const MarkerDescription = ({ title, description, rating, userName, thumbnail, mapId, latLng, layer }) => {
 
     const [reviewInput, setreviewInput] = useState("")
     const [value, setValue] = useState(null)
@@ -47,7 +47,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, ma
         console.log("reviewList : ", reviewList)
         let dataToSubmit = {
             "mapId": mapId,
-            "layerName": "default1",
+            "layerName": layer,
             "geometry": latLng
         }
         console.log("dataToSubmit", dataToSubmit)
@@ -79,7 +79,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, ma
 
         let dataToSubmit = {
             "mapId": mapId,
-            "layerName": "default1",
+            "layerName": layer,
             "geometry": latLng,
             "author": userName,
             "content": reviewInput,

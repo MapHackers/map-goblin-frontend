@@ -1,8 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
 import LogoImage from '../../assets/images/Logo.png'
+import { Checkbox } from 'antd'
 
-const MapController = ({ MarkerOnClick, isMarkerCreatable, authority, GpsOnClick }) => {
+const plainOptions = ['Layer1','Layer2','Layer3'];
+
+function onChange(checkedValues) {
+    console.log('checked = ', checkedValues);
+}
+
+const MapController = ({ MarkerOnClick, isMarkerCreatable, authority, GpsOnClick, onLayerCheckBoxClick }) => {
     return (
         <>
             {authority === "OWNER" &&
@@ -10,8 +17,11 @@ const MapController = ({ MarkerOnClick, isMarkerCreatable, authority, GpsOnClick
                     <img style={{ width: '100%', height: '100%', backgroundColor: isMarkerCreatable ? 'rgba(0,100,255, 0.2)' : 'whitesmoke', boxShadow: '2px 2px 2px 2px gray' }} src={LogoImage} alt="Logo" />
                 </Controller>
             }
-            <Controller style={{top: '250px'}} onClick={GpsOnClick}>
-                <img style={{ width: '100%', height: '100%', backgroundColor: 'whitesmoke', boxShadow: '2px 2px 2px 2px gray'}} src="../../gps-fixed.svg" alt="gps"/>
+            <Controller style={{ top: '250px' }} onClick={GpsOnClick}>
+                <img style={{ width: '100%', height: '100%', backgroundColor: 'whitesmoke', boxShadow: '2px 2px 2px 2px gray' }} src="../../gps-fixed.svg" alt="gps" />
+            </Controller>
+            <Controller style={{ top: '10px', width:'300px', right: '30px', backgroundColor: 'white', textAlign: 'center', margin: '0 auto', alignItems: 'center' }}>
+                <Checkbox.Group options={plainOptions} defaultValue={['Layer1']} onChange={onLayerCheckBoxClick} style={{ fontSize: '1.2rem'}} />
             </Controller>
         </>
 
@@ -29,3 +39,4 @@ const Controller = styled.a`
     right: 3.5px;
     display: block;
 `
+
