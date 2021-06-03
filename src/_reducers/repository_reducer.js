@@ -4,7 +4,7 @@ import {
     SAVE_REPOSITORY_INFO,
     ADD_SELECTED_CATEGORY,
     MODIFY_REPOSITORY_INFO,
-    MODIFY_FILE
+    MODIFY_FILE, SELECT_ISSUE_LIST, SELECT_REQUEST_LIST
 } from '../_actions/type'
 
 const initialState = {
@@ -12,7 +12,9 @@ const initialState = {
     fileList: [],
     info: {},
     selectedCategory: [],
-    isModified: false
+    isModified: false,
+    issueList: [],
+    requestList: []
 }
 
 const repository = (state = initialState, action) => {
@@ -29,6 +31,10 @@ const repository = (state = initialState, action) => {
             return { ...state, info: action.payload.data }
         case ADD_SELECTED_CATEGORY:
             return {...state, selectedCategory: action.payload}
+        case SELECT_ISSUE_LIST:
+            return {...state, issueList: action.payload.data}
+        case SELECT_REQUEST_LIST:
+            return {...state, requestList: action.payload.data}
         default:
             return state;
     }
