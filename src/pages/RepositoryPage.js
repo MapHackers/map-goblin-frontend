@@ -151,6 +151,8 @@ const Info = styled.div`
     
 `;
 
+let visitCount = 0
+
 const RepositoryPage = (props) => {
     const dispatch = useDispatch()
 
@@ -159,6 +161,7 @@ const RepositoryPage = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
     const [actionType, setActionType] = useState(null);
+    const [isFirst, setIsFirst] = useState(true);
     const { userId, repositoryName } = props.match.params;
     const userUrl = `/${userId}`;
 
@@ -172,7 +175,15 @@ const RepositoryPage = (props) => {
     }
 
     useEffect(() => {
-
+        // 새로 고침 가능!!
+        if (isFirst && visitCount !== 0){
+            visitCount++
+            setIsFirst(false)
+            Api.post(`/${userId}/${repositoryName}/visit`)
+                .then(response => response)
+                .catch(e => e)
+        }
+        visitCount++
         async function getRepositoryInfo() {
             hrefId = userId;
             hrefRepo = repositoryName;

@@ -11,7 +11,6 @@ function SearchByRepoName(props) {
 
     const [searchValue, setsearchValue] = useState('')
 
-    const dispatch = useDispatch()
 
     const onChange = (event) => {
         setsearchValue(event.currentTarget.value)
@@ -19,17 +18,12 @@ function SearchByRepoName(props) {
 
     const onSearch = (value, e) => {
         props.history.push(`/search?q=${value}`)
-
-        dispatch(searchUser(searchValue))
-            .then(response => console.log("FIND USER",response))
-        dispatch(searchRepository(searchValue))
-            .then(response => console.log("FIND SEARCH",response))
     }
 
 
     return (
         <SearchContainer>
-            <Search placeholder="지도명으로 검색" onSearch={onSearch} size="large" value={searchValue} onChange={onChange} />
+            <Search placeholder="검색어를 입력해주세요." onSearch={onSearch} size="large" value={searchValue} onChange={onChange} />
         </SearchContainer>
     )
 }

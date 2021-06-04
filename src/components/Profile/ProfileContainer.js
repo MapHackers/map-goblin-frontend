@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {Card, Image, Upload, Input, Button, Avatar} from 'antd';
-import { EditOutlined, UserOutlined } from '@ant-design/icons';
+import {EditOutlined, UserOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
-import { editUser } from "../../_actions/user_action";
+import {editUser} from "../../_actions/user_action";
 import styled from "styled-components";
 import ImgCrop from 'antd-img-crop';
 import Api from "../../util/Api";
 import {addFile, modifiedFile} from "../../_actions/repository_action";
 import ImgUpload from "../Repository/ImgUpload";
 
-const { Meta } = Card;
+const {Meta} = Card;
 
-const { TextArea } = Input;
+const {TextArea} = Input;
 
 const Doilimg = styled.img`
     border-radius: 30% !important;
@@ -24,9 +24,11 @@ const Doilimg = styled.img`
 
 const ProfileContainer = (props) => {
     const [editData, setShowResults] = React.useState(false)
-    const [userName, setUserName] = useState()
-    const [userDescription, setUserDescription] = useState("")
-    const [profile, setProfile] = useState("")
+    const [userName, setUserName] = useState(props.user.userName)
+    const [userDescription, setUserDescription] = useState(props.user.description)
+    const [profile, setProfile] = useState(props.user.profile)
+    const [isOwner, setIsOwner] = useState(false)
+
 
     const dispatch = useDispatch()
     const onClick = () => setShowResults(!editData)
@@ -34,6 +36,7 @@ const ProfileContainer = (props) => {
     //const [fileList, setFileList] = useState([]);
 
     const fileList = useSelector(state => state.repository.fileList)
+    const userInfo = useSelector(state => state.userInfo)
 
 
     // const onChange = ({ fileList: newFileList }) => {
@@ -49,16 +52,15 @@ const ProfileContainer = (props) => {
         const formData = new FormData
         console.log("FILELIST", fileList)
         if (fileList.length > 0) {
-            if (fileList[0].originFileObj){
+            if (fileList[0].originFileObj) {
                 formData.append('file', fileList[0].originFileObj);
                 Api.post('/files', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
                 }).then(response => {
-                    console.log("profile:",response)
+                    console.log("profile:", response)
                     setProfile(response.data)
-                    console.log("Edit Clicked", userName, userDescription)
                     console.log("FILELIST 1", fileList)
                     let dataToSubmit = {
                         userId: props.user.userId,
@@ -67,11 +69,10 @@ const ProfileContainer = (props) => {
                         profile: response.data
                     }
                     dispatch(editUser(dataToSubmit))
-                        .then(response => console.log("Edit:",response))
+                        .then(response => console.log("Edit:", response))
                         .catch(error => error)
                 })
-            }
-            else{
+            } else {
                 let dataToSubmit = {
                     userId: props.user.userId,
                     userName: userName,
@@ -79,13 +80,13 @@ const ProfileContainer = (props) => {
                     profile: null
                 }
                 dispatch(editUser(dataToSubmit))
-                    .then(response => console.log("FILELIST 2",fileList))
+                    .then(response => console.log("FILELIST 2", fileList))
                     .catch(error => error)
             }
 
-        }else{
-            // setProfile(null)
-            console.log("No FileList", userName, userDescription)
+        } else {
+            setProfile(null)
+            console.log("No FileList", props.userName, props.description)
             console.log("FILELIST 3", fileList)
             let dataToSubmit = {
                 userId: props.user.userId,
@@ -94,39 +95,46 @@ const ProfileContainer = (props) => {
                 profile: null
             }
             dispatch(editUser(dataToSubmit))
-                .then(response => console.log("NOEdit:",response))
+                .then(response => console.log("NOEdit:", response))
                 .catch(error => error)
         }
     }
 
     useEffect(() => {
-        //console.log("props : ",props)
-        setUserName(props.user.userName)
-        setUserDescription(props.user.description)
-        setProfile(props.user.profile)
-        //props.user.profile && setFileList(fileList.concat(props.user.profile))
+            //console.log("props : ",props)
+            // setUserName(props.user.userName)
+            // setUserDescription(props.user.description)
+            // setProfile(props.user.profile)
+            //props.user.profile && setFileList(fileList.concat(props.user.profile))
+
+            if (props.user.userId === userInfo.userId) {
+                setIsOwner(true)
+            }
+
+            setUserName(userInfo.userName)
+            setUserDescription(userInfo.description)
+            setProfile(userInfo.profile)
 
             let newFileList = [{
                 uid: '-1',
                 name: 'image.png',
                 status: 'done',
-                url: props.user.profile,
+                url: profile,
             }];
 
             dispatch(addFile(newFileList));
 
             dispatch(modifiedFile(false));
-
         }
-    , [])
+        , [])
 
     return (
         <Card
-            style={{ width: "100%"}}
+            style={{width: "100%"}}
             cover={
                 editData ?
-                    <span id="create-map-upload" style={{marginLeft: '25px', marginTop: '25px', width:"100%"}}>
-                        <ImgUpload />
+                    <span id="create-map-upload" style={{marginLeft: '25px', marginTop: '25px', width: "100%"}}>
+                        <ImgUpload/>
                         {/*<ImgCrop rotate>*/}
                         {/*    <Upload*/}
                         {/*        listType="picture-card"*/}
@@ -145,22 +153,31 @@ const ProfileContainer = (props) => {
 
                     <div>
                         {
-                            profile !== "" &&
-                                <Avatar size={250}
-                                        shape="square"
-                                        src={profile ? Api.defaults.baseURL + '/files/' + profile : 'no-image.svg'}
-                                />
+                            userInfo.profile !== "" &&
+                            <Avatar size={250}
+                                    shape="square"
+                                    src={userInfo.profile ? Api.defaults.baseURL + '/files/' + userInfo.profile : 'no-image.svg'}
+                            />
                         }
                     </div>
             }
             actions={[
-                <span title='프로필 변경' onClick={onClick}>{
-                    editData ? <div><Button danger style={{marginRight: '10px'}}>취소하기</Button><Button type="primary" onClick={onClickEdit}>변경 완료</Button></div>
-                        : <div><EditOutlined key="edit"/>edit profile</div>
-                }</span>
+                <>
+                    {
+                        isOwner &&
+                        <span title='프로필 변경' onClick={onClick}>{
+                            editData ?
+                                <div><Button danger style={{marginRight: '10px'}}>취소하기</Button><Button
+                                    type="primary"
+                                    onClick={onClickEdit}>변경
+                                    완료</Button></div>
+                                : <div><EditOutlined key="edit"/>edit profile</div>
+                        }</span>
+                    }
+                </>,
             ]}
         >
-            { editData ?
+            {editData ?
                 <div>
                     <Meta
                         description="이름과 상태메시지를 바꿔보세요!"
@@ -172,7 +189,7 @@ const ProfileContainer = (props) => {
                         onChange={(event) => {
                             setUserName(event.currentTarget.value)
                         }}
-                        prefix={<UserOutlined className="site-form-item-icon" />}
+                        prefix={<UserOutlined className="site-form-item-icon"/>}
                     />
                     <div style={{marginTop: '10px'}}>상태메시지</div>
                     <TextArea
@@ -187,13 +204,13 @@ const ProfileContainer = (props) => {
                 :
                 <div>
                     <Meta
-                        title={<h2>{props.user.userName}</h2>}
-                        description={props.user.userEmail}
+                        title={<h2>{userName}</h2>}
+                        description={userInfo.userEmail}
                         style={{marginTop: '10px'}}
                     />
                     <Meta
-                        style={{marginTop:"30px"}}
-                        title={props.user.description}
+                        style={{marginTop: "30px"}}
+                        title={userDescription}
                     />
                 </div>
             }

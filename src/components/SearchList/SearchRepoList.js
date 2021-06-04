@@ -11,13 +11,12 @@ const IconText = ({ icon, text }) => (
     </Space>
 );
 
-// userId 넘겨줘야함
 function SearchRepoList({ Lists }) {
     return (
         <div className="ListWrapper"
              style={{height: "700px", overflow: "auto"}}
         >
-            <div>{Lists}</div>
+            <div>{Lists[0].title}</div>
             <List
                 itemLayout="horizontal"
                 size="large"
@@ -47,13 +46,7 @@ function SearchRepoList({ Lists }) {
                                     preview={false}
                                 />
                             }
-                            title={
-                                item.name
-                                // <a href={`/${props.userId}/repositories/${item.name}`}
-                                //    style={{fontSize:'16px'}}>
-                                //     {item.name}
-                                // </a>
-                            }
+                            title={item.name}
                             description={item.description}
                         />
                     </List.Item>
