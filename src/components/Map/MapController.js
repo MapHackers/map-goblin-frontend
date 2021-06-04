@@ -5,10 +5,6 @@ import { Checkbox } from 'antd'
 
 const plainOptions = ['Layer1','Layer2','Layer3'];
 
-function onChange(checkedValues) {
-    console.log('checked = ', checkedValues);
-}
-
 const MapController = ({ MarkerOnClick, isMarkerCreatable, authority, GpsOnClick, onLayerCheckBoxClick }) => {
     return (
         <>

@@ -230,10 +230,6 @@ const MapContainer = ({ mapId, authority }) => {
         }
     }
 
-    useEffect(() => {
-        console.log({ clickedMarker })
-    }, [clickedMarker])
-
     // 검색을 위한 기능
     var ps = new kakao.maps.services.Places();
 
