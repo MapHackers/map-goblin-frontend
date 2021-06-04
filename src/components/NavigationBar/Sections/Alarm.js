@@ -11,7 +11,7 @@ function Alarm(props) {
 
     const dispatch = useDispatch()
 
-    const alarms = useSelector(state => state.alarm.navAlarm.data)
+    const alarms = useSelector(state => state.alarm.navAlarm?.data)
 
     const typemap = {
         'LIKE' : '를 좋아합니다.',
