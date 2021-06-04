@@ -156,7 +156,7 @@ const ProfileContainer = (props) => {
                             userInfo.profile !== "" &&
                             <Avatar size={250}
                                     shape="square"
-                                    src={userInfo.profile ? Api.defaults.baseURL + '/files/' + userInfo.profile : 'no-image.svg'}
+                                    src={userInfo.profile ? Api.defaults.baseURL + '/files/' + userInfo.profile : 'NoProfile.png'}
                             />
                         }
                     </div>
