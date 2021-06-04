@@ -4,7 +4,7 @@ import {
     SAVE_REPOSITORY_INFO,
     ADD_SELECTED_CATEGORY,
     MODIFY_REPOSITORY_INFO,
-    MODIFY_FILE, SELECT_ISSUE_LIST, SELECT_REQUEST_LIST, COMPARE_REPOSITORY, CREATE_REQUEST
+    MODIFY_FILE, SELECT_ISSUE_LIST, SELECT_REQUEST_LIST, COMPARE_REPOSITORY, CREATE_REQUEST, SELECT_REQUEST_INFO
 } from '../_actions/type'
 
 const initialState = {
@@ -17,6 +17,7 @@ const initialState = {
     requestList: [],
     compareResult: {},
     requestId: "",
+    requestInfo: {},
 }
 
 const repository = (state = initialState, action) => {
@@ -41,6 +42,8 @@ const repository = (state = initialState, action) => {
             return {...state, compareResult: action.payload.data}
         case CREATE_REQUEST:
             return {...state, requestId: action.payload.data.requestId}
+        case SELECT_REQUEST_INFO:
+            return {...state, requestInfo: action.payload.data}
         default:
             return state;
     }

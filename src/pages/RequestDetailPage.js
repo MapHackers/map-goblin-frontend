@@ -26,6 +26,7 @@ const RequestDetailPage = (props) => {
 
     const dispatch = useDispatch()
 
+    const [repositoryInfo, setRepositoryInfo] = useState({});
     const [timeLineLoading, setTimeLineLoading] = useState(false);
     const [addList, setAddList] = useState([]);
     const [modifyList, setModifyList] = useState([]);
@@ -36,6 +37,9 @@ const RequestDetailPage = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [notFound, setNotFound] = useState(false);
 
+    const userId = props.match.params.userId;
+    const repositoryName = props.match.params.repositoryName;
+
     const backHome = () => {
         props.history.push('/main')
     }
@@ -44,18 +48,13 @@ const RequestDetailPage = (props) => {
 
         console.log("Request Detail props:", props);
 
-        // Api.get(`/${userId}/repositories/${repositoryName}`).then(response => {
-        //     setRepositoryInfo(response.data);
-        //
-        //     if (response.data.thumbnail !== null) {
-        //         setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
-        //     }else{
-        //         setThumbnail(Api.defaults.baseURL + '/files/no-image.svg');
-        //     }
-        //
-        // }).catch(error => {
-        //     setNotFound(true);
-        // });
+        Api.get(`/${userId}/repositories/${repositoryName}`)
+            .then(response => {
+                setRepositoryInfo(response.data);
+            })
+            .catch(error => {
+                setNotFound(true);
+            });
 
         dispatch(selectRequestInfo(props.location.pathname))
             .then(response => {
@@ -93,6 +92,13 @@ const RequestDetailPage = (props) => {
 
     }, []);
 
+    const onClickMerge = () => {
+        console.log("onClickMerge");
+    }
+
+    const onClickDenied = () => {
+        console.log("onClickDenied");
+    }
 
     if(isLoading){
         return (
@@ -153,11 +159,17 @@ const RequestDetailPage = (props) => {
                                     </Timeline>
                                 }
                             </Form.Item>
-                            <Form.Item wrapperCol={tailFormItemLayout}>
-                                <Button type="primary" htmlType="submit">
-                                    변경 요청
-                                </Button>
-                            </Form.Item>
+                            {
+                                repositoryInfo.authority === "OWNER" && <Form.Item wrapperCol={tailFormItemLayout}>
+                                    <Button type="primary" onClick={onClickMerge}>
+                                        반영하기
+                                    </Button>
+                                    <Button style={{marginLeft: "10px"}} type="primary" onClick={onClickDenied} danger>
+                                        거절하기
+                                    </Button>
+                                </Form.Item>
+                            }
+
                         </RequestForm>
                     </Col>
                     <Col span={5}></Col>
