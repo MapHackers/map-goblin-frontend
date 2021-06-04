@@ -17,8 +17,6 @@ const formItemLayout = {
 const IssueForm = (props) => {
 
     const onFinish = (values) => {
-        console.log(props)
-        console.log('values:', values);
         Api.post(props.location.pathname, {"title": values.title, "content": values.content})
             .then(response =>{
                 console.log("response")

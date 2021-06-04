@@ -24,49 +24,6 @@ const tailFormItemLayout = {
 
 const CreateIssuePage = (props) => {
 
-    const dispatch = useDispatch()
-
-    const options = [{ value: 'QUESTION' }, { value: 'ISSUE' }];
-
-    const tagRender = (props) => {
-        const { label, closable, onClose } = props;
-
-        const onPreventMouseDown = event => {
-            event.preventDefault();
-            event.stopPropagation();
-        };
-
-        if (label === 'QUESTION'){
-            return (
-                <Tag
-                    color='geekblue'
-                    onMouseDown={onPreventMouseDown}
-                    closable={closable}
-                    onClose={onClose}
-                    style={{ marginRight: 3 }}
-                >
-                    {label}
-                </Tag>
-            );
-        }else{
-            return (
-                <Tag
-                    color='volcano'
-                    onMouseDown={onPreventMouseDown}
-                    closable={closable}
-                    onClose={onClose}
-                    style={{ marginRight: 3 }}
-                >
-                    {label}
-                </Tag>
-            );
-        }
-    };
-
-    const onChange = (value) => {
-        dispatch(addSelectedCategory(value));
-    }
-
     return (
         <CommonLayout>
             <Row style={{textAlign:'center'}}>
@@ -99,20 +56,7 @@ const CreateIssuePage = (props) => {
                                     </Button>
                                 </Form.Item>
                             </Col>
-                            <Col flex="auto">
-                                <Divider>라벨</Divider>
-                                <Select
-                                    mode="multiple"
-                                    showArrow
-                                    tagRender={tagRender}
-                                    style={{ width: '100%' }}
-                                    options={options}
-                                    onChange={onChange}
-                                    defaultValue={'QUESTION'}
-                                />
-                            </Col>
                         </Row>
-
                     </IssueForm>
                 </Col>
                 <Col span={5}></Col>
