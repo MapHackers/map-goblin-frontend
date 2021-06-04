@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {Link} from "react-router-dom";
 import styled from "styled-components";
 
 import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, ExclamationCircleOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
@@ -20,7 +21,9 @@ import {
     Spin,
     Statistic,
     Image,
-    Pagination
+    Pagination,
+    Alert,
+    Space
 } from 'antd';
 import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant-design/icons';
 import Api from "../util/Api";
@@ -28,7 +31,7 @@ import Api from "../util/Api";
 import InfoSetting from "../components/Repository/InfoSetting";
 import {useDispatch, useSelector} from "react-redux";
 
-import {selectIssueList} from "../_actions/repository_action";
+import {compareRepository, selectIssueList} from "../_actions/repository_action";
 
 const { TabPane } = Tabs
 
@@ -41,7 +44,7 @@ const columns = [
         dataIndex: 'title',
         key: 'title',
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
-        render: (title, values) => <a href={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</a>,
+        render: (title, values) => (<Link to={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</Link>),
     },
     {
         title: 'User',
@@ -170,6 +173,8 @@ const RepositoryPage = (props) => {
     const [issueWaitingData, setIssueWaitingData] = useState([]);
     const [issueCheckedData, setIssueCheckedData] = useState([]);
 
+    const [requestLoading, setRequestLoading] = useState(false);
+
     const backHome = () => {
         props.history.push('/main')
     }
@@ -258,6 +263,17 @@ const RepositoryPage = (props) => {
                 })
                 .catch(error => {
                     setNotFound(true);
+                });
+
+            dispatch(compareRepository(userId, repositoryName))
+                .then(response => {
+                    console.log(response);
+                    if(response.payload.status === 200){
+                        setRequestLoading(true);
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
                 })
         }
 
@@ -427,7 +443,16 @@ const RepositoryPage = (props) => {
                         <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority} key="mapContainer"/>
                     </TabPane>
                     { repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
-                        <Button href={`/${userId}/repositories/${repositoryName}/issues`}>새로운 지적</Button>
+                        <Alert
+                            message="새로운 이슈를 올려주세요!"
+                            type="warning"
+                            action={
+                                <Link to={`/${userId}/repositories/${repositoryName}/issues`}>
+                                    <Button size="middle" type="primary">지적하기</Button>
+                                </Link>
+                            }
+                            style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
+                        />
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>{`${totalWaitingIssueCount} Waiting`}</span>} key="1">
                                 <Table
@@ -449,7 +474,18 @@ const RepositoryPage = (props) => {
                     </TabPane>
                     }
                     { repositoryInfo.source === "HOST" && <TabPane tab={<span><PullRequestOutlined />변경 요청</span>} key="4">
-                        <Button href={`/${userId}/repositories/${repositoryName}/requests`}>새로운 변경 요청</Button>
+                        {
+                            requestLoading && <Alert
+                                message="복사한 지도에 변경사항이 있습니다."
+                                type="info"
+                                action={
+                                    <Link to={`/${userId}/repositories/${repositoryName}/requests`}>
+                                        <Button size="middle" type="primary">요청하기</Button>
+                                    </Link>
+                                }
+                                style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
+                            />
+                        }
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>2 Waiting</span>} key="1">
                                 <Table
