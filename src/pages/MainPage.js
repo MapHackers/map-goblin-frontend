@@ -37,7 +37,7 @@ function MainPage(props) {
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/${props?.user.id}/repositories/likes`)
+        Api.get(`/${props.user?.id}/repositories/likes`)
             .then(response => {
                 console.log({ response })
                 setLikedThumbCards(response.data?.data)
@@ -80,7 +80,9 @@ function MainPage(props) {
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
-                        <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} />
+                        <Card title={card.name} 
+                        hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} 
+                        key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount}/>
                     ))}
                 </Slider>
                 {LikedThumbCards.length > 0 &&
@@ -92,7 +94,8 @@ function MainPage(props) {
                         </div>
                         <Slider {...settings2}>
                             {LikedThumbCards.map(card => (
-                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} />
+                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} 
+                                key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount}/>
                             ))}
                         </Slider>
                     </>

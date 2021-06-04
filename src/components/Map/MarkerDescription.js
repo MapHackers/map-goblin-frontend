@@ -39,7 +39,7 @@ const CommentList = ({ comments }) => (
 const MarkerDescription = ({ title, description, rating, userName, thumbnail, mapId, latLng, layer }) => {
 
     const [reviewInput, setreviewInput] = useState("")
-    const [value, setValue] = useState(null)
+    const [value, setValue] = useState(0)
     const [reviewList, setreviewList] = useState([])
     const [submitting, setsubmitting] = useState(false)
 
@@ -130,7 +130,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, ma
                 <TabPane tab={<span><CommentOutlined /> Review </span>} key="2">
                     <div>
                         <h2> {title} </h2>
-                        <Rate character={<HeartFilled />} allowHalf allowClear={false} defaultValue={2} style={{ fontSize: '40px', marginBottom: '25px' }} onChange={handleRatingChange} />
+                        <Rate character={<HeartFilled />} allowHalf allowClear={false} value={value} style={{ fontSize: '40px', marginBottom: '25px' }} onChange={handleRatingChange} />
                         <Divider style={{ marginTop: '0px' }}> Review </Divider>
 
                         <Comment
