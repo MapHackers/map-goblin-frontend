@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LikeOutlined, DislikeOutlined, DownloadOutlined, FileTextOutlined, LikeTwoTone, DislikeTwoTone } from '@ant-design/icons';
+import { LikeOutlined, DislikeOutlined, DownloadOutlined, EyeOutlined, LikeTwoTone, DislikeTwoTone } from '@ant-design/icons';
 import { Card } from 'antd';
 import Api from '../../util/Api'
 import { withRouter } from 'react-router-dom'
@@ -80,11 +80,13 @@ function CardView(props) {
                     <h3> {dislike} </h3>
                 </div>,
                 <div>
-                    <DownloadOutlined key="clone" />
-                </div>,
-                <div>
-                    <FileTextOutlined key="readMe" />
+                    <EyeOutlined key="visit" />
+                    <h3> {props.visitCount} </h3>
                 </div>
+                // ,
+                // <div>
+                //     <FileTextOutlined key="readMe" />
+                // </div>
             ]}
         >
             <Meta

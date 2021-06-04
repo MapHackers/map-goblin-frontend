@@ -15,7 +15,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const MapContainer = ({ mapId, authority }) => {
-    //    const [mapCenter, setmapCenter] = useState(new kakao.maps.LatLng(gpsLat, gpsLng))
+
     const [gpsLat, setgpsLat] = useState(37.504877390232885)
     const [gpsLng, setgpsLng] = useState(126.9550496072659)
     useEffect(() => {
@@ -28,22 +28,15 @@ const MapContainer = ({ mapId, authority }) => {
     const dispatch = useDispatch()
 
     const [markers, setmarkers] = useState([])
-    // const [L1markers, setL1markers] = useState([])
-    // const [L2markers, setL2markers] = useState([])
-    // const [L3markers, setL3markers] = useState([])
 
     useEffect(() => {
         console.log("USeeffect")
         dispatch(loadMapData(mapId))
             .then(response => {
                 console.log("response", response)
-                // response.payload.data.data.length > 0 && setmarkers(response.payload.data.data[0].mapDatas)
                 let temp = []
                 response.payload?.data.data.map((layer, idx) => {
-                    console.log("temp : ", temp)
-                    console.log("layer.mapDatas : ", layer.mapDatas)
                     temp = temp.concat(layer.mapDatas)
-                    console.log("markers + layer.mapDatas : ", temp)
                     return null
                 })
                 setmarkers(temp)
@@ -112,8 +105,10 @@ const MapContainer = ({ mapId, authority }) => {
         setisCreateModalVisible(true)
     }
 
+    const [selectLayer, setselectLayer] = useState("None")
     const onCreateMarkerLayerChange = (value) => {
         console.log(`selected ${value}`);
+        setselectLayer(value)
         setcreateMarkerInfo({
             latlng: createMarkerInfo.latlng,
             title: createMarkerInfo.title,
@@ -124,6 +119,10 @@ const MapContainer = ({ mapId, authority }) => {
     }
 
     const handleCreateOk = async () => {
+        if(selectLayer === "None"){
+            alert("레이어를 선택해 주세요")
+            return
+        }
         setisCreateModalVisible(false)
         let dataToSubmit = {
             "mapId": mapId,
@@ -182,10 +181,11 @@ const MapContainer = ({ mapId, authority }) => {
 
             // 이미지 지도를 표시할 div와 옵션으로 이미지 지도를 생성합니다
             var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-            let src = staticMap?.a.innerHTML.replaceAll('&amp;', '&').match(/src=["']?([^>"']+)["'?[^>]*/gm)[0].replaceAll("src", "").replaceAll("\"", "").slice(1).replace("IW=0", "IW=400").replace("IH=0", "IH=400")
+            let src = staticMap.a.innerHTML.replaceAll('&amp;', '&').match(/src=["']?([^>"']+)["'?[^>]*/gm)[0].replaceAll("src", "").replaceAll("\"", "").slice(1).replace("IW=0", "IW=400").replace("IH=0", "IH=400")
             dataToSubmit.thumbnail = src
-
-            console.log(dataToSubmit)
+            console.log({ dataToSubmit })
+            console.log({ staticMap })
+            console.log(src)
             Api.post('/mapdata', dataToSubmit)
                 .then(response => {
                     console.log("response : ", response, "LayerName : ", createMarkerInfo.layer)
@@ -200,24 +200,31 @@ const MapContainer = ({ mapId, authority }) => {
                     console.log("markers : ", markers)
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.log("eeeeeeuyeiuyeiwuryweiurywie", error)
                 })
         }
-
+        setdefaultRating(0)
+        setcreateMarkerInfo({ title: "", latlng: "", description: "", rating: defaultRating, layer: "Layer1" })
+        let elem = document.getElementById("staticMap")
+        elem.innerHTML = null
+        setselectLayer("None")
     }
 
     const handleCreateCancel = () => {
         setFileList([])
         setisCreateModalVisible(false)
+        setdefaultRating(0)
+        setselectLayer("None")
     }
 
     const [layerArr, setlayerArr] = useState(['Layer1'])
     const onLayerCheckBoxClick = (checkedValues) => {
-        console.log('checked = ', checkedValues);
+        console.log('checked = ', checkedValues)
         setlayerArr(checkedValues)
     }
 
-    const [createMarkerInfo, setcreateMarkerInfo] = useState({ title: "", latlng: "", description: "", rating: 0, layer: "Layer1" })
+    const [defaultRating, setdefaultRating] = useState(0)
+    const [createMarkerInfo, setcreateMarkerInfo] = useState({ title: "", latlng: "", description: "", rating: defaultRating, layer: "Layer1" })
 
     function onMapClick(e) {
         if (isMarkerCreatable) {
@@ -427,9 +434,10 @@ const MapContainer = ({ mapId, authority }) => {
                         <h2 style={{ marginTop: '20px' }}> Rating </h2>
                         <div style={{ display: 'flex' }}>
                             <Rate character={<HeartFilled />} allowHalf
-                                allowClear={false} defaultValue={5}
+                                allowClear={false} value={defaultRating}
                                 style={{ fontSize: '30px', marginBottom: '25px' }}
                                 onChange={(value) => {
+                                    setdefaultRating(value)
                                     setcreateMarkerInfo({
                                         latlng: createMarkerInfo.latlng,
                                         title: createMarkerInfo.title,
@@ -456,8 +464,8 @@ const MapContainer = ({ mapId, authority }) => {
                         </div>
                         <div style={{ marginTop: '-70px' }}>
                             <h2 style={{ marginTop: '20px' }}> Layer </h2>
-
-                            <Select defaultValue="Layer1" style={{ width: 120, marginTop: '10px' }} onChange={onCreateMarkerLayerChange}>
+                            <Select value={selectLayer} style={{ width: 120, marginTop: '10px' }} onChange={onCreateMarkerLayerChange}>
+                                <Option value="None">None</Option>
                                 <Option value="Layer1">Layer1</Option>
                                 <Option value="Layer2">Layer2</Option>
                                 <Option value="Layer3">Layer3</Option>
