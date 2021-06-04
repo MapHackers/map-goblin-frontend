@@ -24,22 +24,52 @@ let settings = {
     drag: true,
 };
 
+
 function MainPage(props) {
     const [ThumbCards, setThumbCards] = useState([])
+    const [LikedThumbCards, setLikedThumbCards] = useState([])
 
     useEffect(() => {
         Api.get('/repositories')
             .then(response => {
-                console.log("----------------------------",response.data.data)
                 response.data.data.length > 0 && setThumbCards(response.data.data)
             })
             .catch(err => {
                 console.log(err)
             })
+        Api.get(`/${props?.user.id}/repositories/likes`)
+            .then(response => {
+                console.log({ response })
+                setLikedThumbCards(response.data?.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }, [])
+
+    let settings2 = {
+        dots: false,
+        infinite: LikedThumbCards.length > 3 ? true : false,
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        arrows: true,
+        prevArrow: <SlideButton type="prev" />,
+        nextArrow: <SlideButton type="next" />,
+        drag: true,
+    };
+
+    useEffect(() => {
+        console.log(LikedThumbCards)
+    }, [LikedThumbCards])
+
+    useEffect(() => {
+        console.log({ ThumbCards })
+    }, [ThumbCards])
+
     return (
         <div style={{ background: '#f5f6f7' }}>
-            <NavBar user={props.user}/>
+            <NavBar user={props.user} />
             <MainContentSlider />
             <Divider />
             <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
@@ -50,9 +80,23 @@ function MainPage(props) {
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
-                        <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType}/>
+                        <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} />
                     ))}
                 </Slider>
+                {LikedThumbCards.length > 0 &&
+                    <>
+                        <div
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                        >
+                            <ExpandingText text="내가 좋아요한 지도 목록" />
+                        </div>
+                        <Slider {...settings2}>
+                            {LikedThumbCards.map(card => (
+                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} />
+                            ))}
+                        </Slider>
+                    </>
+                }
             </div>
         </div>
     )
