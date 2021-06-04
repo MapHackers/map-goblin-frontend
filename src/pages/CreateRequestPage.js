@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import CommonLayout from "../components/Layout/CommonLayout";
 import {Button, Col, Divider, Form, Input, Row, Select, Tag, Timeline} from "antd";
-import CreateInfo from "../components/Repository/CreateInfo";
 import RequestForm from "../components/Repository/RequestForm";
-import IssueForm from "../components/Repository/IssueForm";
-import {addSelectedCategory, compareRepository} from "../_actions/repository_action";
+import {compareRepository, createRequest} from "../_actions/repository_action";
 import {useDispatch, useSelector} from "react-redux";
 
 const { TextArea } = Input;
@@ -22,69 +20,70 @@ const tailFormItemLayout = {
     },
 };
 
-const CreateRequestPage = () => {
+const CreateRequestPage = (props) => {
 
     const dispatch = useDispatch()
 
-    const options = [{ value: 'REQUEST' }];
-
-    const tagRender = (props) => {
-        const { label, closable, onClose } = props;
-
-        const onPreventMouseDown = event => {
-            event.preventDefault();
-            event.stopPropagation();
-        };
-
-        if (label === 'REQUEST'){
-            return (
-                <Tag
-                    color='geekblue'
-                    onMouseDown={onPreventMouseDown}
-                    closable={closable}
-                    onClose={onClose}
-                    style={{ marginRight: 3 }}
-                >
-                    {label}
-                </Tag>
-            );
-        }else{
-            return (
-                <Tag
-                    color='volcano'
-                    onMouseDown={onPreventMouseDown}
-                    closable={closable}
-                    onClose={onClose}
-                    style={{ marginRight: 3 }}
-                >
-                    {label}
-                </Tag>
-            );
-        }
-    };
-
-    const onChange = (value) => {
-        dispatch(addSelectedCategory(value));
-    }
-
     const [timeLineLoading, setTimeLineLoading] = useState(false);
+    const [addList, setAddList] = useState([]);
+    const [modifyList, setModifyList] = useState([]);
+    const [deleteList, setDeleteList] = useState([]);
+    const [layerList, setLayerList] = useState([]);
     const compareResult = useSelector(state => state.repository.compareResult);
 
-    let addList = []
-    let modifyList = []
-    let deleteList = []
+    let userId;
+    let repositoryName;
 
     useEffect(() => {
+        console.log(props);
+        if(Object.keys(compareResult).length === 0 && props.location.state !== undefined){
+            userId = props.location.state.userId;
+            repositoryName = props.location.state.repositoryName;
 
-        console.log("compareREsult:", compareResult);
+            dispatch(compareRepository(userId, repositoryName))
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
 
-        addList = compareResult.added;
-        modifyList = compareResult.modified;
-        deleteList = compareResult.delete;
+        if(compareResult.added !== undefined){
+            setAddList(compareResult.added.map((data) => <p>{data.createdDate} {data.name}</p>));
+        }
+
+        if(compareResult.modified !== undefined){
+            setModifyList(compareResult.modified.map((data) => <p>{data.createdDate} {data.name}</p>));
+        }
+
+        if(compareResult.delete !== undefined){
+            setDeleteList(compareResult.delete.map((data) => <p>{data.createdDate} {data.name}</p>));
+        }
+
+        if(compareResult.layer !== undefined){
+            setLayerList(compareResult.layer.map((data) => <p>{data.createdDate} {data.name}</p>));
+        }
 
         setTimeLineLoading(true);
 
-    }, [])
+    }, [compareResult])
+
+    const onClickRequest = () => {
+        if(addList.length<=0 && modifyList.length<=0 && deleteList.length<=0 && layerList.length<=0){
+            alert("변경 사항이 없습니다.");
+        }else{
+            let jsonObj = {};
+            jsonObj.title =
+            dispatch(createRequest(props.location.pathname, compareResult))
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+    }
 
     return (
         <CommonLayout>
@@ -95,54 +94,58 @@ const CreateRequestPage = () => {
                         변경사항 반영 요청
                     </p>
                     <Divider />
-                    <RequestForm>
-                        <Row>
-                            <Col span={19}>
-                                <Form.Item
-                                    label="제목"
-                                    name="title"
-                                    rules={[{ required: true, message: '요청 제목을 입력해주세요!' }]}
-                                >
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item
-                                    label="내용"
-                                    name="content"
-                                    rules={[{ required: true, message: '요청 내용을 입력해주세요!' }]}
-                                >
-                                    <TextArea rows={10}/>
-                                </Form.Item>
-                                {
-                                    timeLineLoading && <Timeline>
-                                        <Timeline.Item color="green">
-                                            {
-                                                // eslint-disable-next-line array-callback-return
-                                                addList.map(data => {
-                                                    <p>{data}</p>
-                                                })
-                                            }
+                    <RequestForm initialValue={compareResult}>
+                        <Form.Item
+                            label="제목"
+                            name="title"
+                            rules={[{ required: true, message: '요청 제목을 입력해주세요!' }]}
+                            style={{width: '85%'}}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="내용"
+                            name="content"
+                            rules={[{ required: true, message: '요청 내용을 입력해주세요!' }]}
+                            style={{width: '85%'}}
+                        >
+                            <TextArea rows={10}/>
+                        </Form.Item>
+                        <Form.Item>
+                            {
+                                timeLineLoading && <Timeline style={{marginLeft: "15%", width: "50%", textAlign: "left"}}>
+                                    {
+                                        addList.length > 0 && <Timeline.Item color="green">
+                                            <p>데이터 추가</p>
+                                            {addList}
                                         </Timeline.Item>
-                                    </Timeline>
-                                }
-                                <Form.Item wrapperCol={tailFormItemLayout}>
-                                    <Button type="primary" htmlType="submit">
-                                        이슈 생성
-                                    </Button>
-                                </Form.Item>
-                            </Col>
-                            <Col flex="auto">
-                                <Divider>라벨</Divider>
-                                <Select
-                                    mode="multiple"
-                                    showArrow
-                                    tagRender={tagRender}
-                                    style={{ width: '100%' }}
-                                    options={options}
-                                    onChange={onChange}
-                                    defaultValue={'REQUEST'}
-                                />
-                            </Col>
-                        </Row>
+                                    }
+                                    {
+                                        modifyList.length > 0 && <Timeline.Item>
+                                            <p>데이터 수정</p>
+                                            {modifyList}
+                                        </Timeline.Item>
+                                    }
+                                    {
+                                        deleteList.length > 0 && <Timeline.Item color="red">
+                                            <p>데이터 삭제</p>
+                                            {deleteList}
+                                        </Timeline.Item>
+                                    }
+                                    {
+                                        layerList.length > 0 && <Timeline.Item color="grey">
+                                            <p>레이어 추가</p>
+                                            {layerList}
+                                        </Timeline.Item>
+                                    }
+                                </Timeline>
+                            }
+                        </Form.Item>
+                        <Form.Item wrapperCol={tailFormItemLayout}>
+                            <Button type="primary" htmlType="submit">
+                                변경 요청
+                            </Button>
+                        </Form.Item>
                     </RequestForm>
                 </Col>
                 <Col span={5}></Col>

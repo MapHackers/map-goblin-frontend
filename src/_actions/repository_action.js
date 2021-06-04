@@ -4,7 +4,7 @@ import {
     SAVE_REPOSITORY_INFO,
     ADD_SELECTED_CATEGORY,
     MODIFY_REPOSITORY_INFO,
-    MODIFY_FILE, SELECT_ISSUE_LIST, SELECT_REQUEST_LIST, COMPARE_REPOSITORY
+    MODIFY_FILE, SELECT_ISSUE_LIST, SELECT_REQUEST_LIST, COMPARE_REPOSITORY, CREATE_REQUEST
 } from './type'
 import Api from "../util/Api";
 
@@ -97,6 +97,17 @@ export const compareRepository = (userId, repositoryName) => {
 
     return {
         type: COMPARE_REPOSITORY,
+        payload: request
+    }
+}
+
+export const createRequest = (url, compareResult) => {
+    const request = Api.post(url, compareResult)
+        .then(response => response)
+        .catch(error => error.response);
+
+    return {
+        type: CREATE_REQUEST,
         payload: request
     }
 }
