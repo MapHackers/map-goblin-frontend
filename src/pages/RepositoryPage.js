@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import styled from "styled-components";
 
 import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, ExclamationCircleOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
@@ -43,7 +43,13 @@ const columns = [
         dataIndex: 'title',
         key: 'title',
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
-        render: (title, values) => (<Link to={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</Link>),
+        render: (title, values) => {
+            if(values.type === "issue"){
+                return (<Link to={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</Link>)
+            }else{
+                return (<Link to={`/${hrefId}/repositories/${hrefRepo}/requests/${values.key}`}>{title}</Link>)
+            }
+        },
     },
     {
         title: 'User',
@@ -219,7 +225,7 @@ const RepositoryPage = (props) => {
                     for(let i=0; i<contents.length; i++){
                         let jsonObj = {};
 
-                        jsonObj.key = i;
+                        jsonObj.key = contents[i].id;
                         jsonObj.title = contents[i].title;
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
@@ -252,6 +258,7 @@ const RepositoryPage = (props) => {
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
                         jsonObj.date = contents[i].createdDate;
+                        jsonObj.type = "issue";
 
                         result.push(jsonObj);
                     }
@@ -534,4 +541,4 @@ const RepositoryPage = (props) => {
     }
 };
 
-export default RepositoryPage;
+export default withRouter(RepositoryPage);
