@@ -28,7 +28,10 @@ let settings = {
 function MainPage(props) {
     const [ThumbCards, setThumbCards] = useState([])
     const [LikedThumbCards, setLikedThumbCards] = useState([])
-
+    const [CategoryUnivercityThumbCards, setCategoryThumbCards] = useState([])
+    const [CategorySeoulThumbCards, setCategorySeoulThumbCards] = useState([])
+    const [CategoryInfoThumbCards, setCategoryInfoThumbCards] = useState([])
+    const [CategoryRestThumbCards, setCategoryRestThumbCards] = useState([])
     useEffect(() => {
         Api.get('/repositories')
             .then(response => {
@@ -45,13 +48,89 @@ function MainPage(props) {
             .catch(err => {
                 console.log(err)
             })
+        Api.get(`/대학교/repositories/category`)
+            .then(response => {
+                console.log({ response })
+                setCategoryThumbCards(response.data?.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        Api.get(`/서울/repositories/category`)
+            .then(response => {
+                console.log({ response })
+                setCategorySeoulThumbCards(response.data?.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        Api.get(`/정보전달/repositories/category`)
+            .then(response => {
+                console.log({ response })
+                setCategoryInfoThumbCards(response.data?.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        Api.get(`/맛집/repositories/category`)
+            .then(response => {
+                console.log({ response })
+                setCategoryRestThumbCards(response.data?.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }, [])
 
     let settings2 = {
         dots: false,
         infinite: LikedThumbCards.length > 3 ? true : false,
         speed: 500,
-        slidesToShow: 4,
+        slidesToShow: LikedThumbCards.length > 3 ? 4 : LikedThumbCards.length,
+        slidesToScroll: 1,
+        arrows: true,
+        prevArrow: <SlideButton type="prev" />,
+        nextArrow: <SlideButton type="next" />,
+        drag: true,
+    }
+    let settings3 = {
+        dots: false,
+        infinite: CategoryUnivercityThumbCards.length > 3 ? true : false,
+        speed: 500,
+        slidesToShow: CategoryUnivercityThumbCards.length > 3 ? 4 : CategoryUnivercityThumbCards.length,
+        slidesToScroll: 1,
+        arrows: true,
+        prevArrow: <SlideButton type="prev" />,
+        nextArrow: <SlideButton type="next" />,
+        drag: true,
+    };
+    let settingsSeoul = {
+        dots: false,
+        infinite: CategorySeoulThumbCards.length > 3 ? true : false,
+        speed: 500,
+        slidesToShow: CategorySeoulThumbCards.length > 3 ? 4 : CategorySeoulThumbCards.length,
+        slidesToScroll: 1,
+        arrows: true,
+        prevArrow: <SlideButton type="prev" />,
+        nextArrow: <SlideButton type="next" />,
+        drag: true,
+    };
+    let settingsInfo = {
+        dots: false,
+        infinite: CategoryInfoThumbCards.length > 3 ? true : false,
+        speed: 500,
+        slidesToShow: CategoryInfoThumbCards.length > 3 ? 4 : CategoryInfoThumbCards.length,
+        slidesToScroll: 1,
+        arrows: true,
+        prevArrow: <SlideButton type="prev" />,
+        nextArrow: <SlideButton type="next" />,
+        drag: true,
+    };
+    let settingsRest = {
+        dots: false,
+        infinite: CategoryRestThumbCards.length > 3 ? true : false,
+        speed: 500,
+        slidesToShow: CategoryRestThumbCards.length > 3 ? 4 : CategoryRestThumbCards.length,
         slidesToScroll: 1,
         arrows: true,
         prevArrow: <SlideButton type="prev" />,
@@ -80,9 +159,9 @@ function MainPage(props) {
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
-                        <Card title={card.name} 
-                        hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} 
-                        key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount}/>
+                        <Card title={card.name}
+                            hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
+                            key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
                     ))}
                 </Slider>
                 {LikedThumbCards.length > 0 &&
@@ -94,8 +173,72 @@ function MainPage(props) {
                         </div>
                         <Slider {...settings2}>
                             {LikedThumbCards.map(card => (
-                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail} 
-                                key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount}/>
+                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
+                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                            ))}
+                        </Slider>
+                    </>
+                }
+
+                {CategoryUnivercityThumbCards.length > 0 &&
+                    <>
+                        <div
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                        >
+                            <ExpandingText text="대학교 카테고리 목록" />
+                        </div>
+                        <Slider {...settings3}>
+                            {CategoryUnivercityThumbCards.map(card => (
+                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
+                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                            ))}
+                        </Slider>
+                    </>
+                }
+
+                {CategorySeoulThumbCards.length > 0 &&
+                    <>
+                        <div
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                        >
+                            <ExpandingText text="서울 카테고리 목록" />
+                        </div>
+                        <Slider {...settingsSeoul}>
+                            {CategorySeoulThumbCards.map(card => (
+                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
+                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                            ))}
+                        </Slider>
+                    </>
+                }
+
+                {CategoryInfoThumbCards.length > 0 &&
+                    <>
+                        <div
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                        >
+                            <ExpandingText text="정보전달 카테고리 목록" />
+                        </div>
+                        <Slider {...settingsInfo}>
+                            {CategoryInfoThumbCards.map(card => (
+                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
+                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                            ))}
+                        </Slider>
+                    </>
+                }
+
+                {CategoryRestThumbCards.length > 0 &&
+                    <>
+                        <div
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                        >
+                            <ExpandingText text="맛집 카테고리 목록" />
+                        </div>
+                        <Slider {...settingsRest}>
+                            {CategoryRestThumbCards.map(card => (
+                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
+                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
                             ))}
                         </Slider>
                     </>
