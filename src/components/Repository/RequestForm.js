@@ -15,7 +15,7 @@ const formItemLayout = {
     },
 };
 
-const IssueForm = (props) => {
+const RequestForm = (props) => {
 
     const dispatch = useDispatch()
 
@@ -31,7 +31,8 @@ const IssueForm = (props) => {
 
             dispatch(createRequest(props.location.pathname, jsonObj))
                 .then(response => {
-                    props.history.push(`${props.location.pathname}/${response.payload.data.requestId}`);
+                    props.history.push({pathname:`${props.location.pathname}/${response.payload.data.requestId}`,
+                    state: {userId: props.userId, repositoryName: props.repositoryName}});
                 })
                 .catch(error => {
                     console.log(error);
@@ -56,4 +57,4 @@ const IssueForm = (props) => {
     );
 };
 
-export default withRouter(IssueForm);
+export default withRouter(RequestForm);

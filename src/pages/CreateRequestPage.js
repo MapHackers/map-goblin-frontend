@@ -35,14 +35,12 @@ const CreateRequestPage = (props) => {
     let repositoryName;
 
     useEffect(() => {
-        console.log(props);
         if(Object.keys(compareResult).length === 0 && props.location.state !== undefined){
             userId = props.location.state.userId;
             repositoryName = props.location.state.repositoryName;
 
             dispatch(compareRepository(userId, repositoryName))
                 .then(response => {
-                    console.log(response);
                 })
                 .catch(error => {
                     console.log(error);
@@ -69,22 +67,6 @@ const CreateRequestPage = (props) => {
 
     }, [compareResult])
 
-    const onClickRequest = () => {
-        if(addList.length<=0 && modifyList.length<=0 && deleteList.length<=0 && layerList.length<=0){
-            alert("변경 사항이 없습니다.");
-        }else{
-            let jsonObj = {};
-            jsonObj.title =
-            dispatch(createRequest(props.location.pathname, compareResult))
-                .then(response => {
-                    console.log(response);
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        }
-    }
-
     return (
         <CommonLayout>
             <Row style={{textAlign:'center'}}>
@@ -94,7 +76,7 @@ const CreateRequestPage = (props) => {
                         변경사항 반영 요청
                     </p>
                     <Divider />
-                    <RequestForm initialValue={compareResult}>
+                    <RequestForm initialValue={compareResult} userId={userId} repositoryName={repositoryName}>
                         <Form.Item
                             label="제목"
                             name="title"

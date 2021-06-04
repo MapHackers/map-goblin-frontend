@@ -47,7 +47,8 @@ const columns = [
             if(values.type === "issue"){
                 return (<Link to={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</Link>)
             }else{
-                return (<Link to={`/${hrefId}/repositories/${hrefRepo}/requests/${values.key}`}>{title}</Link>)
+                return (<Link to={{pathname:`/${hrefId}/repositories/${hrefRepo}/requests/${values.key}`,
+                    state: {userId:hrefId, repositoryName: hrefRepo}}}>{title}</Link>)
             }
         },
     },
@@ -484,7 +485,7 @@ const RepositoryPage = (props) => {
                     { repositoryInfo.source === "HOST" && <TabPane tab={<span><PullRequestOutlined />변경 요청</span>} key="4">
                         {
                             requestLoading && <Alert
-                                message="복사한 지도에 변경사항이 있습니다."
+                                message="복사한 지도에 변경사항이 있습니다!"
                                 type="info"
                                 action={
                                     <Link to={{pathname: `/${userId}/repositories/${repositoryName}/requests`, state: {userId: userId, repositoryName:repositoryName}}}>
