@@ -1,7 +1,8 @@
 import React from 'react';
 import {Form} from "antd";
 import {withRouter} from "react-router-dom";
-import Api from "../../util/Api";
+import {createRequest} from "../../_actions/repository_action";
+import {useDispatch} from "react-redux";
 
 const formItemLayout = {
     labelCol: {
@@ -16,17 +17,26 @@ const formItemLayout = {
 
 const IssueForm = (props) => {
 
+    const dispatch = useDispatch()
+
     const onFinish = (values) => {
-        console.log(props)
-        console.log('values:', values);
-        Api.post(props.location.pathname, {"title": values.title, "content": values.content})
-            .then(response =>{
-                console.log("response")
-                console.log(response)
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        const compareResult = props.initialValue;
+
+        if(Object.keys(compareResult).length === 0){
+            alert("변경 사항이 없습니다.");
+        }else{
+            let jsonObj = {}
+            jsonObj.values = [{"title": values.title}, {"content": values.content}];
+            Object.assign(jsonObj, props.initialValue);
+
+            dispatch(createRequest(props.location.pathname, jsonObj))
+                .then(response => {
+                    props.history.push(`${props.location.pathname}/${response.payload.data.requestId}`);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -37,7 +47,8 @@ const IssueForm = (props) => {
         <Form {...formItemLayout}
               name="basic"
               onFinish={onFinish}
-              onFinishFailed={onFinishFailed}>
+              onFinishFailed={onFinishFailed}
+        >
 
             {props.children}
 

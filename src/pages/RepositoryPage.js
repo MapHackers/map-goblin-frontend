@@ -22,14 +22,13 @@ import {
     Statistic,
     Image,
     Pagination,
-    Alert,
-    Space
+    Alert
 } from 'antd';
 import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant-design/icons';
 import Api from "../util/Api";
 
 import InfoSetting from "../components/Repository/InfoSetting";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
 import {compareRepository, selectIssueList} from "../_actions/repository_action";
 
@@ -269,7 +268,9 @@ const RepositoryPage = (props) => {
                 .then(response => {
                     console.log(response);
                     if(response.payload.status === 200){
-                        setRequestLoading(true);
+                        if(response.payload.data.message === undefined){
+                            setRequestLoading(true);
+                        }
                     }
                 })
                 .catch(error => {
@@ -479,7 +480,7 @@ const RepositoryPage = (props) => {
                                 message="복사한 지도에 변경사항이 있습니다."
                                 type="info"
                                 action={
-                                    <Link to={`/${userId}/repositories/${repositoryName}/requests`}>
+                                    <Link to={{pathname: `/${userId}/repositories/${repositoryName}/requests`, state: {userId: userId, repositoryName:repositoryName}}}>
                                         <Button size="middle" type="primary">요청하기</Button>
                                     </Link>
                                 }
