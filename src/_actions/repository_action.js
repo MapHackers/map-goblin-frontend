@@ -68,8 +68,8 @@ export const addSelectedCategory = (categoryList) => {
     }
 }
 
-export const selectIssueList = (page, userId, repositoryName) => {
-    const request = Api.get(`/${userId}/repositories/${repositoryName}/issues?status=WAITING&page=${page}`)
+export const selectIssueList = (page, userId, repositoryName, status) => {
+    const request = Api.get(`/${userId}/repositories/${repositoryName}/issues?status=${status}&page=${page}`)
         .then(response => response)
         .catch(error => error.response);
 

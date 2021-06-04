@@ -20,14 +20,20 @@ import {
     Spin,
     Statistic,
     Image,
+    Pagination
 } from 'antd';
 import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant-design/icons';
 import Api from "../util/Api";
 
 import InfoSetting from "../components/Repository/InfoSetting";
+import {useDispatch, useSelector} from "react-redux";
 
+import {selectIssueList} from "../_actions/repository_action";
 
 const { TabPane } = Tabs
+
+let hrefId="";
+let hrefRepo="";
 
 const columns = [
     {
@@ -35,7 +41,7 @@ const columns = [
         dataIndex: 'title',
         key: 'title',
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
-        render: title => <a>{title}</a>,
+        render: (title, values) => <a href={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</a>,
     },
     {
         title: 'User',
@@ -51,19 +57,19 @@ const columns = [
                 {tags.map(tag => {
                     let color;
 
-                    if (tag === 'question') {
+                    if (tag === 'QUESTION') {
                         color = 'geekblue'
-                    } else if (tag === 'issue') {
+                    } else if (tag === 'ISSUE') {
                         color = 'volcano'
-                    } else if (tag === 'ok') {
+                    } else if (tag === 'OK') {
                         color = 'green'
-                    } else if (tag === 'denied') {
+                    } else if (tag === 'DENIED') {
                         color = 'red'
-                    } else if (tag === 'request') {
+                    } else if (tag === 'REQUEST') {
                         color = 'processing'
-                    } else if (tag === 'merge') {
+                    } else if (tag === 'MERGE') {
                         color = 'gold'
-                    } else if (tag === 'duplicate') {
+                    } else if (tag === 'DUPLICATE') {
                         color = 'default'
                     }
                     return (
@@ -83,46 +89,8 @@ const columns = [
     }
 ];
 
-const issueWaitingData = [
-    {
-        key: '1',
-        title: '코로나때문에 통행이 막힌 포탈은 반영이되어있나요?',
-        user: 'doili0552',
-        tags: ['question'],
-        date: '2021-04-11 12:43:52',
-    },
-    {
-        key: '2',
-        title: '제2 공학관 6층 피씨실 막혔습니다..',
-        user: '88dydfuf',
-        tags: ['issue'],
-        date: '2021-04-10 09:33:27',
-    },
-    {
-        key: '3',
-        title: '학교 310관 막혔어요!',
-        user: 'ghdtjq2038',
-        tags: ['issue'],
-        date: '2021-04-9 11:10:20',
-    },
-];
-
-const issueCheckedData = [
-    {
-        key: '1',
-        title: '학식 위치 추가해주세요!',
-        user: 'doili0552',
-        tags: ['ok'],
-        date: '2021-04-11 12:43:52',
-    },
-    {
-        key: '2',
-        title: '123455관 추가해주실 수 있나요?',
-        user: '88dydfuf',
-        tags: ['denied'],
-        date: '2021-04-10 09:33:27',
-    }
-];
+let totalWaitingIssueCount = 0;
+let totalCheckedIssueCount = 0;
 
 const requestWaitingData = [
     {
@@ -184,6 +152,7 @@ const Info = styled.div`
 `;
 
 const RepositoryPage = (props) => {
+    const dispatch = useDispatch()
 
     const [repositoryInfo, setRepositoryInfo] = useState({});
     const [thumbnail, setThumbnail] = useState("");
@@ -193,15 +162,22 @@ const RepositoryPage = (props) => {
     const { userId, repositoryName } = props.match.params;
     const userUrl = `/${userId}`;
 
+    const [issueWaitingPage, setIssueWaitingPage] = useState(1);
+    const [issueCheckedPage, setIssueCheckedPage] = useState(1);
+    const [issueWaitingData, setIssueWaitingData] = useState([]);
+    const [issueCheckedData, setIssueCheckedData] = useState([]);
+
     const backHome = () => {
         props.history.push('/main')
     }
 
-    //const dispatch = useDispatch()
-
     useEffect(() => {
 
         async function getRepositoryInfo() {
+            hrefId = userId;
+            hrefRepo = repositoryName;
+
+            setIsLoading(true);
             await Api.get(`/${userId}/repositories/${repositoryName}`).then(response => {
                 setRepositoryInfo(response.data);
 
@@ -211,10 +187,67 @@ const RepositoryPage = (props) => {
                     setThumbnail(Api.defaults.baseURL + '/files/no-image.svg');
                 }
 
-                setIsLoading(false);
             }).catch(error => {
                 setNotFound(true);
-            })
+            });
+
+            dispatch(selectIssueList(0, userId, repositoryName, 'WAITING'))
+                .then(response => {
+
+                    let issueList = response.payload.data;
+                    totalWaitingIssueCount = issueList.totalElements;
+
+                    let contents = issueList.content;
+
+                    let result = []
+
+                    for(let i=0; i<contents.length; i++){
+                        let jsonObj = {};
+
+                        jsonObj.key = i;
+                        jsonObj.title = contents[i].title;
+                        jsonObj.user = contents[i].createdBy;
+                        jsonObj.tags = [contents[i].tag];
+                        jsonObj.date = contents[i].createdDate;
+
+                        result.push(jsonObj);
+                    }
+
+                    setIssueWaitingData(result);
+                })
+                .catch(error => {
+                    setNotFound(true);
+                })
+
+            dispatch(selectIssueList(0, userId, repositoryName, 'CHECKED'))
+                .then(response => {
+
+                    let issueList = response.payload.data;
+                    totalCheckedIssueCount = issueList.totalElements;
+
+                    let contents = issueList.content;
+
+                    let result = []
+
+                    for(let i=0; i<contents.length; i++){
+                        let jsonObj = {};
+
+                        jsonObj.key = i;
+                        jsonObj.title = contents[i].title;
+                        jsonObj.user = contents[i].createdBy;
+                        jsonObj.tags = [contents[i].tag];
+                        jsonObj.date = contents[i].createdDate;
+
+                        result.push(jsonObj);
+                    }
+
+                    setIssueCheckedData(result);
+
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    setNotFound(true);
+                })
         }
 
         getRepositoryInfo().then();
@@ -248,6 +281,62 @@ const RepositoryPage = (props) => {
         }).catch(error=>{
             console.log(error);
         })
+    }
+
+    const onChangeWaitingPage = (page) => {
+        dispatch(selectIssueList(page-1, userId, repositoryName, 'WAITING'))
+            .then(response => {
+
+                let issueList = response.payload.data;
+
+                let contents = issueList.content;
+
+                let result = []
+
+                for(let i=0; i<contents.length; i++){
+                    let jsonObj = {};
+
+                    jsonObj.key = i;
+                    jsonObj.title = contents[i].title;
+                    jsonObj.user = contents[i].createdBy;
+                    jsonObj.tags = [contents[i].tag];
+                    jsonObj.date = contents[i].createdDate;
+
+                    result.push(jsonObj);
+                }
+
+                setIssueWaitingData(result);
+            });
+
+        setIssueWaitingPage(page);
+    }
+
+    const onChangeCheckedPage = (page) => {
+        dispatch(selectIssueList(page-1, userId, repositoryName, 'CHECKED'))
+            .then(response => {
+
+                let issueList = response.payload.data;
+
+                let contents = issueList.content;
+
+                let result = []
+
+                for(let i=0; i<contents.length; i++){
+                    let jsonObj = {};
+
+                    jsonObj.key = i;
+                    jsonObj.title = contents[i].title;
+                    jsonObj.user = contents[i].createdBy;
+                    jsonObj.tags = [contents[i].tag];
+                    jsonObj.date = contents[i].createdDate;
+
+                    result.push(jsonObj);
+                }
+
+                setIssueWaitingData(result);
+            });
+
+        setIssueCheckedPage(page);
     }
 
     if (!isLoading) {
@@ -326,27 +415,30 @@ const RepositoryPage = (props) => {
                     <TabPane tab={<span><EnvironmentOutlined />지도</span>} key="2">
                         <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority} key="mapContainer"/>
                     </TabPane>
-                    {
-                        repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
-                            <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
-                                <TabPane tab={<span>3 Waiting</span>} key="1">
-                                    <Table
-                                        columns={columns}
-                                        pagination={{ position: ['bottomCenter'] }}
-                                        dataSource={issueWaitingData}
-                                    />
-                                </TabPane>
-                                <TabPane tab={<span>2 Checked</span>} key="2">
-                                    <Table
-                                        columns={columns}
-                                        pagination={{ position: ['bottomCenter'] }}
-                                        dataSource={issueCheckedData}
-                                    />
-                                </TabPane>
-                            </Tabs>
-                        </TabPane>
+                    { repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
+                        <Button href={`/${userId}/repositories/${repositoryName}/issues`}>새로운 지적</Button>
+                        <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
+                            <TabPane tab={<span>{`${totalWaitingIssueCount} Waiting`}</span>} key="1">
+                                <Table
+                                    columns={columns}
+                                    pagination={false}
+                                    dataSource={issueWaitingData}
+                                />
+                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={issueWaitingPage} pageSize={8} onChange={onChangeWaitingPage} total={totalWaitingIssueCount}/>
+                            </TabPane>
+                            <TabPane tab={<span>{`${totalCheckedIssueCount} Checked`}</span>} key="2">
+                                <Table
+                                    columns={columns}
+                                    pagination={false}
+                                    dataSource={issueCheckedData}
+                                />
+                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={issueCheckedPage} pageSize={8} onChange={onChangeCheckedPage} total={totalCheckedIssueCount}/>
+                            </TabPane>
+                        </Tabs>
+                    </TabPane>
                     }
                     { repositoryInfo.source === "HOST" && <TabPane tab={<span><PullRequestOutlined />변경 요청</span>} key="4">
+                        <Button href={`/${userId}/repositories/${repositoryName}/requests`}>새로운 변경 요청</Button>
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>2 Waiting</span>} key="1">
                                 <Table
