@@ -4,7 +4,7 @@ import {
     SAVE_REPOSITORY_INFO,
     ADD_SELECTED_CATEGORY,
     MODIFY_REPOSITORY_INFO,
-    MODIFY_FILE, SELECT_ISSUE_LIST, SELECT_REQUEST_LIST
+    MODIFY_FILE, SELECT_ISSUE_LIST, SELECT_REQUEST_LIST, COMPARE_REPOSITORY
 } from './type'
 import Api from "../util/Api";
 
@@ -86,6 +86,17 @@ export const selectRequestList = (page, userId, repositoryName) => {
 
     return {
         type: SELECT_REQUEST_LIST,
+        payload: request
+    }
+}
+
+export const compareRepository = (userId, repositoryName) => {
+    const request = Api.get(`/${userId}/repositories/${repositoryName}/compare`)
+        .then(response => response)
+        .catch(error => error.response);
+
+    return {
+        type: COMPARE_REPOSITORY,
         payload: request
     }
 }
