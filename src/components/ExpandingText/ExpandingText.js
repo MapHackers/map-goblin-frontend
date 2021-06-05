@@ -22,7 +22,7 @@ const ExpandedText = styled.a`
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
-    font-size: 1.8vw;
+    font-size: 2.2vw;
     vertical-align: bottom;
     .arrow{
         padding-left: 0.5vw;

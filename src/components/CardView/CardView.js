@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LikeOutlined, DislikeOutlined, DownloadOutlined, EyeOutlined, LikeTwoTone, DislikeTwoTone } from '@ant-design/icons';
+import { LikeOutlined, DislikeOutlined, EyeOutlined, LikeTwoTone, DislikeTwoTone } from '@ant-design/icons';
 import { Card } from 'antd';
 import Api from '../../util/Api'
 import { withRouter } from 'react-router-dom'
@@ -12,7 +12,7 @@ function CardView(props) {
 
     const [like, setlike] = useState(props.like)
     const [dislike, setdislike] = useState(props.dislike)
-    const [id, setid] = useState(props.id)
+    const [id, ] = useState(props.id)
     const [likeType, setlikeType] = useState(props.likeType)
 
     const handleLike = (id, type) => {
@@ -56,15 +56,15 @@ function CardView(props) {
 
     return (
         <Card
-            style={{ width: '15rem', marginLeft: '3rem', marginRight: '3rem', marginBottom: '1rem', boxShadow: '6px 6px 10px 0 rgba(169, 169, 169, 0.4)' }}
+            style={{ width: '17.5rem', marginLeft: '1rem', marginRight: '1rem', marginBottom: '1rem', boxShadow: '6px 6px 10px 0 rgba(169, 169, 169, 0.4)' }}
             cover={
                 <Image
                     onClick={() => {
                         console.log(props.ownerId)
                         props.history.push(`/${props.ownerId}/repositories/${props.title}`)
                     }}
-                    width='15rem'
-                    height='15rem'
+                    width='17.5rem'
+                    height='17.5rem'
                     alt="example"
                     src={props.thumbnail ? Api.defaults.baseURL + '/files/' + props.thumbnail : "no-image.svg"}
                     preview={false}
