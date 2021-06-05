@@ -44,18 +44,14 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, ma
     const [submitting, setsubmitting] = useState(false)
 
     useEffect(() => {
-        console.log("reviewList : ", reviewList)
         let dataToSubmit = {
             "mapId": mapId,
             "layerName": layer,
             "geometry": latLng
         }
-        console.log("dataToSubmit", dataToSubmit)
         Api.post(`/review/mapData`, dataToSubmit)
             .then(response => {
-                console.log("review : ", response)
                 let temp = []
-                console.log(response?.data.data)
                 response?.data.data.reverse().map((review, idx) => (
                     temp.push(
                         {
@@ -85,10 +81,8 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, ma
             "content": reviewInput,
             "rating": value
         }
-        console.log("dataToSubmit", dataToSubmit)
         await Api.post(`/review`, dataToSubmit)
             .then(response => {
-                console.log("review : ", response)
             })
             .catch(e => {
                 console.log(e)
@@ -117,7 +111,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, ma
                 tabBarGutter={100}>
                 <TabPane tab={<span><InfoCircleOutlined /> Information </span>} key="1">
                     <div>
-                        <h2> {title} </h2>
+                        <h1> {title} </h1>
                         <Rate disabled allowHalf={true} value={rating} style={{ marginBottom: '25px' }} />
                         {thumbnail.substr(0, 4) === "http" ?
                             <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={thumbnail} alt="staticImage" />
