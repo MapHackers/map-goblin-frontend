@@ -18,7 +18,7 @@ function ExpandingText({ text }) {
 
 export default ExpandingText
 
-const ExpandedText = styled.a`
+const ExpandedText = styled.div`
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
