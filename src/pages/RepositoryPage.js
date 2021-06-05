@@ -30,7 +30,7 @@ import Api from "../util/Api";
 import InfoSetting from "../components/Repository/InfoSetting";
 import {useDispatch} from "react-redux";
 
-import {compareRepository, selectIssueList} from "../_actions/repository_action";
+import {compareRepository, selectIssueList, selectRequestList} from "../_actions/repository_action";
 
 const { TabPane } = Tabs
 
@@ -100,57 +100,9 @@ const columns = [
 
 let totalWaitingIssueCount = 0;
 let totalCheckedIssueCount = 0;
-
-const requestWaitingData = [
-    {
-        key: '1',
-        title: '학교 경치 좋은 곳 추가',
-        user: 'doili0552',
-        tags: ['request'],
-        date: '2021-04-11 12:43:52',
-    },
-    {
-        key: '2',
-        title: '학교 화장실 위치 추가',
-        user: '88dydfuf',
-        tags: ['request'],
-        date: '2021-04-10 09:33:27',
-    }
-];
-
-const requestAcceptedData = [
-    {
-        key: '1',
-        title: '학교 편의점 위치 추가',
-        user: '88dydfuf',
-        tags: ['ok', 'merge'],
-        date: '2021-04-10 09:33:27',
-    },
-    {
-        key: '2',
-        title: '학교 커피숍 위치 추가',
-        user: 'ghdtjq2038',
-        tags: ['ok', 'merge'],
-        date: '2021-04-9 11:10:20',
-    },
-];
-
-const requestDeniedData = [
-    {
-        key: '1',
-        title: '학교 운동장 위치 추가',
-        user: 'doili0552',
-        tags: ['denied', 'duplicate'],
-        date: '2021-04-11 12:43:52',
-    },
-    {
-        key: '2',
-        title: '맛집 추가',
-        user: 'ghdtjq2038',
-        tags: ['denied'],
-        date: '2021-04-11 12:43:52',
-    },
-];
+let totalWaitingRequestCount = 0;
+let totalAcceptedRequestCount = 0;
+let totalDeniedRequestCount = 0;
 
 const Description = styled.div`
     margin : 20px 100px 20px 100px;
@@ -180,6 +132,12 @@ const RepositoryPage = (props) => {
     const [issueCheckedData, setIssueCheckedData] = useState([]);
 
     const [requestLoading, setRequestLoading] = useState(false);
+    const [requestWaitingPage, setRequestWaitingPage] = useState(1);
+    const [requestAcceptedPage, setRequestAcceptedPage] = useState(1);
+    const [requestDeniedPage, setRequestDeniedPage] = useState(1);
+    const [requestWaitingData, setRequestWaitingData] = useState([]);
+    const [requestAcceptedData, setRequestAcceptedData] = useState([]);
+    const [requestDeniedData, setRequestDeniedData] = useState([]);
 
     const backHome = () => {
         props.history.push('/main')
@@ -254,7 +212,7 @@ const RepositoryPage = (props) => {
                     for(let i=0; i<contents.length; i++){
                         let jsonObj = {};
 
-                        jsonObj.key = i;
+                        jsonObj.key = contents[i].id;
                         jsonObj.title = contents[i].title;
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
@@ -272,9 +230,101 @@ const RepositoryPage = (props) => {
                     setNotFound(true);
                 });
 
+            dispatch(selectRequestList(0, userId, repositoryName, 'WAITING'))
+                .then(response => {
+
+                    let issueList = response.payload.data;
+                    totalWaitingRequestCount = issueList.totalElements;
+
+                    let contents = issueList.content;
+
+                    let result = []
+
+                    for(let i=0; i<contents.length; i++){
+                        let jsonObj = {};
+
+                        jsonObj.key = contents[i].id;
+                        jsonObj.title = contents[i].title;
+                        jsonObj.user = contents[i].createdBy;
+                        jsonObj.tags = [contents[i].tag];
+                        jsonObj.date = contents[i].createdDate;
+                        jsonObj.type = "request";
+
+                        result.push(jsonObj);
+                    }
+
+                    setRequestWaitingData(result);
+
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    setNotFound(true);
+                });
+
+            dispatch(selectRequestList(0, userId, repositoryName, 'ACCEPTED'))
+                .then(response => {
+
+                    let requestList = response.payload.data;
+                    totalAcceptedRequestCount = requestList.totalElements;
+
+                    let contents = requestList.content;
+
+                    let result = []
+
+                    for(let i=0; i<contents.length; i++){
+                        let jsonObj = {};
+
+                        jsonObj.key = contents[i].id;
+                        jsonObj.title = contents[i].title;
+                        jsonObj.user = contents[i].createdBy;
+                        jsonObj.tags = [contents[i].tag];
+                        jsonObj.date = contents[i].createdDate;
+                        jsonObj.type = "request";
+
+                        result.push(jsonObj);
+                    }
+
+                    setRequestAcceptedData(result);
+
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    setNotFound(true);
+                });
+
+            dispatch(selectRequestList(0, userId, repositoryName, 'DENIED'))
+                .then(response => {
+
+                    let requestList = response.payload.data;
+                    totalDeniedRequestCount = requestList.totalElements;
+
+                    let contents = requestList.content;
+
+                    let result = []
+
+                    for(let i=0; i<contents.length; i++){
+                        let jsonObj = {};
+
+                        jsonObj.key = contents[i].id;
+                        jsonObj.title = contents[i].title;
+                        jsonObj.user = contents[i].createdBy;
+                        jsonObj.tags = [contents[i].tag];
+                        jsonObj.date = contents[i].createdDate;
+                        jsonObj.type = "request";
+
+                        result.push(jsonObj);
+                    }
+
+                    setRequestDeniedData(result);
+
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    setNotFound(true);
+                });
+
             dispatch(compareRepository(userId, repositoryName))
                 .then(response => {
-                    console.log(response);
                     if(response.payload.status === 200){
                         if(response.payload.data.message === undefined){
                             setRequestLoading(true);
@@ -287,7 +337,7 @@ const RepositoryPage = (props) => {
         }
 
         getRepositoryInfo().then();
-    }, [props,actionType])
+    }, [props, actionType])
 
     const onClickClone = () => {
         if(repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER"){
@@ -332,11 +382,12 @@ const RepositoryPage = (props) => {
                 for(let i=0; i<contents.length; i++){
                     let jsonObj = {};
 
-                    jsonObj.key = i;
+                    jsonObj.key = contents[i].id;
                     jsonObj.title = contents[i].title;
                     jsonObj.user = contents[i].createdBy;
                     jsonObj.tags = [contents[i].tag];
                     jsonObj.date = contents[i].createdDate;
+                    jsonObj.type = "issue";
 
                     result.push(jsonObj);
                 }
@@ -360,11 +411,12 @@ const RepositoryPage = (props) => {
                 for(let i=0; i<contents.length; i++){
                     let jsonObj = {};
 
-                    jsonObj.key = i;
+                    jsonObj.key = contents[i].id;
                     jsonObj.title = contents[i].title;
                     jsonObj.user = contents[i].createdBy;
                     jsonObj.tags = [contents[i].tag];
                     jsonObj.date = contents[i].createdDate;
+                    jsonObj.type = "issue";
 
                     result.push(jsonObj);
                 }
@@ -373,6 +425,93 @@ const RepositoryPage = (props) => {
             });
 
         setIssueCheckedPage(page);
+    }
+
+    const onChangeRequestWaitingPage = (page) => {
+        dispatch(selectRequestList(page-1, userId, repositoryName, 'WAITING'))
+            .then(response => {
+
+                let requestList = response.payload.data;
+
+                let contents = requestList.content;
+
+                let result = []
+
+                for(let i=0; i<contents.length; i++){
+                    let jsonObj = {};
+
+                    jsonObj.key = contents[i].id;
+                    jsonObj.title = contents[i].title;
+                    jsonObj.user = contents[i].createdBy;
+                    jsonObj.tags = [contents[i].tag];
+                    jsonObj.date = contents[i].createdDate;
+                    jsonObj.type = "request";
+
+                    result.push(jsonObj);
+                }
+
+                setRequestWaitingData(result);
+            });
+
+        setRequestWaitingPage(page);
+    }
+
+    const onChangeRequestAcceptedPage = (page) => {
+        dispatch(selectRequestList(page-1, userId, repositoryName, 'ACCEPTED'))
+            .then(response => {
+
+                let requestList = response.payload.data;
+
+                let contents = requestList.content;
+
+                let result = []
+
+                for(let i=0; i<contents.length; i++){
+                    let jsonObj = {};
+
+                    jsonObj.key = contents[i].id;
+                    jsonObj.title = contents[i].title;
+                    jsonObj.user = contents[i].createdBy;
+                    jsonObj.tags = [contents[i].tag];
+                    jsonObj.date = contents[i].createdDate;
+                    jsonObj.type = "request";
+
+                    result.push(jsonObj);
+                }
+
+                setRequestAcceptedData(result);
+            });
+
+        setRequestAcceptedPage(page);
+    }
+
+    const onChangeRequestDeniedPage = (page) => {
+        dispatch(selectRequestList(page-1, userId, repositoryName, 'DENIED'))
+            .then(response => {
+
+                let requestList = response.payload.data;
+
+                let contents = requestList.content;
+
+                let result = []
+
+                for(let i=0; i<contents.length; i++){
+                    let jsonObj = {};
+
+                    jsonObj.key = contents[i].id;
+                    jsonObj.title = contents[i].title;
+                    jsonObj.user = contents[i].createdBy;
+                    jsonObj.tags = [contents[i].tag];
+                    jsonObj.date = contents[i].createdDate;
+                    jsonObj.type = "request";
+
+                    result.push(jsonObj);
+                }
+
+                setRequestDeniedData(result);
+            });
+
+        setRequestDeniedPage(page);
     }
 
     if (!isLoading) {
@@ -463,7 +602,7 @@ const RepositoryPage = (props) => {
                             style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
                         />
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
-                            <TabPane tab={<span>{`${totalWaitingIssueCount} Waiting`}</span>} key="1">
+                            <TabPane tab={<span>{totalWaitingIssueCount} Waiting</span>} key="1">
                                 <Table
                                     columns={columns}
                                     pagination={false}
@@ -471,7 +610,7 @@ const RepositoryPage = (props) => {
                                 />
                                 <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={issueWaitingPage} pageSize={8} onChange={onChangeWaitingPage} total={totalWaitingIssueCount}/>
                             </TabPane>
-                            <TabPane tab={<span>{`${totalCheckedIssueCount} Checked`}</span>} key="2">
+                            <TabPane tab={<span>{totalCheckedIssueCount} Checked</span>} key="2">
                                 <Table
                                     columns={columns}
                                     pagination={false}
@@ -496,26 +635,29 @@ const RepositoryPage = (props) => {
                             />
                         }
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
-                            <TabPane tab={<span>2 Waiting</span>} key="1">
+                            <TabPane tab={<span>{totalWaitingRequestCount} Waiting</span>} key="1">
                                 <Table
                                     columns={columns}
-                                    pagination={{ position: ['bottomCenter'] }}
+                                    pagination={false}
                                     dataSource={requestWaitingData}
                                 />
+                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={requestWaitingPage} pageSize={8} onChange={onChangeRequestWaitingPage} total={totalWaitingRequestCount}/>
                             </TabPane>
-                            <TabPane tab={<span>2 Accepted</span>} key="2">
+                            <TabPane tab={<span>{totalAcceptedRequestCount} Accepted</span>} key="2">
                                 <Table
                                     columns={columns}
-                                    pagination={{ position: ['bottomCenter'] }}
+                                    pagination={false}
                                     dataSource={requestAcceptedData}
                                 />
+                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={requestAcceptedPage} pageSize={8} onChange={onChangeRequestAcceptedPage} total={totalAcceptedRequestCount}/>
                             </TabPane>
-                            <TabPane tab={<span>1 Denied</span>} key="3">
+                            <TabPane tab={<span>{totalDeniedRequestCount} Denied</span>} key="3">
                                 <Table
                                     columns={columns}
-                                    pagination={{ position: ['bottomCenter'] }}
+                                    pagination={false}
                                     dataSource={requestDeniedData}
                                 />
+                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={requestDeniedPage} pageSize={8} onChange={onChangeRequestDeniedPage} total={totalDeniedRequestCount}/>
                             </TabPane>
                         </Tabs>
                     </TabPane>

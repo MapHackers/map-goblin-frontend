@@ -79,8 +79,8 @@ export const selectIssueList = (page, userId, repositoryName, status) => {
     }
 }
 
-export const selectRequestList = (page, userId, repositoryName) => {
-    const request = Api.get(`/${userId}/repositories/${repositoryName}/requests?page=${page}`)
+export const selectRequestList = (page, userId, repositoryName, status) => {
+    const request = Api.get(`/${userId}/repositories/${repositoryName}/requests?status=${status}&page=${page}`)
         .then(response => response)
         .catch(error => error.response);
 
