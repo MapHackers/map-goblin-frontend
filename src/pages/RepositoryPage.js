@@ -37,6 +37,17 @@ const { TabPane } = Tabs
 let hrefId="";
 let hrefRepo="";
 
+function getDate(isoDate) {
+    const months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const createdDate = isoDate.split(/-|T/);
+    const year = createdDate[0];
+    const month = months[parseInt(createdDate[1])]
+    const date = createdDate[2];
+
+    return year + ', ' + month + ' ' + date;
+}
+
 const columns = [
     {
         title: 'Title',
@@ -188,7 +199,7 @@ const RepositoryPage = (props) => {
                         jsonObj.title = contents[i].title;
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
-                        jsonObj.date = contents[i].createdDate;
+                        jsonObj.date = getDate(contents[i].createdDate);
                         jsonObj.type = "issue";
 
                         result.push(jsonObj);
@@ -217,7 +228,7 @@ const RepositoryPage = (props) => {
                         jsonObj.title = contents[i].title;
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
-                        jsonObj.date = contents[i].createdDate;
+                        jsonObj.date = getDate(contents[i].createdDate);
                         jsonObj.type = "issue";
 
                         result.push(jsonObj);
@@ -248,7 +259,7 @@ const RepositoryPage = (props) => {
                         jsonObj.title = contents[i].title;
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
-                        jsonObj.date = contents[i].createdDate;
+                        jsonObj.date = getDate(contents[i].createdDate);
                         jsonObj.type = "request";
 
                         result.push(jsonObj);
@@ -279,7 +290,7 @@ const RepositoryPage = (props) => {
                         jsonObj.title = contents[i].title;
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
-                        jsonObj.date = contents[i].createdDate;
+                        jsonObj.date = getDate(contents[i].createdDate);
                         jsonObj.type = "request";
 
                         result.push(jsonObj);
@@ -310,7 +321,7 @@ const RepositoryPage = (props) => {
                         jsonObj.title = contents[i].title;
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
-                        jsonObj.date = contents[i].createdDate;
+                        jsonObj.date = getDate(contents[i].createdDate);
                         jsonObj.type = "request";
 
                         result.push(jsonObj);

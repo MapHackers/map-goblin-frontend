@@ -111,6 +111,8 @@ const RequestDetailPage = (props) => {
 
                 let compareResult = response.payload.data;
 
+                console.log("compareResult:", compareResult);
+
                 if(compareResult.added !== undefined){
                     setAddList(compareResult.added.map((data) => <p>{data.createdDate} {data.name}</p>));
                 }
