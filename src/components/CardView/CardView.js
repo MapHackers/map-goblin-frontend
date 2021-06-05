@@ -27,7 +27,7 @@ function CardView({ card, history }) {
                     <h1> 카테고리 </h1>
                 </div>
             }
-            <div style={{textAlign: "center"}}>
+            <div style={{ textAlign: "center" }}>
                 {
 
                     card.categories.map((category, idx) => (
@@ -81,17 +81,16 @@ function CardView({ card, history }) {
         <Card
             style={{ width: '17.5rem', marginLeft: '1rem', marginRight: '1rem', marginBottom: '1rem', boxShadow: '6px 6px 10px 0 rgba(169, 169, 169, 0.4)' }}
             cover={
-                <Image
-                    onClick={() => {
-                        console.log(card.ownerId)
-                        history.push(`/${card.ownerId}/repositories/${card.name}`)
-                    }}
-                    width='17.5rem'
-                    height='17.5rem'
-                    alt="example"
-                    src={card.thumbnail ? Api.defaults.baseURL + '/files/' + card.thumbnail : "no-image.svg"}
-                    preview={false}
-                />
+                <a href={`/${card.ownerId}/repositories/${card.name}`}>
+                    <Image
+                        width='17.5rem'
+                        height='17.5rem'
+                        alt="example"
+                        src={card.thumbnail ? Api.defaults.baseURL + '/files/' + card.thumbnail : "no-image.svg"}
+                        preview={false}
+                    />
+                </a>
+
             }
             actions={[
                 <div>

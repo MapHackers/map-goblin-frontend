@@ -534,7 +534,7 @@ const RepositoryPage = (props) => {
                             <Row>
                                 <Col flex="auto" style={{ width: '200px' }}>
                                     <Row>
-                                        <h1 style={{ marginBottom: '50px', fontSize: '2rem', fontWeight: '2rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}> 상세설명 </h1>
+                                        <h1 style={{ width: '200px',marginBottom: '50px', fontSize: '2rem', fontWeight: '2rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}> 상세설명 </h1>
                                         <h2 style={{ fontSize: '1.1rem', lineHeight: '2rem' }}>{repositoryInfo.description}</h2>
                                     </Row>
                                 </Col>

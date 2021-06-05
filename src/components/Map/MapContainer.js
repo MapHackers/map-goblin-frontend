@@ -47,18 +47,28 @@ const MapContainer = ({ mapId, authority }) => {
         setisMarkerCreatable(!isMarkerCreatable)
     }
 
+    const [isGPSLoading, setisGPSLoading] = useState(false)
     const GpsOnClick = () => {
         console.log("GPS ONCLICK")
         if (navigator.geolocation) {
             console.log("in IF")
+            setisGPSLoading(true)
+
             navigator.geolocation.getCurrentPosition(function (position) {
-                setmapCenter(new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude))
-                console.log(mapCenter)
+                setgpsLat(position.coords.latitude)
+                setgpsLng(position.coords.longitude)
             })
         } else {
             alert("GPS 지원하지 않습니다.")
         }
     }
+
+    useEffect(() => {
+        setmapCenter(new kakao.maps.LatLng(gpsLat, gpsLng))
+        setisGPSLoading(false)
+    }, [gpsLat, gpsLng])
+
+
 
     const [isDescModalVisible, setIsDescModalVisible] = useState(false);
     const [clickedMarker, setclickedMarker] = useState()
@@ -538,6 +548,11 @@ const MapContainer = ({ mapId, authority }) => {
                             </Select>
                         </div>
                     </div>
+                </Modal>
+
+                <Modal visible={isGPSLoading} onOk={() => { setisGPSLoading(!isGPSLoading) }} centered>
+                    <h1>GPS Loading...</h1>
+                    <h3>GPS 정보를 불러오는 데 수 초~분이 걸릴 수 있습니다.</h3>
                 </Modal>
 
 
