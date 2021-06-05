@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { LikeOutlined, DislikeOutlined, EyeOutlined, LikeTwoTone, DislikeTwoTone, InfoCircleOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
 import Api from '../../util/Api'
 import { withRouter } from 'react-router-dom'
-import { Image, Popover } from 'antd';
+import { Image, Popover, Tag } from 'antd';
 
 
-function CardView({card, history}) {
+function CardView({ card, history }) {
 
     const { Meta } = Card;
 
@@ -16,9 +16,25 @@ function CardView({card, history}) {
     const [likeType, setlikeType] = useState(card.likeType)
 
     const cardHoverInfo = (
-        <div>
-            <h3>Owner : {card.userName}</h3>
-            <h3>Desc : {card.description}</h3>
+        <div style={{ width: '200px' }}>
+            <div style={{ textAlign: "center" }}>
+                <h1> 지도 정보 </h1>
+            </div>
+            <h3>지도 주인 : {card.userName}</h3>
+            <h3>지도 설명 : {card.description}</h3>
+            {card.categories.length > 0 &&
+                <div style={{ textAlign: "center" }}>
+                    <h1> 카테고리 </h1>
+                </div>
+            }
+            <div style={{textAlign: "center"}}>
+                {
+
+                    card.categories.map((category, idx) => (
+                        <Tag color='geekblue' key={idx}>{category.name}</Tag>
+                    ))
+                }
+            </div>
         </div>
     )
 
