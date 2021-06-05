@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Divider, Space, Tabs, List, Row, Col, Image} from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Divider, Space, Tabs, List, Row, Col, Image } from 'antd';
 import {
     BookOutlined,
     EnvironmentOutlined,
@@ -8,17 +8,15 @@ import {
     LikeOutlined,
     DislikeOutlined
 } from '@ant-design/icons';
-import {useSelector, connect, useDispatch} from "react-redux";
+import { useSelector } from "react-redux";
 
 import Card from "../CardView/CardView";
 
-import {Doughnut} from "react-chartjs-2";
-import Avatar from "antd/es/avatar/avatar";
+import { Doughnut } from "react-chartjs-2";
 import Api from "../../util/Api";
-import {withRouter} from "react-router-dom";
-import SlideButton from "../NetflixSlider/SlideButton";
+import { withRouter } from "react-router-dom";
 
-const {TabPane} = Tabs;
+const { TabPane } = Tabs;
 
 const typemap = {
     'LIKE': '를 좋아합니다.',
@@ -28,7 +26,7 @@ const typemap = {
 }
 
 
-const IconText = ({icon, text}) => (
+const IconText = ({ icon, text }) => (
     <Space>
         {React.createElement(icon)}
         {text}
@@ -60,8 +58,6 @@ const MypageTabContainer = (props) => {
     const userInfo = useSelector(state => state.userInfo)
     const [isOwner, setIsOwner] = useState(false)
 
-    let repoDatas = []
-
     //let mapList = []
     let repoOrderByLike = []
     let repoOrderByVisit = []
@@ -71,12 +67,10 @@ const MypageTabContainer = (props) => {
     let tmpVisits = []
 
     const [mapList, setMapList] = useState([])
-    const [repoData, setRepoData] = useState([])
     const [liLabels, setLiLabels] = useState([])
     const [viLabels, setViLabels] = useState([])
     const [likeCounts, setLikeCounts] = useState([])
     const [visitCounts, setVisitCounts] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
 
     const alarms = useSelector(state => state.alarm.userAlarm.data)
 
@@ -141,7 +135,7 @@ const MypageTabContainer = (props) => {
             tmpLikes.push(repo.likeCount);
         })
 
-        repoOrderByVisit.sort(function (a,b) {
+        repoOrderByVisit.sort(function (a, b) {
             return b.visitCount - a.visitCount
         })
         repoOrderByVisit.map(repo => {
@@ -149,29 +143,27 @@ const MypageTabContainer = (props) => {
             tmpVisits.push(repo.visitCount)
         })
 
-        setLiLabels(tmpLiLabels.slice(0,5))
-        setViLabels(tmpViLabels.slice(0,5))
-        setLikeCounts(tmpLikes.slice(0,5))
-        setVisitCounts(tmpVisits.slice(0,5))
+        setLiLabels(tmpLiLabels.slice(0, 5))
+        setViLabels(tmpViLabels.slice(0, 5))
+        setLikeCounts(tmpLikes.slice(0, 5))
+        setVisitCounts(tmpVisits.slice(0, 5))
 
     }, [])
 
 
     return (
-        <div style={{width: '60vw'}}>
+        <div style={{ width: '60vw' }}>
             <Tabs defaultActiveKey="1">
-                <TabPane tab={<span><BookOutlined/>Overview</span>} key="1">
-                    <div style={{marginBottom: "20px", textAlign: "left", fontSize: "20px", fontWeight: "600"}}>{userInfo.userName}님의 지도
+                <TabPane tab={<span><BookOutlined />Overview</span>} key="1">
+                    <div style={{ marginBottom: "20px", textAlign: "left", fontSize: "20px", fontWeight: "600" }}>{userInfo.userName}님의 지도
                         목록
                     </div>
-                    <Space size="large" style={{width: "100%"}}>
+                    <Space size="large" style={{ width: "100%" }}>
                         {mapList?.map(card => (
-                            <Card title={card.name} hashtags={card.description} like={card.likeCount}
-                                  dislike={card.dislikeCount} thumbnail={card.thumbnail} key={card.id}
-                                  ownerId={userInfo.userId}/>
+                            <Card card={card} />
                         ))}
                     </Space>
-                    <Divider/>
+                    <Divider />
                     <Row>
                         <Col span={12}>
                             <div style={{
@@ -181,7 +173,7 @@ const MypageTabContainer = (props) => {
                                 fontWeight: "600"
                             }}>{userInfo.userName}님의 지도별 좋아요 수 TOP 5
                             </div>
-                            <Doughnut data={likeChartData}/>
+                            <Doughnut data={likeChartData} />
                         </Col>
                         <Col span={12}>
                             <div style={{
@@ -191,11 +183,11 @@ const MypageTabContainer = (props) => {
                                 fontWeight: "600"
                             }}>{userInfo.userName}님의 지도별 조회 수 TOP 5
                             </div>
-                            <Doughnut data={visitChartData}/>
+                            <Doughnut data={visitChartData} />
                         </Col>
                     </Row>
                 </TabPane>
-                <TabPane tab={<span><EnvironmentOutlined/>Maps</span>} key="2">
+                <TabPane tab={<span><EnvironmentOutlined />Maps</span>} key="2">
                     <div style={{
                         marginBottom: "20px",
                         textAlign: "left",
@@ -203,7 +195,7 @@ const MypageTabContainer = (props) => {
                         fontWeight: "600"
                     }}>{userInfo.userName}님의 지도 목록
                     </div>
-                    <div className="demo-infinite-container" style={{height: "700px", overflow: "auto"}}>
+                    <div className="demo-infinite-container" style={{ height: "700px", overflow: "auto" }}>
                         <List
                             itemLayout="horizontal"
                             size="large"
@@ -219,10 +211,10 @@ const MypageTabContainer = (props) => {
                                     actions={[
 
                                         <IconText icon={LikeOutlined} text={item.likeCount}
-                                                  key="list-vertical-star-o"/>,
+                                            key="list-vertical-star-o" />,
                                         <IconText icon={DislikeOutlined} text={item.dislikeCount}
-                                                  key="list-vertical-like-o"/>,
-                                        <IconText icon={DownloadOutlined} text="2" key="list-vertical-message"/>,
+                                            key="list-vertical-like-o" />,
+                                        <IconText icon={DownloadOutlined} text="2" key="list-vertical-message" />,
                                     ]}
                                 >
                                     <List.Item.Meta
@@ -232,13 +224,13 @@ const MypageTabContainer = (props) => {
                                                 height='2rem'
                                                 alt="example"
                                                 src={item.thumbnail ? Api.defaults.baseURL + '/files/' + item.thumbnail : "no-image.svg"}
-                                                style={{borderRadius: "10%"}}
+                                                style={{ borderRadius: "10%" }}
                                                 preview={false}
                                             />
                                         }
                                         title={
                                             <a href={`/${userInfo.userId}/repositories/${item.name}`}
-                                               style={{fontSize: '16px'}}>
+                                                style={{ fontSize: '16px' }}>
                                                 {item.name}
                                             </a>
                                         }
@@ -251,7 +243,7 @@ const MypageTabContainer = (props) => {
                 </TabPane>
                 {
                     isOwner &&
-                    <TabPane tab={<span><MessageOutlined/>Records</span>} key="3">
+                    <TabPane tab={<span><MessageOutlined />Records</span>} key="3">
                         <div style={{
                             marginBottom: "20px",
                             textAlign: "left",
@@ -259,7 +251,7 @@ const MypageTabContainer = (props) => {
                             fontWeight: "600"
                         }}>{userInfo.userName}님의 알림 목록
                         </div>
-                        <div className="demo-infinite-container" style={{height: "700px", overflow: "auto"}}>
+                        <div className="demo-infinite-container" style={{ height: "700px", overflow: "auto" }}>
                             <List
                                 itemlayout="horizontal"
                                 size="medium"
@@ -282,20 +274,20 @@ const MypageTabContainer = (props) => {
                                                     height='2rem'
                                                     alt="example"
                                                     src={Api.defaults.baseURL + '/files/' + alarm.thumbnail}
-                                                    style={{borderRadius: "10%"}}
+                                                    style={{ borderRadius: "10%" }}
                                                     fallback="no-image.svg"
                                                     preview={false}
                                                 />
                                             }
                                             title={alarm.read ?
                                                 <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
-                                                   style={{marginLeft: "10px", fontSize: "14px"}}>
-                                                    <text style={{fontWeight: "bold"}}>{alarm.srcMemberName}</text>
+                                                    style={{ marginLeft: "10px", fontSize: "14px" }}>
+                                                    <text style={{ fontWeight: "bold" }}>{alarm.srcMemberName}</text>
                                                     님이 회원님의 지도{typemap[alarm.alarmType]}
                                                 </a> :
                                                 <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
-                                                   style={{marginLeft: "10px", fontSize: "14px", color: '#36A2EB'}}>
-                                                    <text style={{fontWeight: "bold"}}>{alarm.srcMemberName}</text>
+                                                    style={{ marginLeft: "10px", fontSize: "14px", color: '#36A2EB' }}>
+                                                    <text style={{ fontWeight: "bold" }}>{alarm.srcMemberName}</text>
                                                     님이 회원님의 지도{typemap[alarm.alarmType]}
                                                 </a>
                                             }

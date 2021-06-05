@@ -150,7 +150,7 @@ function SearchPage({location, history}) {
             <NavBar/>
             <div style={{marginLeft: '200px', marginRight: '200px'}}>
                 <div style={{marginTop: '20px', marginRight: 'auto'}}>
-                    <h1> "{searchValue}" 키워드에 대한 검색 결과가 {maps?.length + users?.length > 0 ? (maps?.length + users?.length) + '개 있습니다.' : '없습니다.'}</h1>
+                    <h2> "{searchValue}" 키워드에 대한 검색 결과가 {maps?.length + users?.length > 0 ? (maps?.length + users?.length) + '개 있습니다.' : '없습니다.'}</h2>
                 </div>
                 <Tabs defaultActiveKey="1">
                     <TabPane tab={<span><EnvironmentOutlined/>지도 <Badge className="site-badge-count-4" count={maps?.length} style={{ color:'#858585', backgroundColor:'#fff', boxShadow:'0 0 0 1px #d9d9d9 inset' }}/></span>} key="1">
@@ -199,7 +199,7 @@ function SearchPage({location, history}) {
                                         <Avatar size = {20}
                                                 shape="circle"
                                                 style={{marginLeft: '10px', marginRight:'5px'}}
-                                                src={item.userProfile ? Api.defaults.baseURL + '/files/' + item.userProfile : 'no-image.svg'}
+                                                src={item.userProfile ? Api.defaults.baseURL + '/files/' + item.userProfile : 'NoProfile.png'}
                                                 onClick={() => history.push(`/${item.ownerId}`)}
                                         />
                                         {item.userName}
@@ -211,11 +211,11 @@ function SearchPage({location, history}) {
                         </div>
                     </TabPane>
                     <TabPane tab={<span><UserOutlined/>유저 <Badge className="site-badge-count-4" count={users?.length} style={{ color:'#858585', backgroundColor:'#fff', boxShadow:'0 0 0 1px #d9d9d9 inset' }}/></span>} key="2">
-                        <div className="지도 검색 리스트" style={{height: "700px", overflow: "auto", marginRight: "100px"}}>
+                        <div className="지도 검색 리스트" style={{height: "700px", overflow: "auto", marginRight: "50px"}}>
                             <List
                                 grid={{
                                     align: 'middle',
-                                    gutter: [40, 40],
+                                    gutter: [0, 40],
                                     xs: 1,
                                     sm: 1,
                                     md: 1,
@@ -243,7 +243,7 @@ function SearchPage({location, history}) {
                                                     <Avatar size={200}
                                                             shape="circle"
                                                             style={{marginTop: '25px', marginLeft: '25px'}}
-                                                            src={item.profile ? Api.defaults.baseURL + '/files/' + item.profile : 'no-image.svg'}
+                                                            src={item.profile ? Api.defaults.baseURL + '/files/' + item.profile : 'NoProfile.png'}
                                                     />
 
                                                 </div>
