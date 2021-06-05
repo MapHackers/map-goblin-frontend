@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 
-function ExpandingText({ text }) {
+function ExpandingText({ text, count }) {
     return (
         <ExpandedText>
             <a href="/" style={{ display: 'table-cell', paddingTop: '10px', color: 'black' }}>
                 {text}
             </a>
             <div className="arrow">
-                모두보기
+                총 {count}개
             </div>
         </ExpandedText>
 
