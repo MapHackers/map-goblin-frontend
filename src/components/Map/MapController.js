@@ -16,7 +16,7 @@ const MapController = ({ MarkerOnClick, isMarkerCreatable, authority, GpsOnClick
             <Controller style={{ top: '250px' }} onClick={GpsOnClick}>
                 <img style={{ width: '100%', height: '100%', backgroundColor: 'whitesmoke', boxShadow: '2px 2px 2px 2px gray' }} src="../../gps-fixed.svg" alt="gps" />
             </Controller>
-            <Controller style={{ top: '10px', width:'300px', right: '30px', backgroundColor: 'white', textAlign: 'center', margin: '0 auto', alignItems: 'center' }}>
+            <Controller style={{ top: '10px', width:'300px', right: '30px', backgroundColor: 'whitesmoke', textAlign: 'center', margin: '0 auto', alignItems: 'center', boxShadow: '2px 2px 2px 2px gray' }}>
                 <Checkbox.Group options={plainOptions} defaultValue={['Layer1']} onChange={onLayerCheckBoxClick} style={{ fontSize: '1.2rem'}} />
             </Controller>
         </>

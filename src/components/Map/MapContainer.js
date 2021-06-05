@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Map, Marker } from '@ref/react-kakao-maps'
 import MapController from './MapController';
-import { Modal, Input, Button, Rate, Upload, Drawer, List, Select } from 'antd';
+import { Modal, Input, Button, Rate, Upload, Drawer, List, Select, Form } from 'antd';
 import MarkerDescription from './MarkerDescription';
 import { HeartFilled } from '@ant-design/icons'
 import { useDispatch } from 'react-redux'
@@ -30,19 +30,15 @@ const MapContainer = ({ mapId, authority }) => {
     const [markers, setmarkers] = useState([])
 
     useEffect(() => {
-        console.log("USeeffect")
         dispatch(loadMapData(mapId))
             .then(response => {
-                console.log("response", response)
                 let temp = []
                 response.payload?.data.data.map((layer, idx) => {
                     temp = temp.concat(layer.mapDatas)
                     return null
                 })
                 setmarkers(temp)
-                console.log("after mapping", temp)
             })
-
     }, [dispatch, mapId])
 
     const [isMarkerCreatable, setisMarkerCreatable] = useState(false)
@@ -87,7 +83,6 @@ const MapContainer = ({ mapId, authority }) => {
             "geometry": deleteData[0].latlng,
             "mapDataType": "point"
         }
-        console.log({ dataToSubmit })
         Api.post('/mapdata/delete', dataToSubmit)
             .then(response => {
                 console.log(response)
@@ -119,7 +114,7 @@ const MapContainer = ({ mapId, authority }) => {
     }
 
     const handleCreateOk = async () => {
-        if(selectLayer === "None"){
+        if (selectLayer === "None") {
             alert("레이어를 선택해 주세요")
             return
         }
@@ -215,6 +210,33 @@ const MapContainer = ({ mapId, authority }) => {
         setisCreateModalVisible(false)
         setdefaultRating(0)
         setselectLayer("None")
+    }
+
+    const [toggleUpdate, settoggleUpdate] = useState(false)
+    const handleDescUpdate = () => {
+        settoggleUpdate(!toggleUpdate)
+    }
+
+    const onFinishMarkerUpdate = (values) => {
+        let dataToSubmit = {
+            "title": values.title,
+            "description": values.desc,
+            "mapId": mapId,
+            "layerName": clickedMarker[0].layerName,
+            "geometry": clickedMarker[0].latlng,
+            "mapDataType": "point"
+        }
+        Api.post(`/mapdata/update`, dataToSubmit)
+            .then(response => {
+                setIsDescModalVisible(false);
+                settoggleUpdate(!toggleUpdate)
+                markers[markers.indexOf(clickedMarker[0])].name = values.title
+                markers[markers.indexOf(clickedMarker[0])].description = values.desc
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        console.log({ dataToSubmit })
     }
 
     const [layerArr, setlayerArr] = useState(['Layer1'])
@@ -391,18 +413,62 @@ const MapContainer = ({ mapId, authority }) => {
                 ))}
                 <Modal title="마커 정보" visible={isDescModalVisible} onOk={handleDescOk} onCancel={handleDescCancel}
                     footer={[
-                        <Button type="primary" onClick={handleDescDelete} style={{ background: 'red', border: 'red' }}>
-                            {authority === "OWNER" && `삭제하기`}
+                        <Button type="primary" onClick={handleDescUpdate} style={{ background: 'brown', border: 'red' }}>
+                            {authority === "OWNER" && (!toggleUpdate ? `수정하기` : `수정취소`)}
                         </Button>,
-                        <Button type="primary" onClick={handleDescOk}>
-                            OK
+                        (!toggleUpdate &&
+                            <Button type="primary" onClick={handleDescDelete} style={{ background: 'red', border: 'red' }}>
+                                {authority === "OWNER" && `삭제하기`}
+                            </Button>
+                        ),
+                        (!toggleUpdate &&
+                            <Button type="primary" onClick={handleDescOk}>
+                                OK
                         </Button>
+                        )
+
                     ]}
                 >
-                    {clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }}
-                        title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating}
-                        thumbnail={clickedMarker[0].thumbnail} mapId={mapId} latLng={clickedMarker[0].latlng} layer={clickedMarker[0].layerName}
-                    />}
+                    {!toggleUpdate ?
+                        (clickedMarker && <MarkerDescription style={{ padding: '0', margin: '0' }}
+                            title={clickedMarker[0].name} description={clickedMarker[0].description} rating={clickedMarker[0].rating}
+                            thumbnail={clickedMarker[0].thumbnail} mapId={mapId} latLng={clickedMarker[0].latlng} layer={clickedMarker[0].layerName}
+                        />)
+                        :
+                        <div>
+                            <h1> 마커정보 수정하기 </h1>
+                            <Form
+                                name="markerUpdate"
+                                initialValues={{ title: clickedMarker[0].name, desc: clickedMarker[0].description }}
+                                onFinish={onFinishMarkerUpdate}
+                            >
+                                <Form.Item
+                                    label="마커 이름"
+                                    name="title"
+                                    rules={[{ required: true, message: 'Please input title!' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="마커 설명"
+                                    name="desc"
+                                    rules={[{ required: true, message: 'Please input description!' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+
+                                <Form.Item >
+                                    <div style={{ textAlign: 'center' }}>
+                                        <Button type="primary" htmlType="submit">
+                                            수정하기
+                                        </Button>
+                                    </div>
+                                </Form.Item>
+                            </Form>
+                        </div>
+                    }
+
                 </Modal>
 
                 <Modal title="마커 추가" visible={isCreateModalVisible} onOk={handleCreateOk} onCancel={handleCreateCancel}>
