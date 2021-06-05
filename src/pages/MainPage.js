@@ -16,12 +16,12 @@ let settings = {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     arrows: true,
     prevArrow: <SlideButton type="prev" />,
     nextArrow: <SlideButton type="next" />,
-    drag: true,
+    drag: true
 };
 
 
@@ -32,18 +32,11 @@ function MainPage(props) {
     const [CategorySeoulThumbCards, setCategorySeoulThumbCards] = useState([])
     const [CategoryInfoThumbCards, setCategoryInfoThumbCards] = useState([])
     const [CategoryRestThumbCards, setCategoryRestThumbCards] = useState([])
+    
     useEffect(() => {
         Api.get('/repositories')
             .then(response => {
                 response.data.data.length > 0 && setThumbCards(response.data.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        Api.get(`/${props.user?.id}/repositories/likes`)
-            .then(response => {
-                console.log({ response })
-                setLikedThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
@@ -82,11 +75,22 @@ function MainPage(props) {
             })
     }, [])
 
+    useEffect(() => {
+        Api.get(`/${props.user?.id}/repositories/likes`)
+            .then(response => {
+                console.log({ response })
+                setLikedThumbCards(response.data?.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [props.user?.id])
+
     let settings2 = {
         dots: false,
-        infinite: LikedThumbCards.length > 3 ? true : false,
+        infinite: LikedThumbCards.length > 4 ? true : false,
         speed: 500,
-        slidesToShow: LikedThumbCards.length > 3 ? 4 : LikedThumbCards.length,
+        slidesToShow: LikedThumbCards.length > 4 ? 5 : LikedThumbCards.length,
         slidesToScroll: 1,
         arrows: true,
         prevArrow: <SlideButton type="prev" />,
@@ -95,9 +99,9 @@ function MainPage(props) {
     }
     let settings3 = {
         dots: false,
-        infinite: CategoryUnivercityThumbCards.length > 3 ? true : false,
+        infinite: CategoryUnivercityThumbCards.length > 4 ? true : false,
         speed: 500,
-        slidesToShow: CategoryUnivercityThumbCards.length > 3 ? 4 : CategoryUnivercityThumbCards.length,
+        slidesToShow: CategoryUnivercityThumbCards.length > 4 ? 5 : CategoryUnivercityThumbCards.length,
         slidesToScroll: 1,
         arrows: true,
         prevArrow: <SlideButton type="prev" />,
@@ -106,9 +110,9 @@ function MainPage(props) {
     };
     let settingsSeoul = {
         dots: false,
-        infinite: CategorySeoulThumbCards.length > 3 ? true : false,
+        infinite: CategorySeoulThumbCards.length > 4 ? true : false,
         speed: 500,
-        slidesToShow: CategorySeoulThumbCards.length > 3 ? 4 : CategorySeoulThumbCards.length,
+        slidesToShow: CategorySeoulThumbCards.length > 4 ? 5 : CategorySeoulThumbCards.length,
         slidesToScroll: 1,
         arrows: true,
         prevArrow: <SlideButton type="prev" />,
@@ -117,9 +121,9 @@ function MainPage(props) {
     };
     let settingsInfo = {
         dots: false,
-        infinite: CategoryInfoThumbCards.length > 3 ? true : false,
+        infinite: CategoryInfoThumbCards.length > 4 ? true : false,
         speed: 500,
-        slidesToShow: CategoryInfoThumbCards.length > 3 ? 4 : CategoryInfoThumbCards.length,
+        slidesToShow: CategoryInfoThumbCards.length > 4 ? 5 : CategoryInfoThumbCards.length,
         slidesToScroll: 1,
         arrows: true,
         prevArrow: <SlideButton type="prev" />,
@@ -128,9 +132,9 @@ function MainPage(props) {
     };
     let settingsRest = {
         dots: false,
-        infinite: CategoryRestThumbCards.length > 3 ? true : false,
+        infinite: CategoryRestThumbCards.length > 4 ? true : false,
         speed: 500,
-        slidesToShow: CategoryRestThumbCards.length > 3 ? 4 : CategoryRestThumbCards.length,
+        slidesToShow: CategoryRestThumbCards.length > 4 ? 5 : CategoryRestThumbCards.length,
         slidesToScroll: 1,
         arrows: true,
         prevArrow: <SlideButton type="prev" />,
@@ -153,7 +157,7 @@ function MainPage(props) {
             <Divider />
             <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
                 <div
-                    style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1rem 3rem' }}
+                    style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1.7rem 1rem' }}
                 >
                     <ExpandingText text="모든 지도 목록" />
                 </div>
@@ -167,7 +171,7 @@ function MainPage(props) {
                 {LikedThumbCards.length > 0 &&
                     <>
                         <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
                             <ExpandingText text="내가 좋아요한 지도 목록" />
                         </div>
@@ -183,7 +187,7 @@ function MainPage(props) {
                 {CategoryUnivercityThumbCards.length > 0 &&
                     <>
                         <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
                             <ExpandingText text="대학교 카테고리 목록" />
                         </div>
@@ -199,7 +203,7 @@ function MainPage(props) {
                 {CategorySeoulThumbCards.length > 0 &&
                     <>
                         <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
                             <ExpandingText text="서울 카테고리 목록" />
                         </div>
@@ -215,7 +219,7 @@ function MainPage(props) {
                 {CategoryInfoThumbCards.length > 0 &&
                     <>
                         <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
                             <ExpandingText text="정보전달 카테고리 목록" />
                         </div>
@@ -231,7 +235,7 @@ function MainPage(props) {
                 {CategoryRestThumbCards.length > 0 &&
                     <>
                         <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1rem 3rem' }}
+                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
                             <ExpandingText text="맛집 카테고리 목록" />
                         </div>
