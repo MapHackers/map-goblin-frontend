@@ -18,11 +18,11 @@ function ExpandingText({ text }) {
 
 export default ExpandingText
 
-const ExpandedText = styled.a`
+const ExpandedText = styled.div`
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
-    font-size: 1.8vw;
+    font-size: 2.2vw;
     vertical-align: bottom;
     .arrow{
         padding-left: 0.5vw;
