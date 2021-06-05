@@ -12,19 +12,6 @@ import ExpandingText from '../components/ExpandingText/ExpandingText'
 import Api from '../util/Api'
 const NavBar = lazy(() => import('../components/NavigationBar/NavigationBar'))
 
-let settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    arrows: true,
-    prevArrow: <SlideButton type="prev" />,
-    nextArrow: <SlideButton type="next" />,
-    drag: true
-};
-
-
 function MainPage(props) {
     const [ThumbCards, setThumbCards] = useState([])
     const [LikedThumbCards, setLikedThumbCards] = useState([])
@@ -36,7 +23,7 @@ function MainPage(props) {
     useEffect(() => {
         Api.get('/repositories')
             .then(response => {
-                response.data.data.length > 0 && setThumbCards(response.data.data)
+                setThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
@@ -83,6 +70,18 @@ function MainPage(props) {
                 })
         }
     }, [props.user?.id])
+
+    let settings = {
+        dots: false,
+        infinite: ThumbCards.length > 4 ? true : false,
+        speed: 500,
+        slidesToShow: ThumbCards.length > 4 ? 5 : ThumbCards.length,
+        slidesToScroll: 1,
+        arrows: true,
+        prevArrow: <SlideButton type="prev" />,
+        nextArrow: <SlideButton type="next" />,
+        drag: true
+    };
 
     let settings2 = {
         dots: false,
@@ -143,6 +142,27 @@ function MainPage(props) {
     useEffect(() => {
         console.log({ ThumbCards })
     }, [ThumbCards])
+
+    useEffect(() => {
+        console.log({ LikedThumbCards })
+    }, [LikedThumbCards])
+
+    useEffect(() => {
+        console.log({ CategoryInfoThumbCards })
+    }, [CategoryInfoThumbCards])
+
+    useEffect(() => {
+        console.log({ CategoryRestThumbCards })
+    }, [CategoryRestThumbCards])
+
+    useEffect(() => {
+        console.log({ CategorySeoulThumbCards })
+    }, [CategorySeoulThumbCards])
+
+    useEffect(() => {
+        console.log({ CategoryUnivercityThumbCards })
+    }, [CategoryUnivercityThumbCards])
+
     return (
         <div style={{ background: '#f5f6f7' }}>
             <NavBar user={props.user} />
@@ -152,7 +172,7 @@ function MainPage(props) {
                 <div
                     style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1.7rem 1rem' }}
                 >
-                    <ExpandingText text="모든 지도 목록" count={ThumbCards.length}/>
+                    <ExpandingText text="모든 지도 목록" count={ThumbCards.length} />
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
@@ -164,7 +184,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="내가 좋아요한 지도 목록" count={LikedThumbCards.length}/>
+                            <ExpandingText text="내가 좋아요한 지도 목록" count={LikedThumbCards.length} />
                         </div>
                         <Slider {...settings2}>
                             {LikedThumbCards.map(card => (
@@ -179,7 +199,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="대학교 카테고리 목록" count={CategoryUnivercityThumbCards.length}/>
+                            <ExpandingText text="대학교 카테고리 목록" count={CategoryUnivercityThumbCards.length} />
                         </div>
                         <Slider {...settings3}>
                             {CategoryUnivercityThumbCards.map(card => (
@@ -194,7 +214,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="서울 카테고리 목록" count={CategorySeoulThumbCards.length}/>
+                            <ExpandingText text="서울 카테고리 목록" count={CategorySeoulThumbCards.length} />
                         </div>
                         <Slider {...settingsSeoul}>
                             {CategorySeoulThumbCards.map(card => (
@@ -209,7 +229,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="정보전달 카테고리 목록" count={CategoryInfoThumbCards.length}/>
+                            <ExpandingText text="정보전달 카테고리 목록" count={CategoryInfoThumbCards.length} />
                         </div>
                         <Slider {...settingsInfo}>
                             {CategoryInfoThumbCards.map(card => (
@@ -224,7 +244,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="맛집 카테고리 목록" count={CategoryRestThumbCards.length}/>
+                            <ExpandingText text="맛집 카테고리 목록" count={CategoryRestThumbCards.length} />
                         </div>
                         <Slider {...settingsRest}>
                             {CategoryRestThumbCards.map(card => (
