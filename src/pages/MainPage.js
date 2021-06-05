@@ -152,7 +152,7 @@ function MainPage(props) {
                 <div
                     style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1.7rem 1rem' }}
                 >
-                    <ExpandingText text="모든 지도 목록" />
+                    <ExpandingText text="모든 지도 목록" count={ThumbCards.length}/>
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
@@ -164,7 +164,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="내가 좋아요한 지도 목록" />
+                            <ExpandingText text="내가 좋아요한 지도 목록" count={LikedThumbCards.length}/>
                         </div>
                         <Slider {...settings2}>
                             {LikedThumbCards.map(card => (
@@ -179,7 +179,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="대학교 카테고리 목록" />
+                            <ExpandingText text="대학교 카테고리 목록" count={CategoryUnivercityThumbCards.length}/>
                         </div>
                         <Slider {...settings3}>
                             {CategoryUnivercityThumbCards.map(card => (
@@ -194,7 +194,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="서울 카테고리 목록" />
+                            <ExpandingText text="서울 카테고리 목록" count={CategorySeoulThumbCards.length}/>
                         </div>
                         <Slider {...settingsSeoul}>
                             {CategorySeoulThumbCards.map(card => (
@@ -209,7 +209,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="정보전달 카테고리 목록" />
+                            <ExpandingText text="정보전달 카테고리 목록" count={CategoryInfoThumbCards.length}/>
                         </div>
                         <Slider {...settingsInfo}>
                             {CategoryInfoThumbCards.map(card => (
@@ -224,7 +224,7 @@ function MainPage(props) {
                         <div
                             style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
                         >
-                            <ExpandingText text="맛집 카테고리 목록" />
+                            <ExpandingText text="맛집 카테고리 목록" count={CategoryRestThumbCards.length}/>
                         </div>
                         <Slider {...settingsRest}>
                             {CategoryRestThumbCards.map(card => (

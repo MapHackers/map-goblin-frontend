@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { LikeOutlined, DislikeOutlined, EyeOutlined, LikeTwoTone, DislikeTwoTone, InfoCircleOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
 import Api from '../../util/Api'
@@ -60,7 +60,7 @@ function CardView({ card, history }) {
 
     const handleDislike = (id, type) => {
         Api.post(`/${id}/like`, { type: type })
-            .then(response => {
+            .then(() => {
                 if (likeType === "DISLIKE") {
                     setlikeType(null)
                     setdislike(dislike - 1)
@@ -112,11 +112,6 @@ function CardView({ card, history }) {
                         <h3>Info</h3>
                     </div>
                 </Popover>
-
-                // ,
-                // <div>
-                //     <FileTextOutlined key="readMe" />
-                // </div>
             ]}
         >
             <Meta
