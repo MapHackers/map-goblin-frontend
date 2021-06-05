@@ -21,6 +21,8 @@ const IssueForm = (props) => {
             .then(response =>{
                 console.log("response")
                 console.log(response)
+                console.log("주소: ", props.location.pathname)
+                props.history.push(props.location.pathname + "/" + response.data.id)
             })
             .catch(error => {
                 console.log(error)

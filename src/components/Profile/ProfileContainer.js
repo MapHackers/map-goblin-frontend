@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Image, Upload, Input, Button, Avatar} from 'antd';
+import {Card, Input, Button, Avatar} from 'antd';
 import {EditOutlined, UserOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import {editUser} from "../../_actions/user_action";
 import styled from "styled-components";
-import ImgCrop from 'antd-img-crop';
 import Api from "../../util/Api";
 import {addFile, modifiedFile} from "../../_actions/repository_action";
 import ImgUpload from "../Repository/ImgUpload";

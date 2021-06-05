@@ -6,6 +6,7 @@ import IssueForm from "../components/Repository/IssueForm";
 import {useDispatch} from "react-redux";
 import {addSelectedCategory} from "../_actions/repository_action";
 import {UserOutlined} from "@ant-design/icons";
+import Api from "../util/Api";
 
 const { TextArea } = Input;
 
@@ -51,7 +52,7 @@ const CreateIssuePage = (props) => {
                                     <TextArea rows={10}/>
                                 </Form.Item>
                                 <Form.Item wrapperCol={tailFormItemLayout}>
-                                    <Button type="primary" htmlType="submit">
+                                    <Button type="primary" htmlType="submit" >
                                         이슈 생성
                                     </Button>
                                 </Form.Item>
