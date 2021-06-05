@@ -1,28 +1,35 @@
 import React, { useState } from 'react'
-import { LikeOutlined, DislikeOutlined, EyeOutlined, LikeTwoTone, DislikeTwoTone } from '@ant-design/icons';
+import { LikeOutlined, DislikeOutlined, EyeOutlined, LikeTwoTone, DislikeTwoTone, InfoCircleOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
 import Api from '../../util/Api'
 import { withRouter } from 'react-router-dom'
-import { Image } from 'antd';
+import { Image, Popover } from 'antd';
 
 
-function CardView(props) {
+function CardView({card, history}) {
 
     const { Meta } = Card;
 
-    const [like, setlike] = useState(props.like)
-    const [dislike, setdislike] = useState(props.dislike)
-    const [id, ] = useState(props.id)
-    const [likeType, setlikeType] = useState(props.likeType)
+    const [like, setlike] = useState(card.like)
+    const [dislike, setdislike] = useState(card.dislike)
+    const [id,] = useState(card.id)
+    const [likeType, setlikeType] = useState(card.likeType)
+
+    const cardHoverInfo = (
+        <div>
+            <h3>Owner : {card.userName}</h3>
+            <h3>Desc : {card.description}</h3>
+        </div>
+    )
 
     const handleLike = (id, type) => {
         Api.post(`/${id}/like`, { type: type })
-            .then(response => {
+            .then(() => {
                 if (likeType === "LIKE") {
                     setlikeType(null)
                     setlike(like - 1)
                 }
-                else if (likeType === "DISLIKE"){
+                else if (likeType === "DISLIKE") {
                     setlikeType("LIKE")
                     setlike(like + 1)
                     setdislike(dislike - 1)
@@ -42,7 +49,7 @@ function CardView(props) {
                     setlikeType(null)
                     setdislike(dislike - 1)
                 }
-                else if (likeType === "LIKE"){
+                else if (likeType === "LIKE") {
                     setlikeType("DISLIKE")
                     setlike(like - 1)
                     setdislike(dislike + 1)
@@ -60,29 +67,36 @@ function CardView(props) {
             cover={
                 <Image
                     onClick={() => {
-                        console.log(props.ownerId)
-                        props.history.push(`/${props.ownerId}/repositories/${props.title}`)
+                        console.log(card.ownerId)
+                        history.push(`/${card.ownerId}/repositories/${card.name}`)
                     }}
                     width='17.5rem'
                     height='17.5rem'
                     alt="example"
-                    src={props.thumbnail ? Api.defaults.baseURL + '/files/' + props.thumbnail : "no-image.svg"}
+                    src={card.thumbnail ? Api.defaults.baseURL + '/files/' + card.thumbnail : "no-image.svg"}
                     preview={false}
                 />
             }
             actions={[
                 <div>
                     {likeType === "LIKE" ? <LikeTwoTone key="like" onClick={() => { handleLike(id, "LIKE") }} /> : <LikeOutlined key="like" onClick={() => { handleLike(id, "LIKE") }} />}
-                    <h3> {like} </h3>
+                    <h3> {card.likeCount} </h3>
                 </div>,
                 <div>
                     {likeType === "DISLIKE" ? <DislikeTwoTone key="dislike" onClick={() => { handleDislike(id, "DISKLIKE") }} /> : <DislikeOutlined key="dislike" onClick={() => { handleDislike(id, "DISLIKE") }} />}
-                    <h3> {dislike} </h3>
+                    <h3> {card.dislikeCount} </h3>
                 </div>,
                 <div>
                     <EyeOutlined key="visit" />
-                    <h3> {props.visitCount} </h3>
-                </div>
+                    <h3> {card.visitCount} </h3>
+                </div>,
+                <Popover trigger="hover" content={cardHoverInfo}>
+                    <div>
+                        <InfoCircleOutlined key="info" />
+                        <h3>Info</h3>
+                    </div>
+                </Popover>
+
                 // ,
                 // <div>
                 //     <FileTextOutlined key="readMe" />
@@ -90,8 +104,8 @@ function CardView(props) {
             ]}
         >
             <Meta
-                title={props.title}
-                description={props.hastags}
+                title={card.name}
+                description={card.hastags}
             />
         </Card>
     )
