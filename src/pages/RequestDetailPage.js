@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import CommonLayout from "../components/Layout/CommonLayout";
-import {Button, Col, Divider, Form, Input, Result, Row, Spin, Timeline} from "antd";
+import {Button, Col, Divider, Form, Input, Result, Row, Spin, Timeline, Comment, List, Alert} from "antd";
 import RequestForm from "../components/Repository/RequestForm";
 import {useDispatch, useSelector} from "react-redux";
-import {selectRequestInfo} from "../_actions/repository_action";
-import {withRouter} from "react-router-dom";
+import {deniedRequestData, mergeRequestData, saveRequestReply, selectRequestInfo} from "../_actions/repository_action";
+import {Link, withRouter} from "react-router-dom";
 import Api from "../util/Api";
 
 const { TextArea } = Input;
@@ -22,6 +22,33 @@ const tailFormItemLayout = {
     },
 };
 
+const CommentList = ({ comments }) => (
+    <List
+        dataSource={comments}
+        header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
+        itemLayout="horizontal"
+        style={{textAlign: "left", width: "70%", marginLeft: "15%"}}
+        renderItem={props => <Comment {...props} />}
+    />
+);
+
+const Editor = ({ onChange, onSubmit, value }) => (
+    <>
+        <Form.Item style={{marginLeft: "18%"}}>
+            <Row>
+                <Col flex="auto">
+                    <TextArea rows={4} onChange={onChange} value={value} />
+                </Col>
+                <Col>
+                    <Button htmlType="submit" onClick={onSubmit} style={{height: "100%"}} type="primary">
+                        Add Comment
+                    </Button>
+                </Col>
+            </Row>
+        </Form.Item>
+    </>
+);
+
 const RequestDetailPage = (props) => {
 
     const dispatch = useDispatch()
@@ -36,7 +63,7 @@ const RequestDetailPage = (props) => {
     const [content, setContent] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [notFound, setNotFound] = useState(false);
-    const [requestOwner, setRequestOwner] = useState(false);
+    const [requestStatus, setRequestStatus] = useState("");
 
     const userId = props.match.params.userId;
     const repositoryName = props.match.params.repositoryName;
@@ -45,9 +72,26 @@ const RequestDetailPage = (props) => {
         props.history.push('/main')
     }
 
-    useEffect(() => {
+    const [comments, setComments] = useState([]);
+    const [commentValue, setCommentValue] = useState('');
 
-        console.log("Request Detail props:", props);
+    const handleSubmit = () => {
+        if(commentValue !== "" && commentValue !== undefined){
+            dispatch(saveRequestReply(`${props.location.pathname}/reply`, {"content":commentValue}))
+                .then(response => {
+                    setComments([...comments, response.payload.data]);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+    }
+
+    const handleChange = (event) => {
+        setCommentValue(event.currentTarget.value);
+    }
+
+    useEffect(() => {
 
         Api.get(`/${userId}/repositories/${repositoryName}`)
             .then(response => {
@@ -59,16 +103,11 @@ const RequestDetailPage = (props) => {
 
         dispatch(selectRequestInfo(props.location.pathname))
             .then(response => {
-                console.log("response:", response);
                 let values = response.payload.data.values;
-                console.log("values", values);
-
-                if(values[0].createdBy === props.user.userId){
-                    setRequestOwner(true);
-                }
 
                 setTitle(values[0].title);
                 setContent(values[0].content);
+                setRequestStatus(values[0].status);
 
                 let compareResult = response.payload.data;
 
@@ -87,6 +126,11 @@ const RequestDetailPage = (props) => {
                 if(compareResult.layer !== undefined){
                     setLayerList(compareResult.layer.map((data) => <p>{data.createdDate} {data.name}</p>));
                 }
+
+                if(compareResult.replies !== undefined){
+                    setComments(compareResult.replies);
+                }
+
                 setTimeLineLoading(true);
                 setIsLoading(true);
             })
@@ -98,11 +142,26 @@ const RequestDetailPage = (props) => {
     }, []);
 
     const onClickMerge = () => {
-        console.log("onClickMerge");
+        dispatch(mergeRequestData(`${props.location.pathname}/merge`))
+            .then(response => {
+                console.log("onClickMerge:", response);
+                setRequestStatus("ACCEPTED");
+            })
+            .catch(error => {
+                console.log("onClickMerge error:", error);
+            })
     }
 
     const onClickDenied = () => {
         console.log("onClickDenied");
+        dispatch(deniedRequestData(`${props.location.pathname}/denied`))
+            .then(response => {
+                console.log("onClickDenied:", response);
+                setRequestStatus("DENIED");
+            })
+            .catch(error => {
+                console.log("onClickDenied error:", error);
+            })
     }
 
     if(isLoading){
@@ -111,6 +170,20 @@ const RequestDetailPage = (props) => {
                 <Row style={{textAlign:'center'}}>
                     <Col span={5}></Col>
                     <Col span={14}>
+                        {
+                            requestStatus === "ACCEPTED" && <Alert
+                                message="요청 사항이 반영되었습니다!"
+                                type="info"
+                                style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
+                            />
+                        }
+                        {
+                            requestStatus === "DENIED" && <Alert
+                                message="요청 사항이 거부되었습니다!"
+                                type="error"
+                                style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
+                            />
+                        }
                         <p style={{marginTop:"30px", fontSize:"35px"}}>
                             변경사항 반영 요청
                         </p>
@@ -165,7 +238,7 @@ const RequestDetailPage = (props) => {
                                 }
                             </Form.Item>
                             {
-                                repositoryInfo.authority === "OWNER" && <Form.Item wrapperCol={tailFormItemLayout}>
+                                repositoryInfo.authority === "OWNER" && requestStatus === "WAITING" && <Form.Item wrapperCol={tailFormItemLayout}>
                                     <Button type="primary" onClick={onClickMerge}>
                                         반영하기
                                     </Button>
@@ -174,16 +247,8 @@ const RequestDetailPage = (props) => {
                                     </Button>
                                 </Form.Item>
                             }
-                            {
-                                requestOwner && <Form.Item wrapperCol={tailFormItemLayout}>
-                                    <Button type="primary" onClick={onClickMerge}>
-                                        수정하기
-                                    </Button>
-                                    <Button style={{marginLeft: "10px"}} type="primary" onClick={onClickDenied} danger>
-                                        삭제하기
-                                    </Button>
-                                </Form.Item>
-                            }
+                            {comments.length > 0 && <CommentList comments={comments} />}
+                            <Comment content={<Editor onChange={handleChange} onSubmit={handleSubmit} value={commentValue}/>}/>
 
                         </RequestForm>
                     </Col>

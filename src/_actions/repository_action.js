@@ -4,7 +4,13 @@ import {
     SAVE_REPOSITORY_INFO,
     ADD_SELECTED_CATEGORY,
     MODIFY_REPOSITORY_INFO,
-    MODIFY_FILE, SELECT_ISSUE_LIST, SELECT_REQUEST_LIST, COMPARE_REPOSITORY, CREATE_REQUEST, SELECT_REQUEST_INFO
+    MODIFY_FILE,
+    SELECT_ISSUE_LIST,
+    SELECT_REQUEST_LIST,
+    COMPARE_REPOSITORY,
+    CREATE_REQUEST,
+    SELECT_REQUEST_INFO,
+    MERGE_REQUEST_DATA, DENIED_REQUEST_DATA
 } from './type'
 import Api from "../util/Api";
 
@@ -119,6 +125,39 @@ export const selectRequestInfo = (url) => {
 
     return {
         type: SELECT_REQUEST_INFO,
+        payload: request
+    }
+}
+
+export const saveRequestReply = (url, data) => {
+    const request = Api.post(url, data)
+        .then(response => response)
+        .catch(error => error.response);
+
+    return {
+        type: SELECT_REQUEST_INFO,
+        payload: request
+    }
+}
+
+export const mergeRequestData = (url, data) => {
+    const request = Api.post(url, data)
+        .then(response => response)
+        .catch(error => error.response);
+
+    return {
+        type: MERGE_REQUEST_DATA,
+        payload: request
+    }
+}
+
+export const deniedRequestData = (url, data) => {
+    const request = Api.post(url, data)
+        .then(response => response)
+        .catch(error => error.response);
+
+    return {
+        type: DENIED_REQUEST_DATA,
         payload: request
     }
 }
