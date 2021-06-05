@@ -36,6 +36,7 @@ const RequestDetailPage = (props) => {
     const [content, setContent] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [notFound, setNotFound] = useState(false);
+    const [requestOwner, setRequestOwner] = useState(false);
 
     const userId = props.match.params.userId;
     const repositoryName = props.match.params.repositoryName;
@@ -61,6 +62,10 @@ const RequestDetailPage = (props) => {
                 console.log("response:", response);
                 let values = response.payload.data.values;
                 console.log("values", values);
+
+                if(values[0].createdBy === props.user.userId){
+                    setRequestOwner(true);
+                }
 
                 setTitle(values[0].title);
                 setContent(values[0].content);
@@ -166,6 +171,16 @@ const RequestDetailPage = (props) => {
                                     </Button>
                                     <Button style={{marginLeft: "10px"}} type="primary" onClick={onClickDenied} danger>
                                         거절하기
+                                    </Button>
+                                </Form.Item>
+                            }
+                            {
+                                requestOwner && <Form.Item wrapperCol={tailFormItemLayout}>
+                                    <Button type="primary" onClick={onClickMerge}>
+                                        수정하기
+                                    </Button>
+                                    <Button style={{marginLeft: "10px"}} type="primary" onClick={onClickDenied} danger>
+                                        삭제하기
                                     </Button>
                                 </Form.Item>
                             }
