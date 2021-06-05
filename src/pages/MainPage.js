@@ -32,7 +32,7 @@ function MainPage(props) {
     const [CategorySeoulThumbCards, setCategorySeoulThumbCards] = useState([])
     const [CategoryInfoThumbCards, setCategoryInfoThumbCards] = useState([])
     const [CategoryRestThumbCards, setCategoryRestThumbCards] = useState([])
-    
+
     useEffect(() => {
         Api.get('/repositories')
             .then(response => {
@@ -43,7 +43,6 @@ function MainPage(props) {
             })
         Api.get(`/대학교/repositories/category`)
             .then(response => {
-                console.log({ response })
                 setCategoryThumbCards(response.data?.data)
             })
             .catch(err => {
@@ -51,7 +50,6 @@ function MainPage(props) {
             })
         Api.get(`/서울/repositories/category`)
             .then(response => {
-                console.log({ response })
                 setCategorySeoulThumbCards(response.data?.data)
             })
             .catch(err => {
@@ -59,7 +57,6 @@ function MainPage(props) {
             })
         Api.get(`/정보전달/repositories/category`)
             .then(response => {
-                console.log({ response })
                 setCategoryInfoThumbCards(response.data?.data)
             })
             .catch(err => {
@@ -67,7 +64,6 @@ function MainPage(props) {
             })
         Api.get(`/맛집/repositories/category`)
             .then(response => {
-                console.log({ response })
                 setCategoryRestThumbCards(response.data?.data)
             })
             .catch(err => {
@@ -76,14 +72,16 @@ function MainPage(props) {
     }, [])
 
     useEffect(() => {
-        Api.get(`/${props.user?.id}/repositories/likes`)
-            .then(response => {
-                console.log({ response })
-                setLikedThumbCards(response.data?.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        if (props.user?.id !== undefined && props.user?.id !== "null" && props.user?.id !== "") {
+            Api.get(`/${props.user?.id}/repositories/likes`)
+                .then(response => {
+                    console.log({ response })
+                    setLikedThumbCards(response.data?.data)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
     }, [props.user?.id])
 
     let settings2 = {
@@ -143,13 +141,8 @@ function MainPage(props) {
     };
 
     useEffect(() => {
-        console.log(LikedThumbCards)
-    }, [LikedThumbCards])
-
-    useEffect(() => {
         console.log({ ThumbCards })
     }, [ThumbCards])
-
     return (
         <div style={{ background: '#f5f6f7' }}>
             <NavBar user={props.user} />
@@ -163,9 +156,7 @@ function MainPage(props) {
                 </div>
                 <Slider {...settings}>
                     {ThumbCards.map(card => (
-                        <Card title={card.name}
-                            hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
-                            key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                        <Card card={card} key={card.id} />
                     ))}
                 </Slider>
                 {LikedThumbCards.length > 0 &&
@@ -177,8 +168,7 @@ function MainPage(props) {
                         </div>
                         <Slider {...settings2}>
                             {LikedThumbCards.map(card => (
-                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
-                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                                <Card card={card} key={card.id} />
                             ))}
                         </Slider>
                     </>
@@ -193,8 +183,7 @@ function MainPage(props) {
                         </div>
                         <Slider {...settings3}>
                             {CategoryUnivercityThumbCards.map(card => (
-                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
-                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                                <Card card={card} key={card.id} />
                             ))}
                         </Slider>
                     </>
@@ -209,8 +198,7 @@ function MainPage(props) {
                         </div>
                         <Slider {...settingsSeoul}>
                             {CategorySeoulThumbCards.map(card => (
-                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
-                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                                <Card card={card} key={card.id} />
                             ))}
                         </Slider>
                     </>
@@ -225,8 +213,7 @@ function MainPage(props) {
                         </div>
                         <Slider {...settingsInfo}>
                             {CategoryInfoThumbCards.map(card => (
-                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
-                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                                <Card card={card} key={card.id} />
                             ))}
                         </Slider>
                     </>
@@ -241,8 +228,7 @@ function MainPage(props) {
                         </div>
                         <Slider {...settingsRest}>
                             {CategoryRestThumbCards.map(card => (
-                                <Card title={card.name} hastags={card.hashtag} like={card.likeCount} dislike={card.dislikeCount} thumbnail={card.thumbnail}
-                                    key={card.id} ownerId={card.ownerId} id={card.id} likeType={card.likeType} visitCount={card.visitCount} />
+                                <Card card={card} key={card.id} />
                             ))}
                         </Slider>
                     </>
