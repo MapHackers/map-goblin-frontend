@@ -10,8 +10,8 @@ function CardView({ card, history }) {
 
     const { Meta } = Card;
 
-    const [like, setlike] = useState(card.like)
-    const [dislike, setdislike] = useState(card.dislike)
+    const [like, setlike] = useState(card.likeCount)
+    const [dislike, setdislike] = useState(card.dislikeCount)
     const [id,] = useState(card.id)
     const [likeType, setlikeType] = useState(card.likeType)
 
@@ -96,11 +96,11 @@ function CardView({ card, history }) {
             actions={[
                 <div>
                     {likeType === "LIKE" ? <LikeTwoTone key="like" onClick={() => { handleLike(id, "LIKE") }} /> : <LikeOutlined key="like" onClick={() => { handleLike(id, "LIKE") }} />}
-                    <h3> {card.likeCount} </h3>
+                    <h3> {like} </h3>
                 </div>,
                 <div>
                     {likeType === "DISLIKE" ? <DislikeTwoTone key="dislike" onClick={() => { handleDislike(id, "DISKLIKE") }} /> : <DislikeOutlined key="dislike" onClick={() => { handleDislike(id, "DISLIKE") }} />}
-                    <h3> {card.dislikeCount} </h3>
+                    <h3> {dislike} </h3>
                 </div>,
                 <div>
                     <EyeOutlined key="visit" />
