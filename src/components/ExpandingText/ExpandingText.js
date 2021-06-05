@@ -4,9 +4,9 @@ import styled from 'styled-components'
 function ExpandingText({ text, count }) {
     return (
         <ExpandedText>
-            <a href="/" style={{ display: 'table-cell', paddingTop: '10px', color: 'black' }}>
+            <div href="/" style={{ display: 'table-cell', paddingTop: '10px', color: 'black' }}>
                 {text}
-            </a>
+            </div>
             <div className="arrow">
                 총 {count}개
             </div>

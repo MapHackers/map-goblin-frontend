@@ -7,7 +7,7 @@ function MainContentSlider() {
         <div style={{ width: '100%', height: '60vmin', display: 'block', position: 'relative', marginLeft: 'auto', marginRight: 'auto' }}>
             <AwesomeSlider fillParent={true}>
                 <div style={{ backgroundColor: "#A0D0FD" }}>
-                    <img src="/MapGoblin.png" alt=""/>
+                    <img src="/mainbg2.png" alt="" style={{ width: '100%', height: '100%'}}/>
                 </div>
                 <div style={{ backgroundColor: "#A0D0FD" }}>
                     <h1 style={{ color: "white", fontSize: '60px' }}>아직 내 지도가 없군요! 지금 만들어 보아요!</h1>
