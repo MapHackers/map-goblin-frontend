@@ -189,6 +189,7 @@ const RepositoryPage = (props) => {
                         jsonObj.user = contents[i].createdBy;
                         jsonObj.tags = [contents[i].tag];
                         jsonObj.date = contents[i].createdDate;
+                        jsonObj.type = "issue";
 
                         result.push(jsonObj);
                     }
