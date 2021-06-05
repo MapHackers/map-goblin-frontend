@@ -56,6 +56,7 @@ const columns = [
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
         render: (title, values) => {
             if(values.type === "issue"){
+                console.log("VALUES",values)
                 return (<Link to={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</Link>)
             }else{
                 return (<Link to={{pathname:`/${hrefId}/repositories/${hrefRepo}/requests/${values.key}`,
@@ -74,7 +75,7 @@ const columns = [
         dataIndex: 'tags',
         render: tags => (
             <span>
-                {tags.map(tag => {
+                {tags?.map(tag => {
                     let color;
 
                     if (tag === 'QUESTION') {
@@ -185,8 +186,8 @@ const RepositoryPage = (props) => {
             dispatch(selectIssueList(0, userId, repositoryName, 'WAITING'))
                 .then(response => {
 
-                    let issueList = response.payload.data;
-                    totalWaitingIssueCount = issueList.totalElements;
+                    let issueList = response.payload?.data;
+                    totalWaitingIssueCount = issueList?.totalElements;
 
                     let contents = issueList.content;
 

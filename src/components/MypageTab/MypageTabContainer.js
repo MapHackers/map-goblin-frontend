@@ -8,13 +8,13 @@ import {
     LikeOutlined,
     DislikeOutlined
 } from '@ant-design/icons';
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 
 import Card from "../CardView/CardView";
 
-import { Doughnut } from "react-chartjs-2";
+import {Doughnut} from "react-chartjs-2";
 import Api from "../../util/Api";
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
 
 const { TabPane } = Tabs;
 
@@ -58,7 +58,6 @@ const MypageTabContainer = (props) => {
     const userInfo = useSelector(state => state.userInfo)
     const [isOwner, setIsOwner] = useState(false)
 
-    //let mapList = []
     let repoOrderByLike = []
     let repoOrderByVisit = []
     let tmpLiLabels = []

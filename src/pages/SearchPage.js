@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import NavBar from '../components/NavigationBar/NavigationBar'
 import qs from 'qs'
-import {Avatar, Image, List, Space, Tabs, Card, Badge} from 'antd';
+import {Avatar, Image, List, Space, Tabs, Card, Badge, Popover} from 'antd';
 import {UserOutlined, EnvironmentOutlined, LikeOutlined, DislikeOutlined, EyeOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
 import Api from "../util/Api";
 import {searchRepository, searchUser} from "../_actions/search_action";
-import SearchRepoList from "../components/SearchList/SearchRepoList";
 
 const {TabPane} = Tabs;
 const {Meta} = Card;
@@ -203,7 +202,7 @@ function SearchPage({location, history}) {
                                                 onClick={() => history.push(`/${item.ownerId}`)}
                                         />
                                         {item.userName}
-                                        {/*<span onClick={() => history.push(`/${item.ownerId}`)}>{item.userName}</span>*/}
+
                                     </List.Item>
 
                                 )}
@@ -249,7 +248,9 @@ function SearchPage({location, history}) {
                                                 </div>
                                             }
                                             actions={[
-                                                <div>총 좋아요 수 <br/><LikeOutlined key="like" style={{marginRight:'5px'}}/>{item.likeCounts}</div>,
+                                                <Popover title="title" content="content" placement="rightTop" trigger='hover'>
+                                                    <div>총 좋아요 수 <br/><LikeOutlined key="like" style={{marginRight:'5px'}}/>{item.likeCounts}</div>
+                                                </Popover>,
                                                 <div>총 조회 수 <br/><EyeOutlined key="visit" style={{marginRight:'5px'}}/>{item.visitCounts}</div>,
                                                 // <LikeOutlined key="like" />,
                                                 // <DownloadOutlined key="clone" />,
