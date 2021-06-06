@@ -15,6 +15,22 @@ function CardView({ card, history }) {
     const [id,] = useState(card.id)
     const [likeType, setlikeType] = useState(card.likeType)
 
+    /*
+      <Tag color="magenta">magenta</Tag>
+      <Tag color="red">red</Tag>
+      <Tag color="volcano">volcano</Tag>
+      <Tag color="orange">orange</Tag>
+      <Tag color="gold">gold</Tag>
+      <Tag color="lime">lime</Tag>
+      <Tag color="green">green</Tag>
+      <Tag color="cyan">cyan</Tag>
+      <Tag color="blue">blue</Tag>
+      <Tag color="geekblue">geekblue</Tag>
+      <Tag color="purple">purple</Tag>
+      const randomElement = array[Math.floor(Math.random() * array.length)];
+{colorArray[Math.floor(Math.random) * colorArray.length]}
+    */
+    const colorArray = ["magenta", "red", "volcano", "orange", "gole", "lime", "green", "cyan", "blue", "geekblue", "purple"]
     const cardHoverInfo = (
         <div style={{ width: '200px' }}>
             <div style={{ textAlign: "center" }}>
@@ -31,7 +47,7 @@ function CardView({ card, history }) {
                 {
 
                     card.categories.map((category, idx) => (
-                        <Tag color='geekblue' key={idx}>{category.name}</Tag>
+                        <Tag color={colorArray[idx%colorArray.length]} key={idx}>{category.name}</Tag>
                     ))
                 }
             </div>
