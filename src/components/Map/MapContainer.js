@@ -360,6 +360,10 @@ const MapContainer = ({ mapId, authority }) => {
         imgWindow.document.write(image.outerHTML);
     };
 
+    useEffect(() => {
+        console.log({searchdAndClickedPlace})
+    },[searchdAndClickedPlace])
+
     return (
         <>
             <div id="staticMap" style={{ width: '400px', height: '400px', display: 'none' }}></div>
@@ -401,7 +405,7 @@ const MapContainer = ({ mapId, authority }) => {
                                     position: new kakao.maps.LatLng(marker.latlng.split(",")[0], marker.latlng.split(",")[1]),
                                     clickable: true,
                                     image: new kakao.maps.MarkerImage(
-                                        '../../Logo.png',
+                                        '../../MintLogo.png',
                                         new kakao.maps.Size(44, 44),
                                         { offset: new kakao.maps.Point(20, 44) }
                                     )
@@ -550,7 +554,6 @@ const MapContainer = ({ mapId, authority }) => {
                     <h3>GPS 정보를 불러오는 데 수 초~분이 걸릴 수 있습니다.</h3>
                 </Modal>
 
-
                 {searchdAndClickedPlace &&
                     <>
                         <Marker
@@ -562,6 +565,9 @@ const MapContainer = ({ mapId, authority }) => {
                                     new kakao.maps.Size(44, 44),
                                     { offset: new kakao.maps.Point(20, 44) }
                                 )
+                            }}
+                            onClick={() => {
+                                setsearchdAndClickedPlace(null)
                             }}
                         />
                     </>}
