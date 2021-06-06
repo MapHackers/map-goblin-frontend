@@ -116,7 +116,7 @@ const MarkerDescription = ({ title, description, rating, userName, thumbnail, ma
                         {thumbnail.substr(0, 4) === "http" ?
                             <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={thumbnail} alt="staticImage" />
                             :
-                            <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" fallback="../../no-image.svg" />
+                            <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" fallback="../../no-image3.png" />
                         }
                         <h3 style={{ marginTop: '25px' }}> {description} </h3>
                     </div>

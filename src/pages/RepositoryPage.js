@@ -557,7 +557,7 @@ const RepositoryPage = (props) => {
                                 </Col>
                                 <Col flex="auto" style={{ marginLeft: '50px', marginRight: '50px' }}>
                                     <Row style={{ alignContent: "center", justifyContent: "center" }}>
-                                        {thumbnail !== "" ? <Image preview={false} src={thumbnail} alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}/> : <Image preview={false} src="/no-image.svg" alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}/>}
+                                        {thumbnail !== "" ? <Image preview={false} src={thumbnail} alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}/> : <Image preview={false} src="/no-image3.png" alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}/>}
                                     </Row>
                                 </Col>
                                 <Col flex="auto">

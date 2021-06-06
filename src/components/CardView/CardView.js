@@ -106,7 +106,7 @@ function CardView({ card, history }) {
                         width='17.5rem'
                         height='17.5rem'
                         alt="example"
-                        src={card.thumbnail ? Api.defaults.baseURL + '/files/' + card.thumbnail : "no-image.svg"}
+                        src={card.thumbnail ? Api.defaults.baseURL + '/files/' + card.thumbnail : "no-image3.png"}
                         preview={false}
                     />
                 </a>
