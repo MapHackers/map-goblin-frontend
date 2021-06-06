@@ -51,6 +51,17 @@ function alarmCalculate(date) {
     else return Math.round(time_val / year) + '년 전'
 }
 
+function getDate(isoDate) {
+    const months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const createdDate = isoDate.split(/-|T/);
+    const year = createdDate[0];
+    const month = months[parseInt(createdDate[1])]
+    const date = parseInt(createdDate[2]).toString();
+
+    return year + ', ' + month + ' ' + date;
+}
+
 const CommentList = ({ comments }) => (
     <List
         className="comment-list"
@@ -79,6 +90,7 @@ const IssueDetailPage = (props) => {
     const [author, setAuthor] = useState('')
     const [profile, setProfile] = useState('')
     const [status, setStatus] = useState('')
+    const [date, setDate] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const {userId, repositoryName, issue} = props.match.params
 
@@ -96,6 +108,7 @@ const IssueDetailPage = (props) => {
                     setAuthor(response.data.authorName)
                     setProfile(response.data.authorProfile)
                     setStatus(response.data.status)
+                    setDate(response.data.createdDate)
 
                     response.data.issueReviewList.map((review) => {
                         temp.push(
@@ -163,43 +176,50 @@ const IssueDetailPage = (props) => {
                     <Row style={{textAlign:'left'}}>
                         <Col span={5}></Col>
                         <Col span={14}>
-                            {/*<div style={{width:'auto', height:'auto', borderRadius:'10%', boxShadow:'0 0 0 1px #d9d9d9 inset'}}>*/}
-                            {/*    <h2>{title}</h2>*/}
-                            {/*    <Divider/>*/}
-                            {/*    <h4>{issueContent}</h4>*/}
-                            {/*</div>*/}
 
 
                             <RequestForm>
+                                <div style={{marginTop:'20px'}}>
+                                    <b>작성자 :</b>
+                                    <Avatar src={profile ? `${Api.defaults.baseURL}/files/${profile}` : `${Api.defaults.baseURL}/files/NoProfile.png`}
+                                            size={20}
+                                            shape='circle'
+                                            style={{marginLeft:'10px', marginRight:'5px'}}
+                                    />
+                                    <span>{author}</span>
+                                    <span style={{float:'right', color:'#808080'}}>
+                                        <b style={{marginRight:'10px'}}>작성일자 : </b>
+                                        {getDate(date)}
+                                    </span>
+                                </div>
+
                                 {props.user.userId === userId &&
-                                <div style={{marginTop:'20px', marginBottom:'20px', marginLeft:'auto', float:'right'}}>
+                                <div style={{marginTop:'40px', marginLeft:'auto', float:'right'}}>
                                     {
                                         status === 'CHECKED' &&
-                                        <Tag color='blue' icon={<CheckCircleOutlined/>}>OK</Tag>
+                                        <Tag style={{width:'100%', textAlign:'center'}} color='blue' icon={<CheckCircleOutlined/>}>OK</Tag>
                                     }
                                     {
                                         status === "WAITING" &&
                                         <div>
-                                            <Button onClick={checkIssue}>확인</Button>
-                                            <Tag color='gold' icon={<ClockCircleOutlined />}>Waiting</Tag>
+                                            <Tag style={{width:'100%', textAlign:'center'}} color='gold' icon={<ClockCircleOutlined />}>Waiting</Tag>
+                                            <div>
+                                                <Button type='primary' style={{marginTop:'20px', width:'100%'}} onClick={checkIssue}><CheckCircleOutlined/>확인</Button>
+                                            </div>
                                         </div>
                                     }
                                 </div>
                                 }
                                 <Form.Item
-                                    label={<div><Avatar src={profile ? `${Api.defaults.baseURL}/files/${profile}` : `${Api.defaults.baseURL}/files/NoProfile.png`}
-                                                   size={20}
-                                                   shape='circle'
-                                                   style={{marginLeft:'10px', marginRight:'5px'}}
-                                    /><p>{author}</p></div>}
+                                    label="지적 제목"
                                     name="title"
                                     initialValue={title}
-                                    style={{marginTop:'50px', width: '85%'}}
+                                    style={{marginTop:'40px', width: '85%'}}
                                 >
                                     <Input style={{color: "black"}} disabled/>
                                 </Form.Item>
                                 <Form.Item
-                                    label="내용"
+                                    label="지적 내용"
                                     name="content"
                                     initialValue={issueContent}
                                     style={{width: '85%'}}

@@ -98,7 +98,7 @@ function getDate(isoDate) {
     const createdDate = isoDate.split(/-|T/);
     const year = createdDate[0];
     const month = months[parseInt(createdDate[1])]
-    const date = createdDate[2];
+    const date = parseInt(createdDate[2]).toString();
 
     return year + ', ' + month + ' ' + date;
 }
@@ -131,6 +131,17 @@ function SearchPage({location, history}) {
 
         return text;
     };
+
+    const [cursor, setCursor] = useState('default');
+
+    const changeCursor = () => {
+        setCursor(prevState => {
+            if(prevState === 'default'){
+                return 'pointer';
+            }
+            return 'default';
+        });
+    }
 
     useEffect(() => {
         if (searchValue !== ""){
@@ -210,7 +221,7 @@ function SearchPage({location, history}) {
                         </div>
                     </TabPane>
                     <TabPane tab={<span><UserOutlined/>유저 <Badge className="site-badge-count-4" count={users?.length} style={{ color:'#858585', backgroundColor:'#fff', boxShadow:'0 0 0 1px #d9d9d9 inset' }}/></span>} key="2">
-                        <div className="지도 검색 리스트" style={{height: "700px", overflow: "auto", marginRight: "50px"}}>
+                        <div className="유저 검색 리스트" style={{height: "700px", overflow: "auto", marginRight: "50px"}}>
                             <List
                                 grid={{
                                     align: 'middle',
@@ -227,7 +238,9 @@ function SearchPage({location, history}) {
                                     <List.Item>
                                         <Card
                                             onClick={() => history.push(`/${item.userId}`)}
-                                            style={{width: '250px', boxShadow: '2px 2px 10px #a6a6a6'}}
+                                            onMouseEnter={() => {changeCursor()}}
+                                            onMouseLeave={() => {changeCursor()}}
+                                            style={{cursor: cursor, width: '250px', boxShadow: '2px 2px 10px #a6a6a6'}}
                                             cover={
                                                 <div>
                                                     <div
