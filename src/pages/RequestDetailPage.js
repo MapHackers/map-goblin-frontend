@@ -28,8 +28,17 @@ const CommentList = ({ comments }) => (
         dataSource={comments}
         header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
         itemLayout="horizontal"
-        style={{ textAlign: "left", width: "70%", marginLeft: "15%" }}
-        renderItem={props => <Comment {...props} />}
+        style={{textAlign: "left", width: "70%", marginLeft: "15%"}}
+        renderItem={item => (
+            <li>
+                <Comment
+                    author={item.name}
+                    avatar={item.profile ? `${Api.defaults.baseURL}/files/${item.profile}` : `${Api.defaults.baseURL}/files/NoProfile.png`}
+                    content={item.content}
+                    datetime={alarmCalculate(item.datetime)}
+                />
+            </li>
+        )}
     />
 );
 
@@ -42,13 +51,32 @@ const Editor = ({ onChange, onSubmit, value }) => (
                 </Col>
                 <Col>
                     <Button htmlType="submit" onClick={onSubmit} style={{ height: "100%" }} type="primary">
-                        Add Comment
+                        댓글 달기
                     </Button>
                 </Col>
             </Row>
         </Form.Item>
     </>
 );
+
+function alarmCalculate(date) {
+    const cur_date = new Date();
+    const time_val = cur_date.getTime() - Date.parse(date)
+    const min = 60000
+    const hour = 3600000
+    const day = 86400000
+    const week = day * 7
+    const month = day * 30
+    const year = day * 365
+
+    if (time_val < min) return '방금 전'
+    else if (time_val < hour) return Math.round(time_val / min) + '분 전'
+    else if (time_val < day) return Math.round(time_val / hour) + '시간 전'
+    else if (time_val < week) return Math.round(time_val / day) + '일 전'
+    else if (time_val < month) return Math.round(time_val / week) + '주 전'
+    else if (time_val < year) return Math.round(time_val / month) + '개월 전'
+    else return Math.round(time_val / year) + '년 전'
+}
 
 const RequestDetailPage = (props) => {
 
@@ -86,6 +114,8 @@ const RequestDetailPage = (props) => {
                     console.log(error);
                 })
         }
+
+        setCommentValue("");
     }
 
     const handleChange = (event) => {
@@ -220,7 +250,7 @@ const RequestDetailPage = (props) => {
                                             </Timeline.Item>
                                         }
                                         {
-                                            modifyList.length > 0 && <Timeline.Item>
+                                            modifyList.length > 0 && <Timeline.Item color="gold">
                                                 <p>데이터 수정</p>
                                                 {modifyList}
                                             </Timeline.Item>
@@ -232,7 +262,7 @@ const RequestDetailPage = (props) => {
                                             </Timeline.Item>
                                         }
                                         {
-                                            layerList.length > 0 && <Timeline.Item color="grey">
+                                            layerList.length > 0 && <Timeline.Item>
                                                 <p>레이어 추가</p>
                                                 {layerList}
                                             </Timeline.Item>
