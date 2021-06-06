@@ -12,15 +12,6 @@ const {Meta} = Card;
 
 const {TextArea} = Input;
 
-const Doilimg = styled.img`
-    border-radius: 30% !important;
-    overflow: hidden;
-    width: 200px;
-    height: 200px;
-    margin: 25px auto;
-`;
-
-
 const ProfileContainer = (props) => {
     const [editData, setShowResults] = React.useState(false)
     const [userName, setUserName] = useState(props.user.userName)
@@ -32,24 +23,11 @@ const ProfileContainer = (props) => {
     const dispatch = useDispatch()
     const onClick = () => setShowResults(!editData)
 
-    //const [fileList, setFileList] = useState([]);
-
     const fileList = useSelector(state => state.repository.fileList)
     const userInfo = useSelector(state => state.userInfo)
 
-
-    // const onChange = ({ fileList: newFileList }) => {
-    //     // console.log("before SET", fileList)
-    //     // setFileList(newFileList);
-    //     // console.log("after SET", fileList)
-    //     // return false;
-    //     dispatch(addFile(newFileList));
-    //     dispatch(modifiedFile(true));
-    // };
-
     const onClickEdit = () => {
         const formData = new FormData
-        console.log("FILELIST", fileList)
         if (fileList.length > 0) {
             if (fileList[0].originFileObj) {
                 formData.append('file', fileList[0].originFileObj);
@@ -58,9 +36,7 @@ const ProfileContainer = (props) => {
                         'Content-Type': 'multipart/form-data',
                     }
                 }).then(response => {
-                    console.log("profile:", response)
                     setProfile(response.data)
-                    console.log("FILELIST 1", fileList)
                     let dataToSubmit = {
                         userId: props.user.userId,
                         userName: userName,
@@ -85,8 +61,6 @@ const ProfileContainer = (props) => {
 
         } else {
             setProfile(null)
-            console.log("No FileList", props.userName, props.description)
-            console.log("FILELIST 3", fileList)
             let dataToSubmit = {
                 userId: props.user.userId,
                 userName: userName,
@@ -100,32 +74,30 @@ const ProfileContainer = (props) => {
     }
 
     useEffect(() => {
-            //console.log("props : ",props)
-            // setUserName(props.user.userName)
-            // setUserDescription(props.user.description)
-            // setProfile(props.user.profile)
-            //props.user.profile && setFileList(fileList.concat(props.user.profile))
 
-            if (props.user.userId === userInfo.userId) {
-                setIsOwner(true)
-            }
+        if (props.user.userId === userInfo.userId) {
+            setIsOwner(true)
+        }
 
-            setUserName(userInfo.userName)
-            setUserDescription(userInfo.description)
-            setProfile(userInfo.profile)
+        setUserName(userInfo.userName)
+        setUserDescription(userInfo.description)
+        setProfile(userInfo.profile)
 
-            let newFileList = [{
+        let newFileList = [];
+
+        if(profile != null){
+            newFileList = [{
                 uid: '-1',
                 name: 'image.png',
                 status: 'done',
-                url: profile,
+                url: `${Api.defaults.baseURL}/files/${profile}`,
             }];
-
-            dispatch(addFile(newFileList));
-
-            dispatch(modifiedFile(false));
         }
-        , [])
+
+        dispatch(addFile(newFileList));
+
+        dispatch(modifiedFile(false));
+    }, [])
 
     return (
         <Card
@@ -134,30 +106,13 @@ const ProfileContainer = (props) => {
                 editData ?
                     <span id="create-map-upload" style={{marginLeft: '25px', marginTop: '25px', width: "100%"}}>
                         <ImgUpload/>
-                        {/*<ImgCrop rotate>*/}
-                        {/*    <Upload*/}
-                        {/*        listType="picture-card"*/}
-                        {/*        fileList={fileList}*/}
-                        {/*        onChange={onChange}*/}
-                        {/*        beforeUpload={() => {return false}}*/}
-                        {/*        // beforeUpload={file => {*/}
-                        {/*        //     setFileList(fileList.concat(file));*/}
-                        {/*        //     return false;*/}
-                        {/*        // }}*/}
-                        {/*    >*/}
-                        {/*        {fileList.length < 1 && '+ Upload'}*/}
-                        {/*    </Upload>*/}
-                        {/*</ImgCrop>*/}
                     </span> :
 
                     <div>
-                        {
-                            userInfo.profile !== "" &&
-                            <Avatar size={250}
-                                    shape="square"
-                                    src={userInfo.profile ? Api.defaults.baseURL + '/files/' + userInfo.profile : 'NoProfile.png'}
-                            />
-                        }
+                        <Avatar size={250}
+                                shape="square"
+                                src={profile ? Api.defaults.baseURL + '/files/' + profile : 'NoProfile.png'}
+                        />
                     </div>
             }
             actions={[

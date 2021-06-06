@@ -12,9 +12,6 @@ const ImgUpload = (props) => {
 
     const onChange = ({ fileList: newFileList }) => {
 
-        console.log("fileList", fileList)
-        console.log("newFileLIst",newFileList)
-
         let newFile = newFileList[0];
 
         if(newFile?.size > 5*1024*1000){

@@ -45,12 +45,17 @@ const InfoSetting = (props) => {
     const repository = useSelector(state => state.repository);
 
     useEffect(()=>{
-        let newFileList = [{
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: props.thumbnailUrl,
-        }];
+
+        let newFileList = [];
+
+        if(props.thumbnailUrl !== ""){
+            newFileList = [{
+                uid: '-1',
+                name: 'image.png',
+                status: 'done',
+                url: props.thumbnailUrl,
+            }];
+        }
 
         dispatch(addFile(newFileList));
 
