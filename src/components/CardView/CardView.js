@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { LikeOutlined, DislikeOutlined, EyeOutlined, LikeTwoTone, DislikeTwoTone, InfoCircleOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
+import { Card, Divider } from 'antd';
 import Api from '../../util/Api'
 import { withRouter } from 'react-router-dom'
 import { Image, Popover, Tag } from 'antd';
@@ -33,19 +33,23 @@ function CardView({ card, history }) {
     const colorArray = ["magenta", "red", "volcano", "orange", "gole", "lime", "green", "cyan", "blue", "geekblue", "purple"]
     const cardHoverInfo = (
         <div style={{ width: '200px' }}>
-            <div style={{ textAlign: "center" }}>
-                <h1> 지도 정보 </h1>
+            <div style={{ textAlign: "center", marginBottom:'10px' }}>
+                <h2 style={{ color:'#808080' }}><InfoCircleOutlined/> information </h2>
             </div>
-            <h3>지도 주인 : {card.userName}</h3>
+            <h4><text style={{ color:'#808080' }}>created By:</text> {card.userName}</h4>
+            {card.description &&
             <h3>지도 설명 : {card.description}</h3>
+            }
             {card.categories.length > 0 &&
+            <div>
+                <Divider/>
                 <div style={{ textAlign: "center" }}>
-                    <h1> 카테고리 </h1>
+                    <h2 style={{ color:'#808080' }}> # 카테고리 </h2>
                 </div>
+            </div>
             }
             <div style={{ textAlign: "center" }}>
                 {
-
                     card.categories.map((category, idx) => (
                         <Tag color={colorArray[idx%colorArray.length]} key={idx}>{category.name}</Tag>
                     ))
@@ -111,20 +115,20 @@ function CardView({ card, history }) {
             actions={[
                 <div>
                     {likeType === "LIKE" ? <LikeTwoTone key="like" onClick={() => { handleLike(id, "LIKE") }} /> : <LikeOutlined key="like" onClick={() => { handleLike(id, "LIKE") }} />}
-                    <h3> {like} </h3>
+                    <h3 style={{ color:'#808080' }}> {like} </h3>
                 </div>,
                 <div>
                     {likeType === "DISLIKE" ? <DislikeTwoTone key="dislike" onClick={() => { handleDislike(id, "DISKLIKE") }} /> : <DislikeOutlined key="dislike" onClick={() => { handleDislike(id, "DISLIKE") }} />}
-                    <h3> {dislike} </h3>
+                    <h3 style={{ color:'#808080' }}> {dislike} </h3>
                 </div>,
                 <div>
                     <EyeOutlined key="visit" />
-                    <h3> {card.visitCount} </h3>
+                    <h3 style={{ color:'#808080' }}> {card.visitCount} </h3>
                 </div>,
                 <Popover trigger="hover" content={cardHoverInfo}>
                     <div>
                         <InfoCircleOutlined key="info" />
-                        <h3>Info</h3>
+                        <h3 style={{ color:'#808080' }}>Info</h3>
                     </div>
                 </Popover>
             ]}

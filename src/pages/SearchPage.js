@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import NavBar from '../components/NavigationBar/NavigationBar'
 import qs from 'qs'
-import {Avatar, Image, List, Space, Tabs, Card, Badge, Popover} from 'antd';
+import {Avatar, Image, List, Space, Tabs, Card, Badge} from 'antd';
 import {UserOutlined, EnvironmentOutlined, LikeOutlined, DislikeOutlined, EyeOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
 import Api from "../util/Api";
@@ -9,81 +9,6 @@ import {searchRepository, searchUser} from "../_actions/search_action";
 
 const {TabPane} = Tabs;
 const {Meta} = Card;
-
-const test = [
-    {
-        userId: '1',
-        profile: null,
-        name: '',
-        email: '',
-        description: '',
-        likeCounts: '',
-        visitCounts: '',
-    },
-    {
-        userId: '2',
-        profile: null,
-        name: '',
-        email: '',
-        description: '',
-        likeCounts: '',
-        visitCounts: '',
-    },
-    {
-        userId: '3',
-        profile: null,
-        name: '',
-        email: '',
-        description: '',
-        likeCounts: '',
-        visitCounts: '',
-    },
-    {
-        userId: '4',
-        profile: null,
-        name: '',
-        email: '',
-        description: '',
-        likeCounts: '',
-        visitCounts: '',
-    },
-    {
-        userId: '5',
-        profile: null,
-        name: '',
-        email: '',
-        description: '',
-        likeCounts: '',
-        visitCounts: '',
-    },
-    {
-        userId: '6',
-        profile: null,
-        name: '',
-        email: '',
-        description: '',
-        likeCounts: '',
-        visitCounts: '',
-    },
-    {
-        userId: '7',
-        profile: null,
-        name: '',
-        email: '',
-        description: '',
-        likeCounts: '',
-        visitCounts: '',
-    },
-    {
-        userId: '8',
-        profile: null,
-        name: '',
-        email: '',
-        description: '',
-        likeCounts: '',
-        visitCounts: '',
-    },
-]
 
 const IconText = ({icon, text}) => (
     <Space>
@@ -261,12 +186,8 @@ function SearchPage({location, history}) {
                                                 </div>
                                             }
                                             actions={[
-                                                <Popover title="title" content="content" placement="rightTop" trigger='hover'>
-                                                    <div>총 좋아요 수 <br/><LikeOutlined key="like" style={{marginRight:'5px'}}/>{item.likeCounts}</div>
-                                                </Popover>,
+                                                <div>총 좋아요 수 <br/><LikeOutlined key="like" style={{marginRight:'5px'}}/>{item.likeCounts}</div>,
                                                 <div>총 조회 수 <br/><EyeOutlined key="visit" style={{marginRight:'5px'}}/>{item.visitCounts}</div>,
-                                                // <LikeOutlined key="like" />,
-                                                // <DownloadOutlined key="clone" />,
                                             ]}
                                         >
                                             <Meta
