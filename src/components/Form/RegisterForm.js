@@ -25,22 +25,24 @@ function RegisterForm(props) {
             .catch(err => {
                 setsubmitEmail(true)
                 alert("가입한 이메일을 확인하여 코드를 입력해 주세요.")
-                axios.post(`/api/email`, {email: email})
+                axios.post(`/api/email`, { email: email })
             })
     }
-
+    const [codeCheck, setcodeCheck] = useState(false)
     const handleCodeAuth = (email, code) => {
-        console.log("email",email,"code",code)
-        axios.post(`/api/checkNumber`, {email: email, code : code})
-        .then(response => {
-            if( response.status === 200){
-                alert("이메일 인증 완료!")
-                setsubmitEmail(false)
-            }
-        })
-        .catch(err => {
-            alert("잘못된 인증번호입니다.")
-        })
+        console.log("email", email, "code", code)
+        axios.post(`/api/checkNumber`, { email: email, code: code })
+            .then(response => {
+                if (response.status === 200) {
+                    alert("이메일 인증 완료!")
+                    setsubmitEmail(false)
+                    setcodeCheck(true)
+                    console.log({codeCheck})
+                }
+            })
+            .catch(err => {
+                alert("잘못된 인증번호입니다.")
+            })
     }
 
     return (
@@ -70,33 +72,40 @@ function RegisterForm(props) {
                         .required('비밀번호 확인은 필수 항목입니다.')
                 })}
                 onSubmit={(values, { setSubmitting }) => {
-                    setTimeout(() => {
+                    if (!codeCheck) {
+                        alert("이메일 코드를 확인해 주세요!")
+                        console.log({codeCheck})
+                        setSubmitting(false)
+                        return
+                    } else {
+                        setTimeout(() => {
 
-                        let dataToSubmit = {
-                            userId: values.id,
-                            password: values.password,
-                            email: values.email,
-                            name: values.name
-                        };
+                            let dataToSubmit = {
+                                userId: values.id,
+                                password: values.password,
+                                email: values.email,
+                                name: values.name
+                            };
 
-                        dispatch(registerUser(dataToSubmit))
-                            .then(response => {
-                                if (response.payload.status === 200) {
-                                    alert('회원가입이 완료 되었습니다. 로그인 해주세요')
-                                    props.history.push('/login')
-                                } else {
-                                    alert(response.payload.data.message)
-                                    console.log(response)
-                                }
-                            })
-                            .catch(err => {
-                                setTimeout(() => {
-                                    alert("Error!")
-                                }, 3000)
-                            })
+                            dispatch(registerUser(dataToSubmit))
+                                .then(response => {
+                                    if (response.payload.status === 200) {
+                                        alert('회원가입이 완료 되었습니다. 로그인 해주세요')
+                                        props.history.push('/login')
+                                    } else {
+                                        alert(response.payload.data.message)
+                                        console.log(response)
+                                    }
+                                })
+                                .catch(err => {
+                                    setTimeout(() => {
+                                        alert("Error!")
+                                    }, 3000)
+                                })
 
-                        setSubmitting(false);
-                    }, 500);
+                            setSubmitting(false);
+                        }, 500);
+                    }
                 }}
             >
                 {props => {
@@ -200,7 +209,7 @@ function RegisterForm(props) {
                                         style={{ width: '76%' }}
                                     />
 
-                                    <Button type="primary" onClick={() => {handleEmailAuth(values.email)}} size="large">
+                                    <Button type="primary" onClick={() => { handleEmailAuth(values.email) }} size="large">
                                         이메일 인증
                                     </Button>
 
@@ -221,7 +230,7 @@ function RegisterForm(props) {
                                             style={{ width: '76%' }}
                                         />
 
-                                        <Button type="primary" onClick={() => {handleCodeAuth(values.email, values.code)}} size="large">
+                                        <Button type="primary" onClick={() => { handleCodeAuth(values.email, values.code) }} size="large">
                                             코드 확인
                                         </Button>
                                     </Form.Item>
