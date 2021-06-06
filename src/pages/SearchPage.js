@@ -117,7 +117,7 @@ function SearchPage({location, history}) {
                                                     width='6rem'
                                                     height='6rem'
                                                     alt="example"
-                                                    src={item.thumbnail ? Api.defaults.baseURL + '/files/' + item.thumbnail : "no-image.svg"}
+                                                    src={item.thumbnail ? Api.defaults.baseURL + '/files/' + item.thumbnail : "no-image3.png"}
                                                     style={{borderRadius: "10%"}}
                                                     preview={false}
                                                 />

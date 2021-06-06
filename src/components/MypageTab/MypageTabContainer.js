@@ -230,7 +230,7 @@ const MypageTabContainer = (props) => {
                                                 width='2rem'
                                                 height='2rem'
                                                 alt="example"
-                                                src={item.thumbnail ? Api.defaults.baseURL + '/files/' + item.thumbnail : "no-image.svg"}
+                                                src={item.thumbnail ? Api.defaults.baseURL + '/files/' + item.thumbnail : "no-image3.png"}
                                                 style={{ borderRadius: "10%" }}
                                                 preview={false}
                                             />
@@ -282,7 +282,7 @@ const MypageTabContainer = (props) => {
                                                     alt="example"
                                                     src={Api.defaults.baseURL + '/files/' + alarm.thumbnail}
                                                     style={{ borderRadius: "10%" }}
-                                                    fallback="no-image.svg"
+                                                    fallback="no-image3.png"
                                                     preview={false}
                                                 />
                                             }
