@@ -19,6 +19,10 @@ const SelectCategory = (props) => {
             .catch(error => {
                 console.log(error);
             })
+
+        if(props.categories !== undefined){
+            dispatch(addSelectedCategory(props.categories));
+        }
     }, [])
 
     const tagRender = (props) => {
