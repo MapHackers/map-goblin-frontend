@@ -18,12 +18,6 @@ const MapContainer = ({ mapId, authority }) => {
 
     const [gpsLat, setgpsLat] = useState(37.504877390232885)
     const [gpsLng, setgpsLng] = useState(126.9550496072659)
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            setgpsLat(position.coords.latitude)
-            setgpsLng(position.coords.longitude)
-        })
-    }, [])
 
     const dispatch = useDispatch()
 
@@ -376,6 +370,7 @@ const MapContainer = ({ mapId, authority }) => {
                     level: 2
                 }}
                 onClick={onMapClick}
+                cursor= {isMarkerCreatable ? 'url(../../mint.cur), help' : 'auto'}
             >
                 <Button type="primary" onClick={showDrawer} style={{ zIndex: '999', left: '10px', top: '10px' }}>
                     검색하기
