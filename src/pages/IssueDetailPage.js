@@ -120,11 +120,11 @@ const IssueDetailPage = (props) => {
             return
         }
         let dataToSubmit = {
-            "author": props.user.userName,
+            "author": props.user.userId,
             "content": review,
             "profile":props.user.profile
         }
-        console.log("REVIEW", dataToSubmit)
+
         await Api.post(props.location.pathname, dataToSubmit)
             .then(response => console.log(response))
             .catch(e => console.log(e))
@@ -132,8 +132,8 @@ const IssueDetailPage = (props) => {
         setSubmitting(true)
         setTimeout(() => {
             setSubmitting(false)
-            const a = new Date().getTimezoneOffset() * 60000
-            const today = new Date(Date.now() - a)
+            const offset = new Date().getTimezoneOffset() * 60000
+            const today = new Date(Date.now() - offset)
             setReviewList([
                 ...reviewList,
                 {
