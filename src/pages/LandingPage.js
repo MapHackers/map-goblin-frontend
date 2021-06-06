@@ -4,7 +4,7 @@ import Footer from '../components/Footer/Footer'
 
 function LandingPage() {
     return (
-        <div style={{ background: '#f5f6f7', height: '100vh', backgroundImage: 'url(/landing2.png)', backgroundSize: '100%' }}>
+        <div style={{ background: '#f5f6f7', height: '100vh', backgroundImage: 'url(/landing2.svg)', backgroundSize: '100%' }}>
             <div>
                 <MainImage />
                 <Footer />
