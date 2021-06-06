@@ -30,7 +30,7 @@ function CardView({ card, history }) {
       const randomElement = array[Math.floor(Math.random() * array.length)];
 {colorArray[Math.floor(Math.random) * colorArray.length]}
     */
-    const colorArray = ["magenta", "red", "volcano", "orange", "gole", "lime", "green", "cyan", "blue", "geekblue", "purple"]
+    const colorArray = ["magenta", "red", "volcano", "orange", "lime", "green", "cyan", "blue", "geekblue", "purple"]
     const cardHoverInfo = (
         <div style={{ width: '200px' }}>
             <div style={{ textAlign: "center", marginBottom:'10px' }}>

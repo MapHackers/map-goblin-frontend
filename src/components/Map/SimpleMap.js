@@ -76,7 +76,7 @@ const SimpleMap = ({ data }) => {
                 marker = new kakao.maps.Marker({
                     position: modifidedPoints[i],
                     image: new kakao.maps.MarkerImage(
-                        '/Logo.png',
+                        '/YellowLogo.png',
                         new kakao.maps.Size(44, 44),
                         { offset: new kakao.maps.Point(20, 44) }
                     ),
