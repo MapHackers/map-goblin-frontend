@@ -11,8 +11,19 @@ const ImgUpload = (props) => {
     const fileList = useSelector(state => state.repository.fileList)
 
     const onChange = ({ fileList: newFileList }) => {
-        dispatch(addFile(newFileList));
-        dispatch(modifiedFile(true));
+
+        console.log("fileList", fileList)
+        console.log("newFileLIst",newFileList)
+
+        let newFile = newFileList[0];
+
+        if(newFile?.size > 5*1024*1000){
+            alert(`파일업로드 허용용량 5Mbyte를 초과하였습니다.`);
+            newFileList.splice(0, 1)
+        }else{
+            dispatch(addFile(newFileList));
+            dispatch(modifiedFile(true));
+        }
     };
 
     return (
