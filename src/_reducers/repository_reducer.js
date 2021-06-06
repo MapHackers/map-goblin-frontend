@@ -10,7 +10,7 @@ import {
     COMPARE_REPOSITORY,
     CREATE_REQUEST,
     SELECT_REQUEST_INFO,
-    SAVE_REQUEST_REPLY, MERGE_REQUEST_DATA, DENIED_REQUEST_DATA
+    SAVE_REQUEST_REPLY, MERGE_REQUEST_DATA, DENIED_REQUEST_DATA, SELECT_CATEGORY_LIST
 } from '../_actions/type'
 
 const initialState = {
@@ -56,6 +56,8 @@ const repository = (state = initialState, action) => {
         case MERGE_REQUEST_DATA:
             return {...state}
         case DENIED_REQUEST_DATA:
+            return {...state}
+        case SELECT_CATEGORY_LIST:
             return {...state}
         default:
             return state;

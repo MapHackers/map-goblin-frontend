@@ -161,3 +161,14 @@ export const deniedRequestData = (url, data) => {
         payload: request
     }
 }
+
+export const selectCategoryList = (url) => {
+    const request = Api.get(url)
+        .then(response => response)
+        .catch(error => error.response);
+
+    return {
+        type: DENIED_REQUEST_DATA,
+        payload: request
+    }
+}
