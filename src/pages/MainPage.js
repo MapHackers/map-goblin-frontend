@@ -28,28 +28,28 @@ function MainPage(props) {
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/대학교/repositories/category`)
+        Api.get(`/univ/repositories/category`)
             .then(response => {
                 setCategoryThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/서울/repositories/category`)
+        Api.get(`/seoul/repositories/category`)
             .then(response => {
                 setCategorySeoulThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/정보전달/repositories/category`)
+        Api.get(`/info/repositories/category`)
             .then(response => {
                 setCategoryInfoThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/맛집/repositories/category`)
+        Api.get(`/rest/repositories/category`)
             .then(response => {
                 setCategoryRestThumbCards(response.data?.data)
             })

@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import CommonLayout from "../components/Layout/CommonLayout";
-import {Button, Col, Divider, Form, Input, Result, Row, Spin, Timeline, Comment, List, Alert} from "antd";
+import { Button, Col, Divider, Form, Input, Result, Row, Spin, Timeline, Comment, List, Alert } from "antd";
 import RequestForm from "../components/Repository/RequestForm";
-import {useDispatch, useSelector} from "react-redux";
-import {deniedRequestData, mergeRequestData, saveRequestReply, selectRequestInfo} from "../_actions/repository_action";
-import {Link, withRouter} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { deniedRequestData, mergeRequestData, saveRequestReply, selectRequestInfo } from "../_actions/repository_action";
+import { Link, withRouter } from "react-router-dom";
 import Api from "../util/Api";
+import SimpleMap from '../components/Map/SimpleMap';
 
 const { TextArea } = Input;
 
@@ -27,20 +28,20 @@ const CommentList = ({ comments }) => (
         dataSource={comments}
         header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
         itemLayout="horizontal"
-        style={{textAlign: "left", width: "70%", marginLeft: "15%"}}
+        style={{ textAlign: "left", width: "70%", marginLeft: "15%" }}
         renderItem={props => <Comment {...props} />}
     />
 );
 
 const Editor = ({ onChange, onSubmit, value }) => (
     <>
-        <Form.Item style={{marginLeft: "18%"}}>
+        <Form.Item style={{ marginLeft: "18%" }}>
             <Row>
                 <Col flex="auto">
                     <TextArea rows={4} onChange={onChange} value={value} />
                 </Col>
                 <Col>
-                    <Button htmlType="submit" onClick={onSubmit} style={{height: "100%"}} type="primary">
+                    <Button htmlType="submit" onClick={onSubmit} style={{ height: "100%" }} type="primary">
                         Add Comment
                     </Button>
                 </Col>
@@ -76,8 +77,8 @@ const RequestDetailPage = (props) => {
     const [commentValue, setCommentValue] = useState('');
 
     const handleSubmit = () => {
-        if(commentValue !== "" && commentValue !== undefined){
-            dispatch(saveRequestReply(`${props.location.pathname}/reply`, {"content":commentValue}))
+        if (commentValue !== "" && commentValue !== undefined) {
+            dispatch(saveRequestReply(`${props.location.pathname}/reply`, { "content": commentValue }))
                 .then(response => {
                     setComments([...comments, response.payload.data]);
                 })
@@ -90,6 +91,8 @@ const RequestDetailPage = (props) => {
     const handleChange = (event) => {
         setCommentValue(event.currentTarget.value);
     }
+
+    const [dataToSimpleMap, setdataToSimpleMap] = useState([])
 
     useEffect(() => {
 
@@ -110,29 +113,27 @@ const RequestDetailPage = (props) => {
                 setRequestStatus(values[0].status);
 
                 let compareResult = response.payload.data;
-
-                console.log("compareResult:", compareResult);
-
-                if(compareResult.added !== undefined){
+                console.log({ compareResult })
+                setdataToSimpleMap(compareResult)
+                if (compareResult.added !== undefined) {
                     setAddList(compareResult.added.map((data) => <p>{data.createdDate} {data.name}</p>));
                 }
 
-                if(compareResult.modified !== undefined){
+                if (compareResult.modified !== undefined) {
                     setModifyList(compareResult.modified.map((data) => <p>{data.createdDate} {data.name}</p>));
                 }
 
-                if(compareResult.delete !== undefined){
+                if (compareResult.delete !== undefined) {
                     setDeleteList(compareResult.delete.map((data) => <p>{data.createdDate} {data.name}</p>));
                 }
 
-                if(compareResult.layer !== undefined){
+                if (compareResult.layer !== undefined) {
                     setLayerList(compareResult.layer.map((data) => <p>{data.createdDate} {data.name}</p>));
                 }
 
-                if(compareResult.replies !== undefined){
+                if (compareResult.replies !== undefined) {
                     setComments(compareResult.replies);
                 }
-
                 setTimeLineLoading(true);
                 setIsLoading(true);
             })
@@ -166,27 +167,27 @@ const RequestDetailPage = (props) => {
             })
     }
 
-    if(isLoading){
+    if (isLoading) {
         return (
             <CommonLayout>
-                <Row style={{textAlign:'center'}}>
+                <Row style={{ textAlign: 'center' }}>
                     <Col span={5}></Col>
                     <Col span={14}>
                         {
                             requestStatus === "ACCEPTED" && <Alert
                                 message="요청 사항이 반영되었습니다!"
                                 type="info"
-                                style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
+                                style={{ marginBottom: '10px', borderRadius: '15px', fontSize: '15px' }}
                             />
                         }
                         {
                             requestStatus === "DENIED" && <Alert
                                 message="요청 사항이 거부되었습니다!"
                                 type="error"
-                                style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
+                                style={{ marginBottom: '10px', borderRadius: '15px', fontSize: '15px' }}
                             />
                         }
-                        <p style={{marginTop:"30px", fontSize:"35px"}}>
+                        <p style={{ marginTop: "30px", fontSize: "35px" }}>
                             변경사항 반영 요청
                         </p>
                         <Divider />
@@ -196,22 +197,22 @@ const RequestDetailPage = (props) => {
                                 name="title"
                                 rules={[{ required: true, message: '요청 제목을 입력해주세요!' }]}
                                 initialValue={title}
-                                style={{width: '85%'}}
+                                style={{ width: '85%' }}
                             >
-                                <Input style={{color: "black"}} disabled/>
+                                <Input style={{ color: "black" }} disabled />
                             </Form.Item>
                             <Form.Item
                                 label="내용"
                                 name="content"
                                 rules={[{ required: true, message: '요청 내용을 입력해주세요!' }]}
                                 initialValue={content}
-                                style={{width: '85%'}}
+                                style={{ width: '85%' }}
                             >
-                                <TextArea style={{color: "black"}} rows={10} disabled/>
+                                <TextArea style={{ color: "black" }} rows={10} disabled />
                             </Form.Item>
                             <Form.Item>
                                 {
-                                    timeLineLoading && <Timeline style={{marginLeft: "15%", width: "50%", textAlign: "left"}}>
+                                    timeLineLoading && <Timeline style={{ marginLeft: "15%", width: "50%", textAlign: "left" }}>
                                         {
                                             addList.length > 0 && <Timeline.Item color="green">
                                                 <p>데이터 추가</p>
@@ -244,13 +245,14 @@ const RequestDetailPage = (props) => {
                                     <Button type="primary" onClick={onClickMerge}>
                                         반영하기
                                     </Button>
-                                    <Button style={{marginLeft: "10px"}} type="primary" onClick={onClickDenied} danger>
+                                    <Button style={{ marginLeft: "10px" }} type="primary" onClick={onClickDenied} danger>
                                         거절하기
                                     </Button>
                                 </Form.Item>
                             }
+                            <SimpleMap data={dataToSimpleMap} />
                             {comments.length > 0 && <CommentList comments={comments} />}
-                            <Comment content={<Editor onChange={handleChange} onSubmit={handleSubmit} value={commentValue}/>}/>
+                            <Comment content={<Editor onChange={handleChange} onSubmit={handleSubmit} value={commentValue} />} />
 
                         </RequestForm>
                     </Col>
@@ -258,7 +260,7 @@ const RequestDetailPage = (props) => {
                 </Row>
             </CommonLayout>
         );
-    }else{
+    } else {
         return (
             <div style={isLoading && notFound ? null : { textAlign: "center", lineHeight: "100vh", height: "100vh" }}>
                 {isLoading && notFound ? <Result
