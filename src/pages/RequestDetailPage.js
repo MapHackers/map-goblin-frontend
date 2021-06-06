@@ -92,6 +92,8 @@ const RequestDetailPage = (props) => {
         setCommentValue(event.currentTarget.value);
     }
 
+    const [dataToSimpleMap, setdataToSimpleMap] = useState([])
+
     useEffect(() => {
 
         Api.get(`/${userId}/repositories/${repositoryName}`)
@@ -111,10 +113,9 @@ const RequestDetailPage = (props) => {
                 setRequestStatus(values[0].status);
 
                 let compareResult = response.payload.data;
-
-                console.log("compareResult:", compareResult);
-
-                if(compareResult.added !== undefined){
+                console.log({ compareResult })
+                setdataToSimpleMap(compareResult)
+                if (compareResult.added !== undefined) {
                     setAddList(compareResult.added.map((data) => <p>{data.createdDate} {data.name}</p>));
                 }
 
@@ -133,7 +134,6 @@ const RequestDetailPage = (props) => {
                 if (compareResult.replies !== undefined) {
                     setComments(compareResult.replies);
                 }
-
                 setTimeLineLoading(true);
                 setIsLoading(true);
             })
@@ -250,7 +250,7 @@ const RequestDetailPage = (props) => {
                                     </Button>
                                 </Form.Item>
                             }
-                            <SimpleMap />
+                            <SimpleMap data={dataToSimpleMap} />
                             {comments.length > 0 && <CommentList comments={comments} />}
                             <Comment content={<Editor onChange={handleChange} onSubmit={handleSubmit} value={commentValue} />} />
 

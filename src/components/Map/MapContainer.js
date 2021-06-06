@@ -370,7 +370,7 @@ const MapContainer = ({ mapId, authority }) => {
         <>
             <div id="staticMap" style={{ width: '400px', height: '400px', display: 'none' }}></div>
             <Map
-                style={{ width: '95vw', height: '80vh' }}
+                style={{ width: '95vw', height: '80vh'}}
                 options={{
                     center: mapCenter,
                     level: 2
