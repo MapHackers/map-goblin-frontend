@@ -1,23 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Comment, List, Avatar, Col, Row, Form, Button, Table, Tag, Input} from 'antd';
+import {Comment, List, Avatar, Col, Row, Form, Button, Tag, Input} from 'antd';
 import { CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons'
 import CommonLayout from "../components/Layout/CommonLayout";
 import TextArea from "antd/es/input/TextArea";
 import Api from "../util/Api";
 import RequestForm from "../components/Repository/RequestForm";
-
-const data = [
-    {
-        author:'doil',
-        profile: 'NoProfile.png',
-        content:'hello'
-    },
-    {
-        author:'doil',
-        profile: 'NoProfile.png',
-        content:'hello'
-    }
-]
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <>
@@ -227,22 +214,6 @@ const IssueDetailPage = (props) => {
                                     <TextArea style={{color: "black"}} rows={10} disabled/>
                                 </Form.Item>
                             </RequestForm>
-
-                            {/*<Table pagination={false}*/}
-                            {/*       dataSource={[{key:'1', content: `${issueContent}`, height:'100px', columnWidth:"400px"}]}*/}
-                            {/*       columns={[{title: `${title}`, dataIndex:'content'}]}*/}
-                            {/*       footer={() => (*/}
-                            {/*           <>*/}
-                            {/*               <b>작성자 : </b>*/}
-                            {/*               <Avatar src={profile ? `${Api.defaults.baseURL}/files/${profile}` : `${Api.defaults.baseURL}/files/NoProfile.png`}*/}
-                            {/*                       size={20}*/}
-                            {/*                       shape='circle'*/}
-                            {/*                       style={{marginLeft:'10px', marginRight:'5px'}}*/}
-                            {/*               />*/}
-                            {/*               {author}*/}
-                            {/*           </>*/}
-                            {/*       )}*/}
-                            {/*/>*/}
                             <CommentList key={Math.random} comments={reviewList} />
                             <Comment
                                 avatar={

@@ -1,12 +1,7 @@
-import React, {useState} from 'react';
-import {Avatar, Button, Col, Divider, Form, Input, Row, Select, Tag} from "antd";
-import CreateInfo from "../components/Repository/CreateInfo";
+import React from 'react';
+import {Button, Col, Divider, Form, Input, Row} from "antd";
 import CommonLayout from "../components/Layout/CommonLayout";
 import IssueForm from "../components/Repository/IssueForm";
-import {useDispatch} from "react-redux";
-import {addSelectedCategory} from "../_actions/repository_action";
-import {UserOutlined} from "@ant-design/icons";
-import Api from "../util/Api";
 
 const { TextArea } = Input;
 

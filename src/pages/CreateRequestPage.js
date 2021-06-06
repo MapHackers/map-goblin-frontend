@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import CommonLayout from "../components/Layout/CommonLayout";
-import {Button, Col, Divider, Form, Input, Row, Select, Tag, Timeline} from "antd";
+import {Button, Col, Divider, Form, Input, Row, Timeline} from "antd";
 import RequestForm from "../components/Repository/RequestForm";
-import {compareRepository, createRequest} from "../_actions/repository_action";
+import {compareRepository} from "../_actions/repository_action";
 import {useDispatch, useSelector} from "react-redux";
 
 const { TextArea } = Input;
@@ -19,6 +19,18 @@ const tailFormItemLayout = {
         },
     },
 };
+
+function getDate(isoDate) {
+    const createdDate = isoDate.split(/-|T/);
+    const year = createdDate[0];
+    const month = parseInt(createdDate[1]).toString();
+    const date = parseInt(createdDate[2]).toString();
+    const time = createdDate[3].split(':');
+    const hour = time[0];
+    const min = time[1];
+
+    return `${year}년 ${month}월 ${date}일  ${hour}:${min}`;
+}
 
 const CreateRequestPage = (props) => {
 
@@ -48,19 +60,19 @@ const CreateRequestPage = (props) => {
         }
 
         if(compareResult.added !== undefined){
-            setAddList(compareResult.added.map((data) => <p>{data.createdDate} {data.name}</p>));
+            setAddList(compareResult.added.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
         }
 
         if(compareResult.modified !== undefined){
-            setModifyList(compareResult.modified.map((data) => <p>{data.createdDate} {data.name}</p>));
+            setModifyList(compareResult.modified.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
         }
 
         if(compareResult.delete !== undefined){
-            setDeleteList(compareResult.delete.map((data) => <p>{data.createdDate} {data.name}</p>));
+            setDeleteList(compareResult.delete.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
         }
 
         if(compareResult.layer !== undefined){
-            setLayerList(compareResult.layer.map((data) => <p>{data.createdDate} {data.name}</p>));
+            setLayerList(compareResult.layer.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
         }
 
         setTimeLineLoading(true);

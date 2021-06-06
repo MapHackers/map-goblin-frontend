@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Button, Col, Input, Row} from "antd";
 import ImgUpload from "./ImgUpload";
 import {withRouter} from "react-router-dom";

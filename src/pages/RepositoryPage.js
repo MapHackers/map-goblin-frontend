@@ -38,8 +38,6 @@ let hrefId = "";
 let hrefRepo = "";
 
 function getDate(isoDate) {
-    const months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
     const createdDate = isoDate.split(/-|T/);
     const year = createdDate[0];
     const month = parseInt(createdDate[1]).toString();

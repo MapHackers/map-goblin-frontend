@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import CommonLayout from "../components/Layout/CommonLayout";
 import { Button, Col, Divider, Form, Input, Result, Row, Spin, Timeline, Comment, List, Alert } from "antd";
 import RequestForm from "../components/Repository/RequestForm";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { deniedRequestData, mergeRequestData, saveRequestReply, selectRequestInfo } from "../_actions/repository_action";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Api from "../util/Api";
 import SimpleMap from '../components/Map/SimpleMap';
 
@@ -78,6 +78,18 @@ function alarmCalculate(date) {
     else return Math.round(time_val / year) + '년 전'
 }
 
+function getDate(isoDate) {
+    const createdDate = isoDate.split(/-|T/);
+    const year = createdDate[0];
+    const month = parseInt(createdDate[1]).toString();
+    const date = parseInt(createdDate[2]).toString();
+    const time = createdDate[3].split(':');
+    const hour = time[0];
+    const min = time[1];
+
+    return `${year}년 ${month}월 ${date}일  ${hour}:${min}`;
+}
+
 const RequestDetailPage = (props) => {
 
     const dispatch = useDispatch()
@@ -146,19 +158,19 @@ const RequestDetailPage = (props) => {
                 console.log({ compareResult })
                 setdataToSimpleMap(compareResult)
                 if (compareResult.added !== undefined) {
-                    setAddList(compareResult.added.map((data) => <p>{data.createdDate} {data.name}</p>));
+                    setAddList(compareResult.added.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
                 }
 
                 if (compareResult.modified !== undefined) {
-                    setModifyList(compareResult.modified.map((data) => <p>{data.createdDate} {data.name}</p>));
+                    setModifyList(compareResult.modified.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
                 }
 
                 if (compareResult.delete !== undefined) {
-                    setDeleteList(compareResult.delete.map((data) => <p>{data.createdDate} {data.name}</p>));
+                    setDeleteList(compareResult.delete.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
                 }
 
                 if (compareResult.layer !== undefined) {
-                    setLayerList(compareResult.layer.map((data) => <p>{data.createdDate} {data.name}</p>));
+                    setLayerList(compareResult.layer.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
                 }
 
                 if (compareResult.replies !== undefined) {

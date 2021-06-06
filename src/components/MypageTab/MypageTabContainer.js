@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, Space, Tabs, List, Row, Col, Image } from 'antd';
+import { Divider, Space, Tabs, List, Row, Col, Image, Empty } from 'antd';
 import {
     BookOutlined,
     EnvironmentOutlined,
@@ -157,33 +157,41 @@ const MypageTabContainer = (props) => {
                     <div style={{ marginBottom: "20px", textAlign: "left", fontSize: "20px", fontWeight: "600" }}>{userInfo.userName}님의 지도
                         목록
                     </div>
+                    {mapList.length !== 0 ?
                     <Space size="large" style={{ width: "100%" }}>
                         {mapList?.map(card => (
                             <Card card={card} />
                         ))}
-                    </Space>
+                    </Space>:
+                        <Empty/>
+                    }
+
                     <Divider />
                     <Row>
-                        <Col span={12}>
-                            <div style={{
-                                marginBottom: "20px",
-                                textAlign: "left",
-                                fontSize: "20px",
-                                fontWeight: "600"
-                            }}>{userInfo.userName}님의 지도별 좋아요 수 TOP 5
-                            </div>
-                            <Doughnut data={likeChartData} />
-                        </Col>
-                        <Col span={12}>
-                            <div style={{
-                                marginBottom: "20px",
-                                textAlign: "left",
-                                fontSize: "20px",
-                                fontWeight: "600"
-                            }}>{userInfo.userName}님의 지도별 조회 수 TOP 5
-                            </div>
-                            <Doughnut data={visitChartData} />
-                        </Col>
+                        {likeCounts.length !== 0 &&
+                            <Col span={12}>
+                                <div style={{
+                                    marginBottom: "20px",
+                                    textAlign: "left",
+                                    fontSize: "20px",
+                                    fontWeight: "600"
+                                }}>{userInfo.userName}님의 지도별 좋아요 수 TOP 5
+                                </div>
+                                <Doughnut data={likeChartData} />
+                            </Col>
+                        }
+                        {visitCounts.length !== 0 &&
+                            <Col span={12}>
+                                <div style={{
+                                    marginBottom: "20px",
+                                    textAlign: "left",
+                                    fontSize: "20px",
+                                    fontWeight: "600"
+                                }}>{userInfo.userName}님의 지도별 조회 수 TOP 5
+                                </div>
+                                <Doughnut data={visitChartData} />
+                            </Col>
+                        }
                     </Row>
                 </TabPane>
                 <TabPane tab={<span><EnvironmentOutlined />Maps</span>} key="2">
