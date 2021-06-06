@@ -74,10 +74,11 @@ const CreateForm = (props) => {
         }else{
             if(props.formName === "modify"){
 
+                console.log("values",values);
+
                 dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
                     .then(response => {
                         props.history.push(`/${props.user.userId}/repositories/${values.name}`);
-                        window.location.reload();
                     });
             }else{
                 dispatch(saveRepositoryInfo(values))

@@ -186,6 +186,10 @@ const RequestDetailPage = (props) => {
 
     }, []);
 
+    const onClickBack = () => {
+        console.log("onclickback", props);
+    }
+
     const onClickMerge = () => {
         dispatch(mergeRequestData(`${props.location.pathname}/merge`))
             .then(response => {
@@ -280,6 +284,19 @@ const RequestDetailPage = (props) => {
                                             </Timeline.Item>
                                         }
                                     </Timeline>
+                                }
+                            </Form.Item>
+                            <Form.Item>
+                                <Button type="primary" onClick={onClickBack}>뒤로가기</Button>
+                                {
+                                    repositoryInfo.authority === "OWNER" && requestStatus === "WAITING" && <>
+                                        <Button type="primary" color="green" onClick={onClickMerge}>
+                                            반영하기
+                                        </Button>
+                                        <Button style={{ marginLeft: "10px" }} type="primary" onClick={onClickDenied} danger>
+                                            거절하기
+                                        </Button>
+                                        </>
                                 }
                             </Form.Item>
                             {
