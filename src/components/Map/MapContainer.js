@@ -460,7 +460,7 @@ const MapContainer = ({ mapId, authority }) => {
                                     name="desc"
                                     rules={[{ required: true, message: 'Please input description!' }]}
                                 >
-                                    <Input />
+                                    <TextArea rows={4}/>
                                 </Form.Item>
 
                                 <Form.Item >
