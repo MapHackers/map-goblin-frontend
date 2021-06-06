@@ -16,7 +16,7 @@ function MainContentSlider() {
 
             >
                 <div style={{ backgroundColor: "#A0D0FD" }}>
-                    <img src="/m1.png" alt="" style={{ width: '100vw', height: '600px' }} />
+                    <img src="/g1.png" alt="" style={{ width: '100vw', height: '600px' }} />
                 </div>
                 <div style={{ backgroundColor: "#A0D0FD" }}>
                     <img src="/mainslider2.png" alt="" style={{ width: '100vw', height: '600px' }} />
