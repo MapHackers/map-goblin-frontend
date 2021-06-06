@@ -187,7 +187,7 @@ const RequestDetailPage = (props) => {
     }, []);
 
     const onClickBack = () => {
-        console.log("onclickback", props);
+        props.history.push(`/${props.match.params.userId}/repositories/${props.match.params.repositoryName}`)
     }
 
     const onClickMerge = () => {
@@ -287,10 +287,10 @@ const RequestDetailPage = (props) => {
                                 }
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" onClick={onClickBack}>뒤로가기</Button>
+                                <Button type="primary" style={{marginLeft: "30%"}} onClick={onClickBack}>뒤로가기</Button>
                                 {
                                     repositoryInfo.authority === "OWNER" && requestStatus === "WAITING" && <>
-                                        <Button type="primary" color="green" onClick={onClickMerge}>
+                                        <Button type="primary" style={{marginLeft: "10px"}} color="green" onClick={onClickMerge}>
                                             반영하기
                                         </Button>
                                         <Button style={{ marginLeft: "10px" }} type="primary" onClick={onClickDenied} danger>
@@ -299,16 +299,6 @@ const RequestDetailPage = (props) => {
                                         </>
                                 }
                             </Form.Item>
-                            {
-                                repositoryInfo.authority === "OWNER" && requestStatus === "WAITING" && <Form.Item wrapperCol={tailFormItemLayout}>
-                                    <Button type="primary" onClick={onClickMerge}>
-                                        반영하기
-                                    </Button>
-                                    <Button style={{ marginLeft: "10px" }} type="primary" onClick={onClickDenied} danger>
-                                        거절하기
-                                    </Button>
-                                </Form.Item>
-                            }
                             <div>
                                 <h1 style={{ fontSize: '2rem'}}> 변경사항 살펴보기 </h1>
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
