@@ -24,48 +24,54 @@ const ProfileContainer = (props) => {
     const onClick = () => setShowResults(!editData)
 
     const fileList = useSelector(state => state.repository.fileList)
+    const isModified = useSelector(state => state.repository.isModified)
     const userInfo = useSelector(state => state.userInfo)
 
     const onClickEdit = () => {
         const formData = new FormData
-        if (fileList.length > 0) {
-            if (fileList[0].originFileObj) {
-                formData.append('file', fileList[0].originFileObj);
-                Api.post('/files', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    }
-                }).then(response => {
-                    setProfile(response.data)
-                    let dataToSubmit = {
-                        userId: props.user.userId,
-                        userName: userName,
-                        description: userDescription,
-                        profile: response.data
-                    }
-                    dispatch(editUser(dataToSubmit))
-                        .then(response => console.log("Edit:", response))
-                        .catch(error => error)
-                })
+        if(isModified === true){
+            if (fileList.length > 0) {
+                if (fileList[0].originFileObj) {
+                    formData.append('file', fileList[0].originFileObj);
+                    Api.post('/files', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }).then(response => {
+                        setProfile(response.data)
+                        let dataToSubmit = {
+                            userId: props.user.userId,
+                            userName: userName,
+                            description: userDescription,
+                            profile: response.data
+                        }
+                        dispatch(editUser(dataToSubmit))
+                            .then(response => console.log("Edit:", response))
+                            .catch(error => error)
+                    })
+                } else {
+                    console.log("img file error");
+                }
+
+                dispatch(modifiedFile(false));
+
             } else {
+                setProfile(null);
                 let dataToSubmit = {
                     userId: props.user.userId,
                     userName: userName,
                     description: userDescription,
-                    profile: null
+                    profile: "profileDelete"
                 }
                 dispatch(editUser(dataToSubmit))
-                    .then(response => console.log("FILELIST 2", fileList))
+                    .then(response => console.log("NOEdit:", response))
                     .catch(error => error)
             }
-
-        } else {
-            setProfile(null)
+        }else{
             let dataToSubmit = {
                 userId: props.user.userId,
                 userName: userName,
                 description: userDescription,
-                profile: null
             }
             dispatch(editUser(dataToSubmit))
                 .then(response => console.log("NOEdit:", response))
