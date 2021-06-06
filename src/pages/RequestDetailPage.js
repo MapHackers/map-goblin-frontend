@@ -257,7 +257,7 @@ const RequestDetailPage = (props) => {
                                     <h2 style={{marginTop: '3px', marginLeft: '10px', marginRight: '15px'}}> 데이터 추가 </h2>
                                     <img src="/RedLogo.png" alt="" style={{ width: '40px', height: '40px' }} />
                                     <h2 style={{marginTop: '3px', marginLeft: '10px', marginRight: '15px'}}> 데이터 삭제 </h2>
-                                    <img src="/Logo.png" alt="" style={{ width: '40px', height: '40px' }} />
+                                    <img src="/YellowLogo.png" alt="" style={{ width: '40px', height: '40px' }} />
                                     <h2 style={{marginTop: '3px', marginLeft: '10px'}}> 데이터 수정 </h2>
                                 </div>
                                 <SimpleMap data={dataToSimpleMap} />

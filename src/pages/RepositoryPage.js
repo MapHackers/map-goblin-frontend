@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Link, withRouter} from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import styled from "styled-components";
 
 import { FileTextOutlined, EnvironmentOutlined, PullRequestOutlined, ExclamationCircleOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
@@ -28,14 +28,14 @@ import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant
 import Api from "../util/Api";
 
 import InfoSetting from "../components/Repository/InfoSetting";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 
-import {compareRepository, selectIssueList, selectRequestList} from "../_actions/repository_action";
+import { compareRepository, selectIssueList, selectRequestList } from "../_actions/repository_action";
 
 const { TabPane } = Tabs
 
-let hrefId="";
-let hrefRepo="";
+let hrefId = "";
+let hrefRepo = "";
 
 function getDate(isoDate) {
     const months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -58,12 +58,14 @@ const columns = [
         key: 'title',
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
         render: (title, values) => {
-            if(values.type === "issue"){
-                console.log("VALUES",values)
+            if (values.type === "issue") {
+                console.log("VALUES", values)
                 return (<Link to={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</Link>)
-            }else{
-                return (<Link to={{pathname:`/${hrefId}/repositories/${hrefRepo}/requests/${values.key}`,
-                    state: {userId:hrefId, repositoryName: hrefRepo}}}>{title}</Link>)
+            } else {
+                return (<Link to={{
+                    pathname: `/${hrefId}/repositories/${hrefRepo}/requests/${values.key}`,
+                    state: { userId: hrefId, repositoryName: hrefRepo }
+                }}>{title}</Link>)
             }
         },
     },
@@ -160,7 +162,7 @@ const RepositoryPage = (props) => {
 
     useEffect(() => {
         // 새로 고침 가능!!
-        if (isFirst && visitCount !== 0){
+        if (isFirst && visitCount !== 0) {
             visitCount++
             setIsFirst(false)
             Api.post(`/${userId}/${repositoryName}/visit`)
@@ -178,6 +180,8 @@ const RepositoryPage = (props) => {
 
                 if (response.data.thumbnail !== null) {
                     setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
+                } else {
+                    setThumbnail(Api.defaults.baseURL + '/files/no-image.svg');
                 }
 
             }).catch(error => {
@@ -194,7 +198,7 @@ const RepositoryPage = (props) => {
 
                     let result = []
 
-                    for(let i=0; i<contents.length; i++){
+                    for (let i = 0; i < contents.length; i++) {
                         let jsonObj = {};
 
                         jsonObj.key = contents[i].id;
@@ -223,7 +227,7 @@ const RepositoryPage = (props) => {
 
                     let result = []
 
-                    for(let i=0; i<contents.length; i++){
+                    for (let i = 0; i < contents.length; i++) {
                         let jsonObj = {};
 
                         jsonObj.key = contents[i].id;
@@ -254,7 +258,7 @@ const RepositoryPage = (props) => {
 
                     let result = []
 
-                    for(let i=0; i<contents.length; i++){
+                    for (let i = 0; i < contents.length; i++) {
                         let jsonObj = {};
 
                         jsonObj.key = contents[i].id;
@@ -285,7 +289,7 @@ const RepositoryPage = (props) => {
 
                     let result = []
 
-                    for(let i=0; i<contents.length; i++){
+                    for (let i = 0; i < contents.length; i++) {
                         let jsonObj = {};
 
                         jsonObj.key = contents[i].id;
@@ -316,7 +320,7 @@ const RepositoryPage = (props) => {
 
                     let result = []
 
-                    for(let i=0; i<contents.length; i++){
+                    for (let i = 0; i < contents.length; i++) {
                         let jsonObj = {};
 
                         jsonObj.key = contents[i].id;
@@ -339,8 +343,8 @@ const RepositoryPage = (props) => {
 
             dispatch(compareRepository(userId, repositoryName))
                 .then(response => {
-                    if(response.payload.status === 200){
-                        if(response.payload.data.message === undefined){
+                    if (response.payload.status === 200) {
+                        if (response.payload.data.message === undefined) {
                             setRequestLoading(true);
                         }
                     }
@@ -354,12 +358,12 @@ const RepositoryPage = (props) => {
     }, [props, actionType])
 
     const onClickClone = () => {
-        if(repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER"){
+        if (repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER") {
             alert("본인의 지도는 클론할 수 없습니다.");
-        }else{
+        } else {
             // eslint-disable-next-line no-restricted-globals
-            if(confirm("지도를 클론하시겠습니까?")){
-                Api.post('/repositories/clone', {"repositoryId":repositoryInfo.id}).then(response => {
+            if (confirm("지도를 클론하시겠습니까?")) {
+                Api.post('/repositories/clone', { "repositoryId": repositoryInfo.id }).then(response => {
                     alert("클론이 완료되었습니다. 클론된 지도로 이동합니다.");
                     props.history.push(`/${props.user.userData.data.userId}/repositories/${response.data.name}`);
                 }).catch(error => {
@@ -371,20 +375,20 @@ const RepositoryPage = (props) => {
     }
 
     const onClickLike = (type) => {
-        Api.post(`/${repositoryInfo.id}/like`, {"type":type}).then(response => {
-            if(actionType === type){
+        Api.post(`/${repositoryInfo.id}/like`, { "type": type }).then(response => {
+            if (actionType === type) {
                 setActionType(null);
-            }else{
+            } else {
                 setActionType(type)
             }
 
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error);
         })
     }
 
     const onChangeWaitingPage = (page) => {
-        dispatch(selectIssueList(page-1, userId, repositoryName, 'WAITING'))
+        dispatch(selectIssueList(page - 1, userId, repositoryName, 'WAITING'))
             .then(response => {
 
                 let issueList = response.payload.data;
@@ -393,7 +397,7 @@ const RepositoryPage = (props) => {
 
                 let result = []
 
-                for(let i=0; i<contents.length; i++){
+                for (let i = 0; i < contents.length; i++) {
                     let jsonObj = {};
 
                     jsonObj.key = contents[i].id;
@@ -413,7 +417,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeCheckedPage = (page) => {
-        dispatch(selectIssueList(page-1, userId, repositoryName, 'CHECKED'))
+        dispatch(selectIssueList(page - 1, userId, repositoryName, 'CHECKED'))
             .then(response => {
 
                 let issueList = response.payload.data;
@@ -422,7 +426,7 @@ const RepositoryPage = (props) => {
 
                 let result = []
 
-                for(let i=0; i<contents.length; i++){
+                for (let i = 0; i < contents.length; i++) {
                     let jsonObj = {};
 
                     jsonObj.key = contents[i].id;
@@ -442,7 +446,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeRequestWaitingPage = (page) => {
-        dispatch(selectRequestList(page-1, userId, repositoryName, 'WAITING'))
+        dispatch(selectRequestList(page - 1, userId, repositoryName, 'WAITING'))
             .then(response => {
 
                 let requestList = response.payload.data;
@@ -451,7 +455,7 @@ const RepositoryPage = (props) => {
 
                 let result = []
 
-                for(let i=0; i<contents.length; i++){
+                for (let i = 0; i < contents.length; i++) {
                     let jsonObj = {};
 
                     jsonObj.key = contents[i].id;
@@ -471,7 +475,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeRequestAcceptedPage = (page) => {
-        dispatch(selectRequestList(page-1, userId, repositoryName, 'ACCEPTED'))
+        dispatch(selectRequestList(page - 1, userId, repositoryName, 'ACCEPTED'))
             .then(response => {
 
                 let requestList = response.payload.data;
@@ -480,7 +484,7 @@ const RepositoryPage = (props) => {
 
                 let result = []
 
-                for(let i=0; i<contents.length; i++){
+                for (let i = 0; i < contents.length; i++) {
                     let jsonObj = {};
 
                     jsonObj.key = contents[i].id;
@@ -500,7 +504,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeRequestDeniedPage = (page) => {
-        dispatch(selectRequestList(page-1, userId, repositoryName, 'DENIED'))
+        dispatch(selectRequestList(page - 1, userId, repositoryName, 'DENIED'))
             .then(response => {
 
                 let requestList = response.payload.data;
@@ -509,7 +513,7 @@ const RepositoryPage = (props) => {
 
                 let result = []
 
-                for(let i=0; i<contents.length; i++){
+                for (let i = 0; i < contents.length; i++) {
                     let jsonObj = {};
 
                     jsonObj.key = contents[i].id;
@@ -527,6 +531,7 @@ const RepositoryPage = (props) => {
 
         setRequestDeniedPage(page);
     }
+    const colorArray = ["magenta", "red", "volcano", "orange", "lime", "green", "cyan", "blue", "geekblue", "purple"]
 
     if (!isLoading) {
         return (
@@ -547,14 +552,14 @@ const RepositoryPage = (props) => {
                             <Row>
                                 <Col flex="auto" style={{ width: '200px' }}>
                                     <Row>
-                                        <h1 style={{ width: '200px',marginBottom: '50px', fontSize: '2rem', fontWeight: '2rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}> 상세설명 </h1>
+                                        <h1 style={{ width: '200px', marginBottom: '50px', fontSize: '2rem', fontWeight: '2rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}> 상세설명 </h1>
                                         <h2 style={{ fontSize: '1.1rem', lineHeight: '2rem' }}>{repositoryInfo.description}</h2>
                                     </Row>
                                 </Col>
                                 <Col flex="auto" style={{ marginLeft: '50px', marginRight: '50px' }}>
                                     <Row style={{ alignContent: "center", justifyContent: "center" }}>
                                         {thumbnail !== "" && <Image preview={false} src={thumbnail} alt="Thumbnail" style={{ width: '50vw', height: '50vh' }}
-                                                                    fallback="/no-image.svg"
+                                            fallback="/no-image.svg"
                                         />}
                                     </Row>
                                 </Col>
@@ -564,20 +569,22 @@ const RepositoryPage = (props) => {
                                         <Divider />
                                         <Row gutter={16}>
                                             <Col span={12}>
-                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={repositoryInfo.likeType === "LIKE" ? <LikeTwoTone onClick={()=>{onClickLike("LIKE")}}/> : <LikeOutlined onClick={()=>{onClickLike("LIKE")}}/>} />
+                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={repositoryInfo.likeType === "LIKE" ? <LikeTwoTone onClick={() => { onClickLike("LIKE") }} /> : <LikeOutlined onClick={() => { onClickLike("LIKE") }} />} />
                                             </Col>
                                             <Col span={12}>
-                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={repositoryInfo.likeType === "DISLIKE" ? <DislikeTwoTone onClick={()=>{onClickLike("DISLIKE")}}/> : <DislikeOutlined onClick={()=>{onClickLike("DISLIKE")}}/>} />
+                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={repositoryInfo.likeType === "DISLIKE" ? <DislikeTwoTone onClick={() => { onClickLike("DISLIKE") }} /> : <DislikeOutlined onClick={() => { onClickLike("DISLIKE") }} />} />
                                             </Col>
                                         </Row>
                                         <Divider>카테고리</Divider>
-                                        {
-                                            repositoryInfo.categories.map((category, idx)=>{
-                                                return (
-                                                    <Tag color='geekblue' key={idx}>{category}</Tag>
-                                                )
-                                            })
-                                        }
+                                        <div style={{ overflow: 'hidden', width: '200px'}}>
+                                            {
+                                                repositoryInfo.categories.map((category, idx) => {
+                                                    return (
+                                                        <Tag style={{marginBottom: '5px'}} color={colorArray[idx%colorArray.length]} key={idx}>{category}</Tag>
+                                                    )
+                                                })
+                                            }
+                                        </div>
                                         <Divider>Owner의 한마디</Divider>
                                         <p>
                                             {repositoryInfo.oneWord}
@@ -585,12 +592,12 @@ const RepositoryPage = (props) => {
                                         <Divider>Owner</Divider>
                                         <div>
                                             {
-                                                repositoryInfo.owners.map((ownerId, idx)=>{
-                                                    return(
+                                                repositoryInfo.owners.map((ownerId, idx) => {
+                                                    return (
                                                         <h3 style={{ textAlign: "left" }} key={idx}>
                                                             <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
                                                             &nbsp;{ownerId}
-                                                            
+
                                                         </h3>
                                                     )
                                                 })
@@ -602,9 +609,9 @@ const RepositoryPage = (props) => {
                         </Description>
                     </TabPane>
                     <TabPane tab={<span><EnvironmentOutlined />지도</span>} key="2">
-                        <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority} key="mapContainer"/>
+                        <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority} key="mapContainer" />
                     </TabPane>
-                    { repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
+                    {repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
                         <Alert
                             message="새로운 이슈를 올려주세요!"
                             type="warning"
@@ -613,7 +620,7 @@ const RepositoryPage = (props) => {
                                     <Button size="middle" type="primary">지적하기</Button>
                                 </Link>
                             }
-                            style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
+                            style={{ marginBottom: '10px', borderRadius: '15px', fontSize: '15px' }}
                         />
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
                             <TabPane tab={<span>{totalWaitingIssueCount} Waiting</span>} key="1">
@@ -622,7 +629,7 @@ const RepositoryPage = (props) => {
                                     pagination={false}
                                     dataSource={issueWaitingData}
                                 />
-                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={issueWaitingPage} pageSize={8} onChange={onChangeWaitingPage} total={totalWaitingIssueCount}/>
+                                <Pagination style={{ marginLeft: '45%', marginTop: '20px' }} current={issueWaitingPage} pageSize={8} onChange={onChangeWaitingPage} total={totalWaitingIssueCount} />
                             </TabPane>
                             <TabPane tab={<span>{totalCheckedIssueCount} Checked</span>} key="2">
                                 <Table
@@ -630,22 +637,22 @@ const RepositoryPage = (props) => {
                                     pagination={false}
                                     dataSource={issueCheckedData}
                                 />
-                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={issueCheckedPage} pageSize={8} onChange={onChangeCheckedPage} total={totalCheckedIssueCount}/>
+                                <Pagination style={{ marginLeft: '45%', marginTop: '20px' }} current={issueCheckedPage} pageSize={8} onChange={onChangeCheckedPage} total={totalCheckedIssueCount} />
                             </TabPane>
                         </Tabs>
                     </TabPane>
                     }
-                    { repositoryInfo.source === "HOST" && <TabPane tab={<span><PullRequestOutlined />변경 요청</span>} key="4">
+                    {repositoryInfo.source === "HOST" && <TabPane tab={<span><PullRequestOutlined />변경 요청</span>} key="4">
                         {
                             requestLoading && <Alert
                                 message="복사한 지도에 변경사항이 있습니다!"
                                 type="info"
                                 action={
-                                    <Link to={{pathname: `/${userId}/repositories/${repositoryName}/requests`, state: {userId: userId, repositoryName:repositoryName}}}>
+                                    <Link to={{ pathname: `/${userId}/repositories/${repositoryName}/requests`, state: { userId: userId, repositoryName: repositoryName } }}>
                                         <Button size="middle" type="primary">요청하기</Button>
                                     </Link>
                                 }
-                                style={{marginBottom: '10px', borderRadius: '15px', fontSize: '15px'}}
+                                style={{ marginBottom: '10px', borderRadius: '15px', fontSize: '15px' }}
                             />
                         }
                         <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px', borderStyle: 'solid', borderWidth: 'thin', borderRadius: '20px' }}>
@@ -655,7 +662,7 @@ const RepositoryPage = (props) => {
                                     pagination={false}
                                     dataSource={requestWaitingData}
                                 />
-                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={requestWaitingPage} pageSize={8} onChange={onChangeRequestWaitingPage} total={totalWaitingRequestCount}/>
+                                <Pagination style={{ marginLeft: '45%', marginTop: '20px' }} current={requestWaitingPage} pageSize={8} onChange={onChangeRequestWaitingPage} total={totalWaitingRequestCount} />
                             </TabPane>
                             <TabPane tab={<span>{totalAcceptedRequestCount} Accepted</span>} key="2">
                                 <Table
@@ -663,7 +670,7 @@ const RepositoryPage = (props) => {
                                     pagination={false}
                                     dataSource={requestAcceptedData}
                                 />
-                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={requestAcceptedPage} pageSize={8} onChange={onChangeRequestAcceptedPage} total={totalAcceptedRequestCount}/>
+                                <Pagination style={{ marginLeft: '45%', marginTop: '20px' }} current={requestAcceptedPage} pageSize={8} onChange={onChangeRequestAcceptedPage} total={totalAcceptedRequestCount} />
                             </TabPane>
                             <TabPane tab={<span>{totalDeniedRequestCount} Denied</span>} key="3">
                                 <Table
@@ -671,13 +678,13 @@ const RepositoryPage = (props) => {
                                     pagination={false}
                                     dataSource={requestDeniedData}
                                 />
-                                <Pagination style={{marginLeft: '45%', marginTop: '20px'}} current={requestDeniedPage} pageSize={8} onChange={onChangeRequestDeniedPage} total={totalDeniedRequestCount}/>
+                                <Pagination style={{ marginLeft: '45%', marginTop: '20px' }} current={requestDeniedPage} pageSize={8} onChange={onChangeRequestDeniedPage} total={totalDeniedRequestCount} />
                             </TabPane>
                         </Tabs>
                     </TabPane>
                     }
-                    { repositoryInfo.authority === "OWNER" && <TabPane tab={<span><SettingOutlined />설정</span>} key="5">
-                        <InfoSetting repositoryInfo={repositoryInfo} thumbnailUrl={thumbnail}/>
+                    {repositoryInfo.authority === "OWNER" && <TabPane tab={<span><SettingOutlined />설정</span>} key="5">
+                        <InfoSetting repositoryInfo={repositoryInfo} thumbnailUrl={thumbnail} />
                     </TabPane>
                     }
 
