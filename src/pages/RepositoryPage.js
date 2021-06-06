@@ -180,8 +180,6 @@ const RepositoryPage = (props) => {
 
                 if (response.data.thumbnail !== null) {
                     setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
-                } else {
-                    setThumbnail(Api.defaults.baseURL + '/files/no-image.svg');
                 }
 
             }).catch(error => {
