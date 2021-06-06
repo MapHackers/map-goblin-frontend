@@ -103,7 +103,7 @@ const CreateRequestPage = (props) => {
                                         </Timeline.Item>
                                     }
                                     {
-                                        modifyList.length > 0 && <Timeline.Item>
+                                        modifyList.length > 0 && <Timeline.Item color="gold">
                                             <p>데이터 수정</p>
                                             {modifyList}
                                         </Timeline.Item>
@@ -115,7 +115,7 @@ const CreateRequestPage = (props) => {
                                         </Timeline.Item>
                                     }
                                     {
-                                        layerList.length > 0 && <Timeline.Item color="grey">
+                                        layerList.length > 0 && <Timeline.Item>
                                             <p>레이어 추가</p>
                                             {layerList}
                                         </Timeline.Item>
