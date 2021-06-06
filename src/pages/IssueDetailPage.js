@@ -155,6 +155,10 @@ const IssueDetailPage = (props) => {
             .catch(err => err.response)
     }
 
+    const onClickBack = () => {
+        props.history.push(`/${props.match.params.userId}/repositories/${props.match.params.repositoryName}`)
+    }
+
     return (
         <>
             {
@@ -163,8 +167,9 @@ const IssueDetailPage = (props) => {
                     <Row style={{textAlign:'left'}}>
                         <Col span={5}></Col>
                         <Col span={14}>
-
-
+                            <p style={{marginTop:"30px", fontSize:"35px", textAlign: "center"}}>
+                                지적사항 보기
+                            </p>
                             <RequestForm>
                                 <div style={{marginTop:'20px'}}>
                                     <b>작성자 :</b>
@@ -214,6 +219,7 @@ const IssueDetailPage = (props) => {
                                     <TextArea style={{color: "black"}} rows={10} disabled/>
                                 </Form.Item>
                             </RequestForm>
+                            <Button style={{marginLeft: "45%"}} type="primary" onClick={onClickBack}>뒤로가기</Button>
                             <CommentList key={Math.random} comments={reviewList} />
                             <Comment
                                 avatar={

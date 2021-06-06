@@ -19,10 +19,13 @@ import {withRouter} from "react-router-dom";
 const { TabPane } = Tabs;
 
 const typemap = {
-    'LIKE': '를 좋아합니다.',
-    'CLONE': '를 가져갔습니다.',
-    'REQUEST': '에 변경 요청을 남겼습니다.',
-    'ISSUE': '를 지적했습니다.'
+    'LIKE': '지도를 좋아합니다.',
+    'CLONE': '지도를 가져갔습니다.',
+    'REQUEST': '지도에 변경 요청을 남겼습니다.',
+    'ISSUE': '지도를 지적했습니다.',
+    'REQUEST_DENIED': '변경요청을 거부했습니다.',
+    'REQUEST_ACCEPTED': '변경요청을 승인했습니다.',
+    'ISSUE_OK': '지적을 확인했습니다.'
 }
 
 
@@ -290,12 +293,12 @@ const MypageTabContainer = (props) => {
                                                 <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
                                                     style={{ marginLeft: "10px", fontSize: "14px" }}>
                                                     <text style={{ fontWeight: "bold" }}>{alarm.srcMemberName}</text>
-                                                    님이 회원님의 지도{typemap[alarm.alarmType]}
+                                                    님이 회원님의 {typemap[alarm.alarmType]}
                                                 </a> :
                                                 <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
                                                     style={{ marginLeft: "10px", fontSize: "14px", color: '#36A2EB' }}>
                                                     <text style={{ fontWeight: "bold" }}>{alarm.srcMemberName}</text>
-                                                    님이 회원님의 지도{typemap[alarm.alarmType]}
+                                                    님이 회원님의 {typemap[alarm.alarmType]}
                                                 </a>
                                             }
                                         />
