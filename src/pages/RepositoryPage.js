@@ -531,8 +531,6 @@ const RepositoryPage = (props) => {
     }
     const colorArray = ["magenta", "red", "volcano", "orange", "lime", "green", "cyan", "blue", "geekblue", "purple"]
 
-    console.log("thumbnail", thumbnail);
-
     if (!isLoading) {
         return (
             <CommonLayout>
@@ -543,7 +541,10 @@ const RepositoryPage = (props) => {
                     <Breadcrumb.Item>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a href="">{repositoryName}</a>
-                        {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>원본 지도 : <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.hostRepoName}>{`/${repositoryInfo.hostUserId}/repositories/${repositoryInfo.hostRepoName}`}</a></div>}
+                        {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>원본 지도 :
+                            {repositoryInfo.hostUserId === null ?
+                                <p style={{ color: "blue", display: "inline" }}>&nbsp;원본 지도가 삭제되었습니다.</p> :
+                                <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.hostRepoName}>&nbsp;{`/${repositoryInfo.hostUserId}/repositories/${repositoryInfo.hostRepoName}`}</a>}</div>}
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px' }}>
