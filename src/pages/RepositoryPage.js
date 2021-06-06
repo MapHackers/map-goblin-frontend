@@ -42,10 +42,13 @@ function getDate(isoDate) {
 
     const createdDate = isoDate.split(/-|T/);
     const year = createdDate[0];
-    const month = months[parseInt(createdDate[1])]
-    const date = createdDate[2];
+    const month = parseInt(createdDate[1]).toString();
+    const date = parseInt(createdDate[2]).toString();
+    const time = createdDate[3].split(':');
+    const hour = time[0];
+    const min = time[1];
 
-    return year + ', ' + month + ' ' + date;
+    return `${year}년 ${month}월 ${date}일  ${hour}:${min}`;
 }
 
 const columns = [
