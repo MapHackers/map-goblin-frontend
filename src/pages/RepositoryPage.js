@@ -22,7 +22,8 @@ import {
     Statistic,
     Image,
     Pagination,
-    Alert
+    Alert,
+    Modal
 } from 'antd';
 import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant-design/icons';
 import Api from "../util/Api";
@@ -30,7 +31,8 @@ import Api from "../util/Api";
 import InfoSetting from "../components/Repository/InfoSetting";
 import { useDispatch } from "react-redux";
 
-import { compareRepository, selectIssueList, selectRequestList } from "../_actions/repository_action";
+import {compareRepository, selectIssueList, selectPullData, selectRequestList} from "../_actions/repository_action";
+import SimpleMap from "../components/Map/SimpleMap";
 
 const { TabPane } = Tabs
 
@@ -153,6 +155,11 @@ const RepositoryPage = (props) => {
     const [requestWaitingData, setRequestWaitingData] = useState([]);
     const [requestAcceptedData, setRequestAcceptedData] = useState([]);
     const [requestDeniedData, setRequestDeniedData] = useState([]);
+
+
+    const [pullDataLoading, setPullDataLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [dataToSimpleMap, setDataToSimpleMap] = useState([]);
 
     const backHome = () => {
         props.history.push('/main')
@@ -348,6 +355,20 @@ const RepositoryPage = (props) => {
                 .catch(error => {
                     console.log(error);
                 })
+
+            dispatch(selectPullData(userId, repositoryName))
+                .then(response => {
+                    console.log("selectpull", response);
+                    if (response.payload.status === 200) {
+                        if (response.payload.data.message === undefined) {
+                            setPullDataLoading(true);
+                            setDataToSimpleMap(response.payload.data);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         }
 
         getRepositoryInfo().then();
@@ -527,7 +548,20 @@ const RepositoryPage = (props) => {
 
         setRequestDeniedPage(page);
     }
+
     const colorArray = ["magenta", "red", "volcano", "orange", "lime", "green", "cyan", "blue", "geekblue", "purple"]
+
+    const showModal = () => {
+        setModalVisible(true);
+    }
+
+    const handleCancel = () => {
+        setModalVisible(false);
+    }
+
+    const handleOk = () => {
+        setModalVisible(false);
+    }
 
     if (!isLoading) {
         return (
@@ -606,6 +640,33 @@ const RepositoryPage = (props) => {
                         </Description>
                     </TabPane>
                     <TabPane tab={<span><EnvironmentOutlined />지도</span>} key="2">
+                        {
+                            pullDataLoading && <Alert
+                                message="원본 지도에 변경사항이 있습니다!"
+                                type="info"
+                                action={
+                                    <Button size="middle" type="primary" onClick={showModal}>데이터 받기</Button>
+                                }
+                                style={{ marginBottom: '10px', borderRadius: '15px', fontSize: '15px' }}
+                            />
+                        }
+                        <Modal visible={modalVisible} title="원본 변경 데이터" onCancel={handleCancel} width="545px"
+                               footer={[<Button key="back" onClick={handleCancel}>뒤로가기</Button>,
+                                   <Button key="submit" type="primary" onClick={handleOk}>받아오기</Button>]}>
+                            <div>
+                                <h1 style={{ fontSize: '2rem'}}> 변경사항 살펴보기 </h1>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <img src="/GreenLogo.png" alt="" style={{ width: '40px', height: '40px' }} />
+                                    <h2 style={{marginTop: '3px', marginLeft: '10px', marginRight: '15px'}}> 데이터 추가 </h2>
+                                    <img src="/RedLogo.png" alt="" style={{ width: '40px', height: '40px' }} />
+                                    <h2 style={{marginTop: '3px', marginLeft: '10px', marginRight: '15px'}}> 데이터 삭제 </h2>
+                                    <img src="/YellowLogo.png" alt="" style={{ width: '40px', height: '40px' }} />
+                                    <h2 style={{marginTop: '3px', marginLeft: '10px'}}> 데이터 수정 </h2>
+                                </div>
+                                <SimpleMap data={dataToSimpleMap} type="modal"/>
+                            </div>
+
+                        </Modal>
                         <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority} key="mapContainer" />
                     </TabPane>
                     {repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
