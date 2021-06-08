@@ -10,7 +10,7 @@ import {
     COMPARE_REPOSITORY,
     CREATE_REQUEST,
     SELECT_REQUEST_INFO,
-    MERGE_REQUEST_DATA, DENIED_REQUEST_DATA
+    MERGE_REQUEST_DATA, DENIED_REQUEST_DATA, SELECT_PULL_DATA
 } from './type'
 import Api from "../util/Api";
 
@@ -169,6 +169,17 @@ export const selectCategoryList = (url) => {
 
     return {
         type: DENIED_REQUEST_DATA,
+        payload: request
+    }
+}
+
+export const selectPullData = (userId, repositoryName) => {
+    const request = Api.get(`/${userId}/repositories/${repositoryName}/pull/compare`)
+        .then(response => response)
+        .catch(error => error.response);
+
+    return {
+        type: SELECT_PULL_DATA,
         payload: request
     }
 }

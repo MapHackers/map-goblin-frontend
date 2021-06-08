@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 
 const { kakao } = window
 
-const SimpleMap = ({ data }) => {
+const SimpleMap = ({ data, type }) => {
     console.log({ data })
 
     useEffect(() => {
@@ -114,7 +114,7 @@ const SimpleMap = ({ data }) => {
 
     return (
         <>
-            <div id="map" style={{ width: '500px', height: '500px', marginLeft: '240px' }}></div>
+            <div id="map" style={type == undefined ? { width: '500px', height: '500px', marginLeft: '240px' } : { width: '500px', height: '500px' }}></div>
         </>
     )
 }

@@ -10,7 +10,7 @@ import {
     COMPARE_REPOSITORY,
     CREATE_REQUEST,
     SELECT_REQUEST_INFO,
-    SAVE_REQUEST_REPLY, MERGE_REQUEST_DATA, DENIED_REQUEST_DATA, SELECT_CATEGORY_LIST
+    SAVE_REQUEST_REPLY, MERGE_REQUEST_DATA, DENIED_REQUEST_DATA, SELECT_CATEGORY_LIST, SELECT_PULL_DATA
 } from '../_actions/type'
 
 const initialState = {
@@ -25,6 +25,7 @@ const initialState = {
     requestId: "",
     requestInfo: {},
     requestReply: [],
+    pullData: {}
 }
 
 const repository = (state = initialState, action) => {
@@ -59,6 +60,8 @@ const repository = (state = initialState, action) => {
             return {...state}
         case SELECT_CATEGORY_LIST:
             return {...state}
+        case SELECT_PULL_DATA:
+            return {...state, pullData: action.payload.data}
         default:
             return state;
     }
