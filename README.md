@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+# 지도깨비(Map-goblin Frontend)
+<img width='200' src="https://user-images.githubusercontent.com/33109677/121631660-77594900-caba-11eb-8e8d-c2057911ee5c.png">
+<누구나 지도를 커스텀하고 공유할 수 있는 오픈소스 커뮤니티>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 설치
 
-## Available Scripts
+이 서비스를 이용하기 위해서는 먼저 map-goblin API가 필요합니다.
 
-In the project directory, you can run:
+[map-goblin-backend](https://github.com/MapHackers/map-goblin-backend)
+레포지토리  
 
-### `yarn start`
+위 레포지토리의 README를 보고 서버를 실행시켜 주세요!
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---------------
+패키지 설치
+```bash
+    $ git clone https://github.com/MapHackers/map-goblin-frontend.git
+    $ cd map-goblin-frontend
+    $ yarn install (or npm install)
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 실행
 
-### `yarn test`
+------------------------------
+```bash
+    $ yarn start (or npm start)
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+## Contributors ✨
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/SimHongSub"><img src="https://avatars2.githubusercontent.com/u/33109677?s=400&u=505828429d65a332c9017eb423161706d6b13442&v=4" width="100px;" alt=""/><br /><sub><b>심홍섭</b></sub></a><br /><a href="https://github.com/all-contributors/all-contributors/commits?author=jakebolam" title="Documentation">📖</a> <a href="#tool-jakebolam" title="Tools">🔧</a> <a href="#infra-jakebolam" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-jakebolam" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/dydfuf"><img src="https://avatars.githubusercontent.com/u/41016331?v=4" width="100px;" alt=""/><br /><sub><b>최용열</b></sub></a><br /><a href="#design-tbenning" title="Design">🎨</a> <a href="#maintenance-tbenning" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/d0o0yle"><img src="https://avatars.githubusercontent.com/u/59687876?v=4" width="100px;" alt=""/><br /><sub><b>김도일</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+  </tr>
+</table>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+## License
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+[MIT](http://opensource.org/licenses/MIT)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Copyright (c) 2021. 지도깨비
