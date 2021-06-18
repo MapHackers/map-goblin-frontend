@@ -560,6 +560,7 @@ const RepositoryPage = (props) => {
     }
 
     const handleOk = () => {
+        alert("아직 준비중입니다.");
         setModalVisible(false);
     }
 
