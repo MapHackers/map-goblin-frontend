@@ -1,261 +1,101 @@
-import React, { useEffect, useState, lazy } from 'react'
-import MainContentSlider from '../components/MainContentSlider/MainContentSlider'
-import Card from '../components/CardView/CardView'
-import { Divider } from 'antd'
+import React, { lazy } from 'react';
+import MainContentSlider from '../components/MainContentSlider/MainContentSlider';
+import Card from '../components/CardView/CardView';
+import { Divider } from 'antd';
+import styled from 'styled-components';
 
-import SlideButton from '../components/NetflixSlider/SlideButton'
+import SlideButton from '../components/NetflixSlider/SlideButton';
 
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import ExpandingText from '../components/ExpandingText/ExpandingText'
-import Api from '../util/Api'
-const NavBar = lazy(() => import('../components/NavigationBar/NavigationBar'))
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import ExpandingText from '../components/ExpandingText/ExpandingText';
+import useMainData from '../hooks/useMainData';
+const NavBar = lazy(() => import('../components/NavigationBar/NavigationBar'));
 
-function MainPage(props) {
-    const [ThumbCards, setThumbCards] = useState([])
-    const [LikedThumbCards, setLikedThumbCards] = useState([])
-    const [CategoryUnivercityThumbCards, setCategoryThumbCards] = useState([])
-    const [CategorySeoulThumbCards, setCategorySeoulThumbCards] = useState([])
-    const [CategoryInfoThumbCards, setCategoryInfoThumbCards] = useState([])
-    const [CategoryRestThumbCards, setCategoryRestThumbCards] = useState([])
+function MainPage() {
+  const { allRepo, recommendRepo, likedRepo, recommendCategory } = useMainData();
 
-    useEffect(() => {
-        Api.get('/repositories')
-            .then(response => {
-                setThumbCards(response.data?.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        Api.get(`/대학교/repositories/category`)
-            .then(response => {
-                setCategoryThumbCards(response.data?.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        Api.get(`/서울/repositories/category`)
-            .then(response => {
-                setCategorySeoulThumbCards(response.data?.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        Api.get(`/정보전달/repositories/category`)
-            .then(response => {
-                setCategoryInfoThumbCards(response.data?.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        Api.get(`/맛집/repositories/category`)
-            .then(response => {
-                setCategoryRestThumbCards(response.data?.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }, [])
-
-    useEffect(() => {
-        if (props.user?.id !== undefined && props.user?.id !== "null" && props.user?.id !== "") {
-            Api.get(`/${props.user?.id}/repositories/likes`)
-                .then(response => {
-                    console.log({ response })
-                    setLikedThumbCards(response.data?.data)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        }
-    }, [props.user?.id])
-
-    let settings = {
-        dots: false,
-        infinite: ThumbCards.length > 4 ? true : false,
-        speed: 500,
-        slidesToShow: ThumbCards.length > 4 ? 5 : ThumbCards.length,
-        slidesToScroll: 1,
-        arrows: true,
-        prevArrow: <SlideButton type="prev" />,
-        nextArrow: <SlideButton type="next" />,
-        drag: true
+  let setting = (repo) => {
+    return {
+      dots: false,
+      infinite: repo.length > 4 ? true : false,
+      speed: 500,
+      slidesToShow: repo.length > 4 ? 5 : repo.length,
+      slidesToScroll: 1,
+      arrows: true,
+      prevArrow: <SlideButton type="prev" />,
+      nextArrow: <SlideButton type="next" />,
+      drag: true,
     };
+  };
+  return (
+    // <div style={{ background: '#f5f6f7' }}>
+    //   <Main />
 
-    let settings2 = {
-        dots: false,
-        infinite: LikedThumbCards.length > 4 ? true : false,
-        speed: 500,
-        slidesToShow: LikedThumbCards.length > 4 ? 5 : LikedThumbCards.length,
-        slidesToScroll: 1,
-        arrows: true,
-        prevArrow: <SlideButton type="prev" />,
-        nextArrow: <SlideButton type="next" />,
-        drag: true,
-    }
-    let settings3 = {
-        dots: false,
-        infinite: CategoryUnivercityThumbCards.length > 4 ? true : false,
-        speed: 500,
-        slidesToShow: CategoryUnivercityThumbCards.length > 4 ? 5 : CategoryUnivercityThumbCards.length,
-        slidesToScroll: 1,
-        arrows: true,
-        prevArrow: <SlideButton type="prev" />,
-        nextArrow: <SlideButton type="next" />,
-        drag: true,
-    };
-    let settingsSeoul = {
-        dots: false,
-        infinite: CategorySeoulThumbCards.length > 4 ? true : false,
-        speed: 500,
-        slidesToShow: CategorySeoulThumbCards.length > 4 ? 5 : CategorySeoulThumbCards.length,
-        slidesToScroll: 1,
-        arrows: true,
-        prevArrow: <SlideButton type="prev" />,
-        nextArrow: <SlideButton type="next" />,
-        drag: true,
-    };
-    let settingsInfo = {
-        dots: false,
-        infinite: CategoryInfoThumbCards.length > 4 ? true : false,
-        speed: 500,
-        slidesToShow: CategoryInfoThumbCards.length > 4 ? 5 : CategoryInfoThumbCards.length,
-        slidesToScroll: 1,
-        arrows: true,
-        prevArrow: <SlideButton type="prev" />,
-        nextArrow: <SlideButton type="next" />,
-        drag: true,
-    };
-    let settingsRest = {
-        dots: false,
-        infinite: CategoryRestThumbCards.length > 4 ? true : false,
-        speed: 500,
-        slidesToShow: CategoryRestThumbCards.length > 4 ? 5 : CategoryRestThumbCards.length,
-        slidesToScroll: 1,
-        arrows: true,
-        prevArrow: <SlideButton type="prev" />,
-        nextArrow: <SlideButton type="next" />,
-        drag: true,
-    };
-
-    useEffect(() => {
-        console.log({ ThumbCards })
-    }, [ThumbCards])
-
-    useEffect(() => {
-        console.log({ LikedThumbCards })
-    }, [LikedThumbCards])
-
-    useEffect(() => {
-        console.log({ CategoryInfoThumbCards })
-    }, [CategoryInfoThumbCards])
-
-    useEffect(() => {
-        console.log({ CategoryRestThumbCards })
-    }, [CategoryRestThumbCards])
-
-    useEffect(() => {
-        console.log({ CategorySeoulThumbCards })
-    }, [CategorySeoulThumbCards])
-
-    useEffect(() => {
-        console.log({ CategoryUnivercityThumbCards })
-    }, [CategoryUnivercityThumbCards])
-
-    return (
-        <div style={{ background: '#f5f6f7' }}>
-            <NavBar user={props.user} />
-            <MainContentSlider />
-            <Divider />
-            <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
-                <div
-                    style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '0 4% 1.7rem 1rem' }}
-                >
-                    <ExpandingText text="모든 지도 목록" count={ThumbCards.length} />
-                </div>
-                <Slider {...settings}>
-                    {ThumbCards.map(card => (
-                        <Card card={card} key={card.id} />
-                    ))}
+    //   <NavBar user={props.user} />
+    //   <MainContentSlider />
+    //   <Divider />
+    //   </div>
+    // </div>
+    <>
+      <NavBar />
+      <MainContentSlider />
+      <Divider />
+      <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
+        <TitleWrapper>
+          <ExpandingText text="모든 지도 목록" count={allRepo.length} />
+        </TitleWrapper>
+        <Slider {...setting(allRepo)}>
+          {allRepo.map((card) => (
+            <Card card={card} key={card.id} />
+          ))}
+        </Slider>
+        {/* 좋아요한 지도가 있을 경우만 렌더 */}
+        {likedRepo.length > 0 && (
+          <>
+            <TitleWrapper>
+              <ExpandingText text="좋아요한 지도 목록" count={likedRepo.length} />
+            </TitleWrapper>
+            <Slider {...setting(likedRepo)}>
+              {likedRepo.map((card) => (
+                <Card card={card} key={card.id} />
+              ))}
+            </Slider>
+          </>
+        )}
+        {/* */}
+        {recommendRepo && (
+          <>
+            {recommendRepo.map((repo, idx) => (
+              <>
+                <TitleWrapper>
+                  <ExpandingText
+                    text={`${recommendCategory[idx]} 카테고리 목록`}
+                    count={repo.length}
+                  />
+                </TitleWrapper>
+                <Slider {...setting(repo)}>
+                  {repo.map((card) => (
+                    <Card card={card} key={card.id} />
+                  ))}
                 </Slider>
-                {LikedThumbCards.length > 0 &&
-                    <>
-                        <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
-                        >
-                            <ExpandingText text="내가 좋아요한 지도 목록" count={LikedThumbCards.length} />
-                        </div>
-                        <Slider {...settings2}>
-                            {LikedThumbCards.map(card => (
-                                <Card card={card} key={card.id} />
-                            ))}
-                        </Slider>
-                    </>
-                }
-
-                {CategoryUnivercityThumbCards.length > 0 &&
-                    <>
-                        <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
-                        >
-                            <ExpandingText text="대학교 카테고리 목록" count={CategoryUnivercityThumbCards.length} />
-                        </div>
-                        <Slider {...settings3}>
-                            {CategoryUnivercityThumbCards.map(card => (
-                                <Card card={card} key={card.id} />
-                            ))}
-                        </Slider>
-                    </>
-                }
-
-                {CategorySeoulThumbCards.length > 0 &&
-                    <>
-                        <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
-                        >
-                            <ExpandingText text="서울 카테고리 목록" count={CategorySeoulThumbCards.length} />
-                        </div>
-                        <Slider {...settingsSeoul}>
-                            {CategorySeoulThumbCards.map(card => (
-                                <Card card={card} key={card.id} />
-                            ))}
-                        </Slider>
-                    </>
-                }
-
-                {CategoryInfoThumbCards.length > 0 &&
-                    <>
-                        <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
-                        >
-                            <ExpandingText text="정보전달 카테고리 목록" count={CategoryInfoThumbCards.length} />
-                        </div>
-                        <Slider {...settingsInfo}>
-                            {CategoryInfoThumbCards.map(card => (
-                                <Card card={card} key={card.id} />
-                            ))}
-                        </Slider>
-                    </>
-                }
-
-                {CategoryRestThumbCards.length > 0 &&
-                    <>
-                        <div
-                            style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1rem', fontSize: '1.5rem', fontWeight: '700', margin: '4rem 4% 1.7rem 1rem' }}
-                        >
-                            <ExpandingText text="맛집 카테고리 목록" count={CategoryRestThumbCards.length} />
-                        </div>
-                        <Slider {...settingsRest}>
-                            {CategoryRestThumbCards.map(card => (
-                                <Card card={card} key={card.id} />
-                            ))}
-                        </Slider>
-                    </>
-                }
-            </div>
-        </div>
-    )
+              </>
+            ))}
+          </>
+        )}
+      </div>
+    </>
+  );
 }
 
-export default MainPage
+export default MainPage;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  vertical-align: bottom;
+  line-height: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 4% 1.7rem 1rem;
+`;

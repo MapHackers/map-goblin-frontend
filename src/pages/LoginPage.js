@@ -1,12 +1,20 @@
-import React from 'react'
-import FormFrame from '../components/Form/FormFrame'
+import React from 'react';
+import styled from 'styled-components';
+import FormFrame from '../components/Form/FormFrame';
+
+const Container = styled.div`
+  display: flex;
+  background: #f5f6f7;
+  position: relative;
+  height: '100%;';
+`;
 
 function LoginPage() {
-    return (
-        <div style={{ display: 'flex', background: '#f5f6f7', position: 'relative', height: '100%'}}>
-            <FormFrame FormType="Login"/>
-        </div>
-    )
+  return (
+    <Container>
+      <FormFrame FormType="Login" />
+    </Container>
+  );
 }
 
-export default LoginPage
+export default LoginPage;
