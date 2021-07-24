@@ -8,7 +8,7 @@ const Core = () => {
 
   const userToken = window.localStorage.getItem('userToken');
 
-  const authCheck = async () => {
+  const authCheck = async (userToken) => {
     await dispatch(userAuth(userToken));
   };
 
@@ -18,7 +18,7 @@ const Core = () => {
     } else {
       authCheck(userToken);
     }
-  }, []);
+  }, [dispatch]);
 
   return <> </>;
 };

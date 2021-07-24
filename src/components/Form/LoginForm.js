@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 import { userLoginAPI } from '../../util/api/user';
+import userAuth from '../../store/user';
 
 function LoginForm(props) {
   const rememberMeChecked = localStorage.getItem('rememberMe') ? true : false;
@@ -18,6 +19,7 @@ function LoginForm(props) {
 
   const initialId = localStorage.getItem('rememberMe') ? localStorage.getItem('rememberMe') : '';
 
+  const dispatch = useDispatch();
   return (
     <div>
       <Formik
@@ -40,9 +42,11 @@ function LoginForm(props) {
 
             try {
               const response = await userLoginAPI(dataToSubmit);
-              console.log(response);
 
               window.localStorage.setItem('userToken', response.data.token);
+              const userToken = window.localStorage.getItem('userToken')
+              console.log({userToken})
+              
               if (rememberMe === true) {
                 window.localStorage.setItem('rememberMe', values.id);
               } else {
@@ -52,7 +56,7 @@ function LoginForm(props) {
               props.history.push('/main');
             } catch (e) {
               alert('아이디 또는 비밀번호를 확인해 주세요');
-              console.log(e)
+              console.log(e);
             }
 
             // dispatch(loginUser(dataToSubmit))

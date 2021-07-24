@@ -42,9 +42,9 @@ function LoginForm(props) {
 
                         dispatch(loginUser(dataToSubmit))
                             .then(response => {
-                                console.log("payload", response.payload)
                                 if (response.payload.status === 200) {
                                     window.localStorage.setItem('userToken', response.payload.data.token)
+                                    console.log("kjhkj",window.localStorage.getItem('userToken'))
                                     if (rememberMe === true) {
                                         window.localStorage.setItem('rememberMe', values.id)
                                     } else {

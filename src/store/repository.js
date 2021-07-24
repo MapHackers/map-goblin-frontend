@@ -47,7 +47,12 @@ export const getLikedRepositoryByUserId = createAsyncThunk(
 const repository = createSlice({
   name: 'repository',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setRecommendRepo(state, action){
+      state.recommendRepo = []
+      return state
+    }
+  },
   extraReducers: {
     [getAllRepo.pending.type]: (state, action) => {
       state.loading = true;

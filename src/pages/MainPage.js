@@ -1,17 +1,20 @@
-import React, { lazy } from 'react';
-import MainContentSlider from '../components/MainContentSlider/MainContentSlider';
-import Card from '../components/CardView/CardView';
-import { Divider } from 'antd';
+import React from 'react';
 import styled from 'styled-components';
 
-import SlideButton from '../components/NetflixSlider/SlideButton';
+import { Divider } from 'antd';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import SlideButton from '../components/NetflixSlider/SlideButton';
+import MainContentSlider from '../components/MainContentSlider/MainContentSlider';
+
+import Card from '../components/CardView/CardView';
 import ExpandingText from '../components/ExpandingText/ExpandingText';
+
+import NavBar from '../components/NavigationBar/NavigationBar';
+
 import useMainData from '../hooks/useMainData';
-const NavBar = lazy(() => import('../components/NavigationBar/NavigationBar'));
 
 function MainPage() {
   const { allRepo, recommendRepo, likedRepo, recommendCategory } = useMainData();
@@ -29,62 +32,58 @@ function MainPage() {
       drag: true,
     };
   };
-  return (
-    // <div style={{ background: '#f5f6f7' }}>
-    //   <Main />
 
-    //   <NavBar user={props.user} />
-    //   <MainContentSlider />
-    //   <Divider />
-    //   </div>
-    // </div>
+  return (
     <>
-      <NavBar />
-      <MainContentSlider />
-      <Divider />
-      <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
-        <TitleWrapper>
-          <ExpandingText text="모든 지도 목록" count={allRepo.length} />
-        </TitleWrapper>
-        <Slider {...setting(allRepo)}>
-          {allRepo.map((card) => (
-            <Card card={card} key={card.id} />
-          ))}
-        </Slider>
-        {/* 좋아요한 지도가 있을 경우만 렌더 */}
-        {likedRepo.length > 0 && (
-          <>
-            <TitleWrapper>
-              <ExpandingText text="좋아요한 지도 목록" count={likedRepo.length} />
-            </TitleWrapper>
-            <Slider {...setting(likedRepo)}>
-              {likedRepo.map((card) => (
-                <Card card={card} key={card.id} />
-              ))}
-            </Slider>
-          </>
-        )}
-        {/* */}
-        {recommendRepo && (
-          <>
-            {recommendRepo.map((repo, idx) => (
-              <>
-                <TitleWrapper>
-                  <ExpandingText
-                    text={`${recommendCategory[idx]} 카테고리 목록`}
-                    count={repo.length}
-                  />
-                </TitleWrapper>
-                <Slider {...setting(repo)}>
-                  {repo.map((card) => (
-                    <Card card={card} key={card.id} />
-                  ))}
-                </Slider>
-              </>
+      <div style={{ background: '#f5f6f7' }}>
+        <NavBar />
+        <MainContentSlider />
+        <Divider />
+        <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
+          <TitleWrapper>
+            <ExpandingText text="모든 지도 목록" count={allRepo.length} />
+          </TitleWrapper>
+          <Slider {...setting(allRepo)}>
+            {allRepo.map((card) => (
+              <Card card={card} key={card.id} />
             ))}
-          </>
-        )}
+          </Slider>
+          {/* 좋아요한 지도가 있을 경우만 렌더 */}
+          {likedRepo.length > 0 && (
+            <>
+              <TitleWrapper>
+                <ExpandingText text="좋아요한 지도 목록" count={likedRepo.length} />
+              </TitleWrapper>
+              <Slider {...setting(likedRepo)}>
+                {likedRepo.map((card) => (
+                  <Card card={card} key={card.id} />
+                ))}
+              </Slider>
+            </>
+          )}
+          {/* */}
+          {recommendRepo && (
+            <>
+              {recommendRepo.map((repo, idx) => (
+                <>
+                  <TitleWrapper>
+                    <ExpandingText
+                      text={`${recommendCategory[idx]} 카테고리 목록`}
+                      count={repo.length}
+                    />
+                  </TitleWrapper>
+                  <Slider {...setting(repo)}>
+                    {repo.map((card) => (
+                      <Card card={card} key={card.id} />
+                    ))}
+                  </Slider>
+                </>
+              ))}
+            </>
+          )}
+        </div>
       </div>
+      )}
     </>
   );
 }

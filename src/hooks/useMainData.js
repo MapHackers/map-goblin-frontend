@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllRepo, getRepoByCategoryName, getLikedRepositoryByUserId } from '../store/repository';
+import {
+  getAllRepo,
+  getRepoByCategoryName,
+  getLikedRepositoryByUserId,
+  repositoryActions,
+} from '../store/repository';
 
 const useMainData = () => {
   const dispatch = useDispatch();
@@ -22,8 +27,10 @@ const useMainData = () => {
     if (userId) {
       setrecommendCategory(['대학교', '맛집', '서울', '정보전달', '포탈']);
 
+      dispatch(repositoryActions.setRecommendRepo());
+
       dispatch(getAllRepo());
-      
+
       await dispatch(getLikedRepositoryByUserId(userId));
 
       for (const catecoryName of recommendCategory) {

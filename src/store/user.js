@@ -11,6 +11,7 @@ export const userAuth = createAsyncThunk('user/auth', async (userToken, thunkAPI
 });
 
 const initialState = {
+  checked: false,
   loginStatus: false,
   id: 0,
   userId: '',
@@ -28,10 +29,15 @@ const user = createSlice({
       state.loginStatus = action.payload;
       return state;
     },
+    setChecked(state, action) {
+      state.checked = action.payload;
+      return state;
+    },
   },
   extraReducers: {
     [userAuth.pending.type]: (state, action) => {
       state.loading = true;
+      state.checked = false;
     },
     [userAuth.fulfilled.type]: (state, action) => {
       state.loading = false;
@@ -43,10 +49,13 @@ const user = createSlice({
       state.description = action.payload.description;
       state.profile = action.payload.profile;
       state.data = action.payload;
+      state.checked = true;
     },
     [userAuth.rejected.type]: (state, action) => {
       state.loading = false;
+      state.loginStatus = false;
       state.err = action.payload.message;
+      state.checked = true;
     },
   },
 });

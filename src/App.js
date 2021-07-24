@@ -22,6 +22,8 @@ import MainPage from './pages/MainPage';
 
 import Core from './containers/base/Core';
 
+import AuthRoute from './util/AuthRoute'
+
 /* 
 option
 null => 아무나 출입이 가능한 페이지
@@ -36,10 +38,10 @@ function App() {
         <Switch>
           <Route exact path="/" component={LandingPage} />
           <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/register" component={Auth(RegisterPage, null)} />
-          <Route exact path="/findId" component={Auth(FindIDPage, null)} />
-          <Route exact path="/findPassword" component={Auth(FindPasswordPage, null)} />
-          <Route exact path="/main" component={MainPage} />
+          <Route exact path="/register" component={RegisterPage} />
+          <Route exact path="/findId" component={FindIDPage} />
+          <Route exact path="/findPassword" component={FindPasswordPage} />
+          <AuthRoute exact path="/main" component={MainPage} />
           <Route exact path="/search" component={Auth(SearchPage, true)} />
           <Route exact path="/new" component={Auth(CreateMyMapPage, true)} />
           <Route
@@ -70,7 +72,7 @@ function App() {
           <Route exact path="/:userId" component={Auth(MyPage, true)} />
         </Switch>
       </Suspense>
-      <Core />
+      {/* <Core /> */}
     </BrowserRouter>
   );
 }

@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Api from '../../../util/Api';
 import { deleteAllAlarm } from '../../../_actions/alram_action';
+import { onClickAlarmAPI } from '../../../util/api/alarm';
 
 function Alarm(props) {
   const dispatch = useDispatch();
@@ -22,15 +23,8 @@ function Alarm(props) {
     ISSUE_OK: '지적을 확인했습니다.',
   };
 
-  const onClickAlarm = (values) => {
-    Api.post('/alarms', { alarmId: values.key })
-      .then((response) => {
-        console.log(response);
-        console.log(props);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const onClickAlarm = async (values) => {
+    await onClickAlarmAPI(values.key);
   };
 
   let alarmCount = 0;
