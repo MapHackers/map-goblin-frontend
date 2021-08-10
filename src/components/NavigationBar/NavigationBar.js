@@ -16,11 +16,11 @@ function NavigationBar() {
 
   useEffect(() => {
     if (user.userId) {
-      dispatch(getAllAlarm(user.userId)).then((response) => {
+      dispatch(getAllAlarm(user.userId)).then(() => {
         setIsLoading(false);
       });
     }
-  }, [user.userId]);
+  }, [user]);
 
   return (
     <>
@@ -39,7 +39,7 @@ function NavigationBar() {
   );
 }
 
-export default NavigationBar;
+export default React.memo(NavigationBar);
 
 const NavContainer = styled.div`
   padding: 0 20px;

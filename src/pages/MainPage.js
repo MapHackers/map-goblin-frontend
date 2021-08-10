@@ -12,7 +12,7 @@ import MainContentSlider from '../components/MainContentSlider/MainContentSlider
 import Card from '../components/CardView/CardView';
 import ExpandingText from '../components/ExpandingText/ExpandingText';
 
-import NavBar from '../components/NavigationBar/NavigationBar';
+import CommonLayout from '../components/Layout/CommonLayout';
 
 import useMainData from '../hooks/useMainData';
 
@@ -35,11 +35,10 @@ function MainPage() {
 
   return (
     <>
-      <div style={{ background: '#f5f6f7' }}>
-        <NavBar />
+      <CommonLayout>
         <MainContentSlider />
         <Divider />
-        <div style={{ padding: '3rem', paddingTop: '1rem', background: '#f5f6f7' }}>
+        <div style={{ padding: '3rem', paddingTop: '1rem' }}>
           <TitleWrapper>
             <ExpandingText text="모든 지도 목록" count={allRepo.length} />
           </TitleWrapper>
@@ -82,8 +81,7 @@ function MainPage() {
             </>
           )}
         </div>
-      </div>
-      )}
+      </CommonLayout>
     </>
   );
 }

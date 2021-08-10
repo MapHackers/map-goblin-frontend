@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Api from '../Api';
 
 export const userAuthAPI = (token) => {
   return axios.get('/api/authentication', {
@@ -10,5 +11,13 @@ export const userAuthAPI = (token) => {
 };
 
 export const userLoginAPI = (dataToSubmit) => {
-  return axios.post('/api/login', dataToSubmit)
-}
+  return axios.post('/api/login', dataToSubmit);
+};
+
+export const getUserInfoByUserIdAPI = (userId) => {
+  return Api.get(`/members/${userId}`);
+};
+
+export const editUserAPI = (body) => {
+  return Api.post(`/members/profile`, body);
+};

@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { userAuth } from '../store/user';
 
 const AuthRoute = ({ path, exact = false, component }) => {
+  // TODO: role을 파라미터로 받아와서 접근 권한을 설정해주자
   const [authenticated, setAuthenticated] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();

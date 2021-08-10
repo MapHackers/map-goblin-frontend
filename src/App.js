@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { Suspense } from 'react';
-import Auth from './hoc/Auth';
 import 'antd/dist/antd.css';
 
 import LoginPage from './pages/LoginPage';
@@ -20,9 +19,8 @@ import CreateRequestPage from './pages/CreateRequestPage';
 import LandingPage from './pages/LandingPage';
 import MainPage from './pages/MainPage';
 
-import Core from './containers/base/Core';
-
-import AuthRoute from './util/AuthRoute'
+import AuthRoute from './util/AuthRoute';
+import NotFound from './pages/error/NotFound';
 
 /* 
 option
@@ -42,34 +40,35 @@ function App() {
           <Route exact path="/findId" component={FindIDPage} />
           <Route exact path="/findPassword" component={FindPasswordPage} />
           <AuthRoute exact path="/main" component={MainPage} />
-          <Route exact path="/search" component={Auth(SearchPage, true)} />
-          <Route exact path="/new" component={Auth(CreateMyMapPage, true)} />
-          <Route
+          <AuthRoute exact path="/search" component={SearchPage} />
+          <AuthRoute exact path="/new" component={CreateMyMapPage} />
+          <AuthRoute
             exact
             path="/:userId/repositories/:repositoryName"
-            component={Auth(RepositoryPage, true)}
+            component={RepositoryPage}
           />
-          <Route
+          <AuthRoute
             exact
             path="/:userId/repositories/:repositoryName/requests"
-            component={Auth(CreateRequestPage, true)}
+            component={CreateRequestPage}
           />
-          <Route
+          <AuthRoute
             exact
             path="/:userId/repositories/:repositoryName/requests/:id"
-            component={Auth(RequestDetailPage, true)}
+            component={RequestDetailPage}
           />
-          <Route
+          <AuthRoute
             exact
             path="/:userId/repositories/:repositoryName/issues"
-            component={Auth(CreateIssuePage, true)}
+            component={CreateIssuePage}
           />
-          <Route
+          <AuthRoute
             exact
             path="/:userId/repositories/:repositoryName/issues/:id"
-            component={Auth(IssueDetailPage, true)}
+            component={IssueDetailPage}
           />
-          <Route exact path="/:userId" component={Auth(MyPage, true)} />
+          <AuthRoute exact path="/:userId" component={MyPage} />
+          <Route component={NotFound} />
         </Switch>
       </Suspense>
       {/* <Core /> */}

@@ -1,75 +1,63 @@
-import React, {useEffect, useState} from 'react';
-import {Select, Spin, Tag} from "antd";
-import {useDispatch} from "react-redux";
-import {addSelectedCategory, selectCategoryList} from "../../_actions/repository_action";
+import React, { useCallback, useEffect } from 'react';
+import { Select, Tag } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { repositoryActions } from '../../store/repository';
+import { getCategoryOptionsAPI } from '../../util/api/repository';
 
 const SelectCategory = (props) => {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch()
+  const categoryOptions = useSelector((state) => state.repository.categoryOptions);
+  const myCategory = useSelector((state) => state.repository.categories);
 
-    const [options, setOptions] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+  const init = useCallback(async () => {
+    const response = await getCategoryOptionsAPI();
+    dispatch(repositoryActions.setCategoryOptions(response.data));
+    dispatch(repositoryActions.setModifyCategory(myCategory));
+  }, [dispatch, myCategory]);
 
-    useEffect(()=>{
-        dispatch(selectCategoryList(`/categories`))
-            .then(response => {
-                setOptions(response.payload.data);
-                setIsLoading(true);
-            })
-            .catch(error => {
-                console.log(error);
-            })
+  useEffect(() => {
+    init();
+  }, [init]);
 
-        if(props.categories !== undefined){
-            dispatch(addSelectedCategory(props.categories));
-        }
-    }, [])
+  const tagRender = (props) => {
+    const { label, closable, onClose } = props;
 
-    const tagRender = (props) => {
-        const { label, closable, onClose } = props;
-
-        const onPreventMouseDown = event => {
-            event.preventDefault();
-            event.stopPropagation();
-        };
-
-        return (
-            <Tag
-                color='geekblue'
-                onMouseDown={onPreventMouseDown}
-                closable={closable}
-                onClose={onClose}
-                style={{ marginRight: 3 }}
-            >
-                {label}
-            </Tag>
-        );
+    const onPreventMouseDown = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
     };
 
-    const onChange = (value) => {
-        dispatch(addSelectedCategory(value));
-    }
+    return (
+      <Tag
+        color="geekblue"
+        onMouseDown={onPreventMouseDown}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3 }}
+      >
+        {label}
+      </Tag>
+    );
+  };
 
-    if(isLoading){
-        return (
-            <Select
-                mode="tags"
-                showArrow
-                tagRender={tagRender}
-                style={{ width: '100%' }}
-                options={options}
-                onChange={onChange}
-                placeholder="새로운 카테고리를 입력할 수 있습니다!"
-                defaultValue={props.categories}
-            />
-        );
-    }else{
-        return (
-            <div style={isLoading ? null : { textAlign: "center", lineHeight: "100vh", height: "100vh" }}>
-                <Spin size="large" tip="Loading..." />
-            </div>
-        );
-    }
+  const onChange = (value) => {
+    console.log(value);
+    dispatch(repositoryActions.setModifyCategory(value));
+  };
+
+  return (
+    <Select
+      mode="tags"
+      showArrow
+      tagRender={tagRender}
+      style={{ width: '100%' }}
+      options={categoryOptions}
+      onChange={onChange}
+      placeholder="새로운 카테고리를 입력할 수 있습니다!"
+      defaultValue={props.categories}
+    />
+  );
 };
 
 export default SelectCategory;

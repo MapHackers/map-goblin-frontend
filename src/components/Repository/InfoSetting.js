@@ -44,23 +44,23 @@ const InfoSetting = (props) => {
     const user = useSelector(state => state.user);
     const repository = useSelector(state => state.repository);
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        let newFileList = [];
+    //     let newFileList = [];
 
-        if(props.thumbnailUrl !== ""){
-            newFileList = [{
-                uid: '-1',
-                name: 'image.png',
-                status: 'done',
-                url: props.thumbnailUrl,
-            }];
-        }
+    //     if(props.thumbnailUrl !== ""){
+    //         newFileList = [{
+    //             uid: '-1',
+    //             name: 'image.png',
+    //             status: 'done',
+    //             url: props.thumbnailUrl,
+    //         }];
+    //     }
 
-        dispatch(addFile(newFileList));
+    //     dispatch(addFile(newFileList));
 
-        dispatch(modifiedFile(false));
-    }, [])
+    //     dispatch(modifiedFile(false));
+    // }, [])
 
     const onClick = () => {
         // eslint-disable-next-line no-restricted-globals
@@ -98,7 +98,7 @@ const InfoSetting = (props) => {
                                 <TextArea rows={10} />
                             </CreateFormItem>
                             <CreateFormItem label="카테고리" name="categories">
-                                <SelectCategory categories={props.repositoryInfo.categories}/>
+                                <SelectCategory categories={repository.categories}/>
                             </CreateFormItem>
                             <CreateFormItem label="Owner의 한마디" name="oneWord">
                                 <TextArea showCount maxLength={20}/>

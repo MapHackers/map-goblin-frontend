@@ -22,72 +22,72 @@ const CreateForm = (props) => {
     const isModified = useSelector(state => state.repository.isModified)
 
     const onFinish = (values) => {
-
+        console.log(values)
         values.categories = selectedCategories;
 
         const formData = new FormData();
+        
+        // if(isModified === true){
+        //     if(props.repository.fileList.length > 0){
+        //         formData.append('file', props.repository.fileList[0].originFileObj);
+        //         dispatch(fileUpload(formData))
+        //             .then(response => {
+        //                 const payload = response.payload;
 
-        if(isModified === true){
-            if(props.repository.fileList.length > 0){
-                formData.append('file', props.repository.fileList[0].originFileObj);
-                dispatch(fileUpload(formData))
-                    .then(response => {
-                        const payload = response.payload;
+        //                 values.thumbnail = payload.data;
 
-                        values.thumbnail = payload.data;
+        //                 if (props.formName === "modify"){
+        //                     dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
+        //                         .then(response => {
+        //                             props.history.push(`/${props.user.userId}/repositories/${values.name}`);
+        //                             window.location.reload();
+        //                         })
+        //                 }else{
+        //                     dispatch(saveRepositoryInfo(values))
+        //                         .then(response => {
+        //                             const payload = response.payload;
 
-                        if (props.formName === "modify"){
-                            dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
-                                .then(response => {
-                                    props.history.push(`/${props.user.userId}/repositories/${values.name}`);
-                                    window.location.reload();
-                                })
-                        }else{
-                            dispatch(saveRepositoryInfo(values))
-                                .then(response => {
-                                    const payload = response.payload;
+        //                             props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
+        //                         })
+        //                 }
+        //             });
+        //     }else{
+        //         if(props.formName === "modify"){
 
-                                    props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
-                                })
-                        }
-                    });
-            }else{
-                if(props.formName === "modify"){
+        //             values.thumbnail = null;
 
-                    values.thumbnail = null;
+        //             dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
+        //                 .then(response => {
+        //                     props.history.push(`/${props.user.userId}/repositories/${values.name}`);
+        //                     window.location.reload();
+        //                 });
+        //         }else{
+        //             dispatch(saveRepositoryInfo(values))
+        //                 .then(response => {
+        //                     const payload = response.payload;
+        //                     props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
+        //                 });
+        //         }
+        //     }
 
-                    dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
-                        .then(response => {
-                            props.history.push(`/${props.user.userId}/repositories/${values.name}`);
-                            window.location.reload();
-                        });
-                }else{
-                    dispatch(saveRepositoryInfo(values))
-                        .then(response => {
-                            const payload = response.payload;
-                            props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
-                        });
-                }
-            }
+        //     dispatch(modifiedFile(false));
+        // }else{
+        //     if(props.formName === "modify"){
 
-            dispatch(modifiedFile(false));
-        }else{
-            if(props.formName === "modify"){
+        //         console.log("values",values);
 
-                console.log("values",values);
-
-                dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
-                    .then(response => {
-                        props.history.push(`/${props.user.userId}/repositories/${values.name}`);
-                    });
-            }else{
-                dispatch(saveRepositoryInfo(values))
-                    .then(response => {
-                        const payload = response.payload;
-                        props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
-                    });
-            }
-        }
+        //         dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
+        //             .then(response => {
+        //                 props.history.push(`/${props.user.userId}/repositories/${values.name}`);
+        //             });
+        //     }else{
+        //         dispatch(saveRepositoryInfo(values))
+        //             .then(response => {
+        //                 const payload = response.payload;
+        //                 props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
+        //             });
+        //     }
+        // }
     };
 
     const onFinishFailed = (errorInfo) => {

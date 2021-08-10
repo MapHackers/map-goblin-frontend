@@ -1,9 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { userAuthAPI } from '../util/api/user';
+import { userAuthAPI, editUserAPI } from '../util/api/user';
 
 export const userAuth = createAsyncThunk('user/auth', async (userToken, thunkAPI) => {
   try {
     const response = await userAuthAPI(userToken);
+    return response.data;
+  } catch (e) {
+    return thunkAPI.rejectWithValue(await e.response.data);
+  }
+});
+
+export const editUser = createAsyncThunk('user/editUser', async (body, thunkAPI) => {
+  try {
+    const response = await editUserAPI(body);
     return response.data;
   } catch (e) {
     return thunkAPI.rejectWithValue(await e.response.data);
@@ -56,6 +65,19 @@ const user = createSlice({
       state.loginStatus = false;
       state.err = action.payload.message;
       state.checked = true;
+    },
+    [editUser.pending.type]: (state, action) => {
+      state.loading = true;
+    },
+    [editUser.fulfilled.type]: (state, action) => {
+      state.loading = false;
+      state.userName = action.payload.userName;
+      state.description = action.payload.description;
+      state.profile = action.payload.profile;
+    },
+    [editUser.rejected.type]: (state, action) => {
+      state.loading = false;
+      state.err = action.payload;
     },
   },
 });

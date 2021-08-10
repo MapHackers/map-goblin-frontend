@@ -12,7 +12,7 @@ const useAuth = () => {
   const checked = useSelector((state) => state.user.checked);
 
   const authCheck = async (userToken) => {
-    await dispatch(userAuth(userToken));
+    dispatch(userAuth(userToken));
   };
 
   useEffect(() => {
