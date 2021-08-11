@@ -26,6 +26,8 @@
     $ yarn start (or npm start)
 ```
 
+## 유저 메뉴얼
+PDF : https://drive.google.com/file/d/1ovsthdtrY2N_qILpebn5zf_deiOoEGaw/view?usp=sharing
 
 ## Contributors ✨
 
