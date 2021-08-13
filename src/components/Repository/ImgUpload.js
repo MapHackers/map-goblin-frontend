@@ -5,7 +5,7 @@ import Api from '../../util/Api';
 
 const ImgUpload = ({ setUploadProfileFile }) => {
   const [url, setUrl] = useState(
-    useSelector((state) => Api.defaults.baseURL + '/files/' + state.user.profile)
+    useSelector((state) => Api.defaults.baseURL + '/files/' + state.file.upload)
   );
 
   const validURL = url !== Api.defaults.baseURL + '/files/null';

@@ -12,7 +12,6 @@ const useColumns = () => {
       // eslint-disable-next-line jsx-a11y/anchor-is-valid
       render: (title, values) => {
         if (values.type === 'issue') {
-          console.log('VALUES', values, { hrefId, hrefRepo });
           return (
             <Link to={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</Link>
           );

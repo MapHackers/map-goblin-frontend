@@ -1,5 +1,5 @@
 import { Modal } from 'antd';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { repositoryActions } from '../store/repository';
@@ -48,16 +48,16 @@ const useRepository = () => {
     }
   };
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     try {
       const response = await getRepositoryInfo(userId, repositoryName);
       dispatch(repositoryActions.setRepositoryInfo(response.data));
     } catch (e) {}
-  };
+  }, [dispatch, repositoryName, userId]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
   return { repositoryUserId, repositoryName, repositoryInfo, backHome, onClickClone, onClickLike };
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from './Sections/Logo';
 import ButtonBox from './Sections/ButtonBox';
 import SearchBar from './Sections/SearchByRepoName';
@@ -20,7 +20,7 @@ function NavigationBar() {
         setIsLoading(false);
       });
     }
-  }, [user]);
+  }, [dispatch, user]);
 
   return (
     <>

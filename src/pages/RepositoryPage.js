@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -56,11 +56,11 @@ const RepositoryPage = () => {
     <CommonLayout>
       <Breadcrumb style={{ fontSize: '20px', textAlign: 'left', padding: '30px 0px 20px 30px' }}>
         <Breadcrumb.Item>
-          <a href={userUrl}>{repositoryUserId}</a>
+          <Link to={userUrl}>{repositoryUserId}</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="">{repositoryName}</a>
+          <Link to={repositoryName}>{repositoryName}</Link>
           {repositoryInfo.source === 'CLONE' && (
             <div style={{ fontSize: '15px' }}>
               원본 지도 :
@@ -69,15 +69,15 @@ const RepositoryPage = () => {
                   &nbsp;원본 지도가 삭제되었습니다.
                 </p>
               ) : (
-                <a
+                <Link
                   style={{ color: 'blue' }}
-                  href={
+                  to={
                     '/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.hostRepoName
                   }
                 >
                   &nbsp;
                   {`/${repositoryInfo.hostUserId}/repositories/${repositoryInfo.hostRepoName}`}
-                </a>
+                </Link>
               )}
             </div>
           )}

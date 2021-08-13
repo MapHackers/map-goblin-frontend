@@ -6,9 +6,13 @@ import { Row, Col, Result, Button, Spin } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserInfo } from '../store/userInfo';
 import useProfile from '../hooks/useProfile';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const MyPage = (props) => {
-  const userId = props.location.pathname.replace('/', '');
+  const history = useHistory();
+  const location = useLocation();
+
+  const userId = location.pathname.replace('/', '');
 
   const dispatch = useDispatch();
 
@@ -16,7 +20,7 @@ const MyPage = (props) => {
   const userInfo = useSelector((state) => state.userInfo);
 
   const backHome = () => {
-    props.history.push('/main');
+    history.push('/main');
   };
 
   const { userInfoName, userInfoDesc, userInfoProfile, userInfoEmail, isOwner } = useProfile();
@@ -63,7 +67,12 @@ const MyPage = (props) => {
                 />
               </Col>
               <Col flex="auto">
-                <MypageTabContainer userId={userId} isOwner={isOwner} userInfoName={userInfoName} userInfoId={userInfo.userId}/>
+                <MypageTabContainer
+                  userId={userId}
+                  isOwner={isOwner}
+                  userInfoName={userInfoName}
+                  userInfoId={userInfo.userId}
+                />
               </Col>
             </Row>
           </div>

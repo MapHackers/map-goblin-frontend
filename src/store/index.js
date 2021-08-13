@@ -5,6 +5,8 @@ import alarm from './alarm';
 import userInfo from './userInfo';
 import repository from './repository';
 import map from './map';
+import search from './search';
+import file from './file';
 
 const rootReducer = combineReducers({
   user: user.reducer,
@@ -13,6 +15,8 @@ const rootReducer = combineReducers({
   userInfo: userInfo.reducer,
   repository: repository.reducer,
   map: map.reducer,
+  search: search.reducer,
+  file: file.reducer,
 });
 
 export default configureStore({

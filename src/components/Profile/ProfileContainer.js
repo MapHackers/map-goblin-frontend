@@ -3,7 +3,6 @@ import { Card, Input, Button, Avatar } from 'antd';
 import { EditOutlined, UserOutlined } from '@ant-design/icons';
 import Api from '../../util/Api';
 import ImgUpload from '../Repository/ImgUpload';
-import useProfile from '../../hooks/useProfile';
 import useEditProfile from '../../hooks/useEditProfile';
 
 const { Meta } = Card;
@@ -42,6 +41,7 @@ const ProfileContainer = ({
             <ImgUpload
               uploadProfileFile={uploadProfileFile}
               setUploadProfileFile={setUploadProfileFile}
+              type={`profile`}
             />
           </span>
         ) : (

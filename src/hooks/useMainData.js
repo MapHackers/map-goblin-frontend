@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllRepo,
@@ -23,7 +23,7 @@ const useMainData = () => {
     '포탈',
   ]);
 
-  const init = async () => {
+  const init = useCallback(async (userId, recommendCategory) => {
     if (userId) {
       setrecommendCategory(['대학교', '맛집', '서울', '정보전달', '포탈']);
 
@@ -31,17 +31,17 @@ const useMainData = () => {
 
       dispatch(getAllRepo());
 
-      await dispatch(getLikedRepositoryByUserId(userId));
+      dispatch(getLikedRepositoryByUserId(userId));
 
       for (const catecoryName of recommendCategory) {
-        await dispatch(getRepoByCategoryName(catecoryName));
+        dispatch(getRepoByCategoryName(catecoryName));
       }
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
-    init();
-  }, [userId]);
+    init(userId, recommendCategory);
+  }, [init, userId]);
 
   return {
     allRepo,

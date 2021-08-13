@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { Form, Input, Button, Checkbox } from 'antd';
 import * as Yup from 'yup';
-import { withRouter } from 'react-router-dom';
+import { Link, useHistory, withRouter } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
 import { userLoginAPI } from '../../util/api/user';
-import userAuth from '../../store/user';
 
 function LoginForm(props) {
   const rememberMeChecked = localStorage.getItem('rememberMe') ? true : false;
@@ -19,7 +17,7 @@ function LoginForm(props) {
 
   const initialId = localStorage.getItem('rememberMe') ? localStorage.getItem('rememberMe') : '';
 
-  const dispatch = useDispatch();
+  const history = useHistory();
   return (
     <div>
       <Formik
@@ -44,56 +42,28 @@ function LoginForm(props) {
               const response = await userLoginAPI(dataToSubmit);
 
               window.localStorage.setItem('userToken', response.data.token);
-              const userToken = window.localStorage.getItem('userToken')
-              console.log({userToken})
-              
+              const userToken = window.localStorage.getItem('userToken');
+              console.log({ userToken });
+
               if (rememberMe === true) {
                 window.localStorage.setItem('rememberMe', values.id);
               } else {
                 localStorage.removeItem('rememberMe');
               }
 
-              props.history.push('/main');
+              history.push('/main');
             } catch (e) {
               alert('아이디 또는 비밀번호를 확인해 주세요');
               console.log(e);
             }
-
-            // dispatch(loginUser(dataToSubmit))
-            //     .then(response => {
-            //         console.log("payload", response.payload)
-            //         if (response.payload.status === 200) {
-            //             window.localStorage.setItem('userToken', response.payload.data.token)
-            //             if (rememberMe === true) {
-            //                 window.localStorage.setItem('rememberMe', values.id)
-            //             } else {
-            //                 localStorage.removeItem('rememberMe')
-            //             }
-            //             props.history.push('/main')
-            //         } else {
-            //             alert('아이디 또는 비밀번호를 확인해 주세요')
-            //         }
-            //     })
-            //     .catch(err => {
-            //         setTimeout(() => {
-            //             alert("Error!", err)
-            //         }, 3000)
-            //     })
             values.password = '';
             setSubmitting(false);
           }, 500);
         }}
       >
         {(props) => {
-          const {
-            values,
-            touched,
-            errors,
-            isSubmitting,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-          } = props;
+          const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } =
+            props;
           return (
             <form onSubmit={handleSubmit}>
               <Form.Item required>
@@ -152,15 +122,15 @@ function LoginForm(props) {
 
               <Form.Item>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <a href="/findId" style={{ marginLeft: '3rem' }}>
+                  <Link to="/findId" style={{ marginLeft: '3rem' }}>
                     {' '}
                     아이디 찾기{' '}
-                  </a>
-                  <a href="/findPassword"> 비밀번호 찾기 </a>
-                  <a href="/register" style={{ marginRight: '3rem' }}>
+                  </Link>
+                  <Link to="/findPassword"> 비밀번호 찾기 </Link>
+                  <Link to="/register" style={{ marginRight: '3rem' }}>
                     {' '}
                     회원가입{' '}
-                  </a>
+                  </Link>
                 </div>
               </Form.Item>
             </form>

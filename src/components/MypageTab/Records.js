@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { List, Image } from 'antd';
 
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
 import Api from '../../util/Api';
 import { dateCalculate } from '../../util/dateCalculate';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   .title {
@@ -20,7 +20,6 @@ const Container = styled.div`
 
 const Records = ({ userInfoName, userId, typemap }) => {
   const alarms = useSelector((state) => state.alarm.userAlarm);
-  const history = useHistory();
   return (
     <Container>
       <div className="title">{userInfoName}님의 알림 목록</div>
@@ -54,21 +53,21 @@ const Records = ({ userInfoName, userId, typemap }) => {
                 }
                 title={
                   alarm.read ? (
-                    <a
-                      href={`/${userId}/repositories/${alarm.spaceName}`}
+                    <Link
+                      to={`/${userId}/repositories/${alarm.spaceName}`}
                       style={{ marginLeft: '10px', fontSize: '14px' }}
                     >
                       <text style={{ fontWeight: 'bold' }}>{alarm.srcMemberName}</text>
                       님이 회원님의 {typemap[alarm.alarmType]}
-                    </a>
+                    </Link>
                   ) : (
-                    <a
-                      href={`/${userId}/repositories/${alarm.spaceName}`}
+                    <Link
+                      to={`/${userId}/repositories/${alarm.spaceName}`}
                       style={{ marginLeft: '10px', fontSize: '14px', color: '#36A2EB' }}
                     >
                       <text style={{ fontWeight: 'bold' }}>{alarm.srcMemberName}</text>
                       님이 회원님의 {typemap[alarm.alarmType]}
-                    </a>
+                    </Link>
                   )
                 }
               />

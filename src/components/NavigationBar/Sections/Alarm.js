@@ -3,7 +3,7 @@ import { BellOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Badge, Menu, Dropdown, Image } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Api from '../../../util/Api';
 import { deleteAllAlarm } from '../../../_actions/alram_action';
 import { onClickAlarmAPI } from '../../../util/api/alarm';
@@ -55,16 +55,17 @@ function Alarm(props) {
                 title={alarm.spaceName}
                 onClick={onClickAlarm}
               >
-                <a
-                  href={`/${props.user.userId}/repositories/${alarm.spaceName}`}
+                <Link
+                  to={`/${props.user.userId}/repositories/${alarm.spaceName}`}
                   style={{ marginLeft: '8px' }}
                 >
                   <text style={{ fontWeight: 'bold' }}>{alarm.srcMemberName}</text>
                   님이 회원님의 {typemap[alarm.alarmType]}
-                </a>
+                </Link>
               </Menu.Item>
             );
           }
+          return null;
         })}
       {alarmCount !== 0 && (
         <Menu.Item

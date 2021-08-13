@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Api from '../util/Api';
 import { editUser } from '../store/user';
 import { userInfoActions } from '../store/userInfo';
+import { fileActions } from '../store/file';
 
 const useEditProfile = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,9 @@ const useEditProfile = () => {
   const userProfile = useSelector((state) => state.user.profile);
 
   const toggleEdit = () => {
+    if (!isEdit) {
+      dispatch(fileActions.setUpload(userProfile));
+    }
     setIsEdit(!isEdit);
     setInputName(userName);
     setInputDesc(userDesc);
@@ -60,7 +64,7 @@ const useEditProfile = () => {
           //* 서버에 파일을 저장하고 파일의 주소를 받아옴
           const formData = new FormData();
           formData.append('file', uploadProfileFile);
-
+          console.log({ uploadProfileFile });
           const response = await Api.post('/files', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',

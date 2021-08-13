@@ -4,6 +4,7 @@ import { DownloadOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/ico
 import { Space, List, Image } from 'antd';
 
 import Api from '../../util/Api';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   .title {
@@ -63,9 +64,9 @@ const Maps = ({ userInfoName, mapList, userInfoId }) => {
                   />
                 }
                 title={
-                  <a href={`/${userInfoId}/repositories/${item.name}`} style={{ fontSize: '16px' }}>
+                  <Link to={`/${userInfoId}/repositories/${item.name}`} style={{ fontSize: '16px' }}>
                     {item.name}
-                  </a>
+                  </Link>
                 }
                 description={item.description}
               />

@@ -5,6 +5,7 @@ import SliderWrapper from './SliderWrapper'
 import useSliding from './useSliding'
 import useSizeElement from './useSizeElement'
 import './Slider.scss'
+import { Link } from 'react-router-dom';
 
 const Slider = ({ children, title }) => {
     const { width, elementRef } = useSizeElement();
@@ -26,9 +27,9 @@ const Slider = ({ children, title }) => {
                 <div
                     style={{ display: 'flex', verticalAlign: 'bottom', lineHeight: '1.25vw', fontSize: '1.4vw', fontWeight: '700', margin: '0 4% .5em 55px' }}
                 >
-                    <a href={`/category/${title}`}>
+                    <Link to={`/category/${title}`}>
                         {title}
-                    </a>
+                    </Link>
                 </div>
                 <SliderWrapper>
                     <div

@@ -4,6 +4,10 @@ export const getAllRepositoryAPI = () => {
   return Api.get('/repositories');
 };
 
+export const createRepositoryAPI = (body) => {
+  return Api.post('/repositories', body);
+};
+
 export const getRepositoryByCategoryNameAPI = (categoryName) => {
   return Api.get(`/${categoryName}/repositories/category`);
 };
