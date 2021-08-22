@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Upload, message, Button } from 'antd';
 import { useSelector } from 'react-redux';
 import Api from '../../util/Api';
 
-const ImgUpload = ({ setUploadProfileFile }) => {
+const ImgUpload = ({ setUploadProfileFile, visible }) => {
   const [url, setUrl] = useState(
     useSelector((state) => Api.defaults.baseURL + '/files/' + state.file.upload)
   );
+
+  useEffect(() => {
+    console.log({visible}, "imgUpload")
+    setUrl(Api.defaults.baseURL + '/files/null');
+  }, [visible]);
 
   const validURL = url !== Api.defaults.baseURL + '/files/null';
 

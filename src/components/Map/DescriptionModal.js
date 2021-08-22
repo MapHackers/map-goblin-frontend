@@ -36,8 +36,13 @@ const DescriptionModal = ({ isDescModalVisible, setIsDescModalVisible, authority
 
     try {
       // TODO 삭제하기 누르고 삭제할것인지 물어보기
-      await deleteMapDataAPI(dataToSubmit);
-      dispatch(loadMapData(mapId));
+      // eslint-disable-next-line no-restricted-globals
+      if (confirm(`정말 삭제하시겠습니까?`)) {
+        await deleteMapDataAPI(dataToSubmit);
+        dispatch(loadMapData(mapId));
+      } else{
+        return
+      }
     } catch (e) {
       console.log(e);
     }

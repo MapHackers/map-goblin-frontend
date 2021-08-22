@@ -28,19 +28,6 @@ import SimpleMap from '../components/Map/SimpleMap';
 
 const { TextArea } = Input;
 
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 18,
-      offset: 10,
-    },
-    sm: {
-      span: 1,
-      offset: 15,
-    },
-  },
-};
-
 const CommentList = ({ comments }) => (
   <List
     dataSource={comments}

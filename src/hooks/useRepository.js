@@ -21,7 +21,7 @@ const useRepository = () => {
 
   const onClickLike = async (type) => {
     try {
-      const response = await likeRepository(type);
+      await likeRepository(type);
       // if (actionType === type) {
       //     setActionType(null);
       //   } else {
