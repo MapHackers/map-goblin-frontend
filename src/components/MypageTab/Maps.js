@@ -55,7 +55,7 @@ const Maps = ({ userInfoName, mapList, userInfoId }) => {
                     height="2rem"
                     alt="example"
                     src={
-                      item.thumbnail
+                      item.thumbnail && item.thumbnail !== 'null'
                         ? Api.defaults.baseURL + '/files/' + item.thumbnail
                         : 'no-image3.png'
                     }
@@ -64,7 +64,10 @@ const Maps = ({ userInfoName, mapList, userInfoId }) => {
                   />
                 }
                 title={
-                  <Link to={`/${userInfoId}/repositories/${item.name}`} style={{ fontSize: '16px' }}>
+                  <Link
+                    to={`/${userInfoId}/repositories/${item.name}`}
+                    style={{ fontSize: '16px' }}
+                  >
                     {item.name}
                   </Link>
                 }

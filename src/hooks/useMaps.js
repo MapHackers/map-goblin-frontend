@@ -50,15 +50,6 @@ const useMaps = () => {
     }
   }, [setReduxGPS]);
 
-  //* 레이어들에 있는 mapData들을 하나의 배열로 만들기
-  //   let markers = [];
-  //   layer.map((aLayer, idx) => {
-  //     aLayer.mapDatas.map((data) => {
-  //       let temp = { layerName: aLayer, ...data };
-  //       markers.push(temp);
-  //     });
-  //   });
-
   const setclickedMarker = (marker) => {
     dispatch(mapActinos.setClickedMarker(marker));
   };

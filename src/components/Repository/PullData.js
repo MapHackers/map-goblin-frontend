@@ -34,7 +34,7 @@ const PullData = () => {
         setDataToSimpleMap(res.data)
       }
     } catch (e) {
-      console.err(e);
+      console.error(e);
     }
   }, []);
 

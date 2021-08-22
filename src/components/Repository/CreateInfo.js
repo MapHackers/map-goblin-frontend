@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Input } from 'antd';
 import ImgUpload from './ImgUpload';
 import { useHistory, withRouter } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CreateForm from './CreateForm';
 import CreateFormItem from './CreateFormItem';
 import SelectCategory from './SelectCategory';
 import { createRepositoryAPI } from '../../util/api/repository';
 import Api from '../../util/Api';
+import { fileActions } from '../../store/file';
 
 const { TextArea } = Input;
 
@@ -35,6 +36,12 @@ const CreateInfo = (props) => {
   const category = useSelector((state) => state.repository.modifyCategory);
 
   const history = useHistory();
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fileActions.setUpload(null))
+  }
+  ,[dispatch])
 
   const onCreateRepository = async () => {
     //* categories, thumbnail, name, description

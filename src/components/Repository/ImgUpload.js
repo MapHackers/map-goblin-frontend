@@ -4,13 +4,26 @@ import { useSelector } from 'react-redux';
 import Api from '../../util/Api';
 
 const ImgUpload = ({ setUploadProfileFile, visible }) => {
+  const reduxFile = useSelector((state) => Api.defaults.baseURL + '/files/' + state.file.upload);
+
   const [url, setUrl] = useState(
     useSelector((state) => Api.defaults.baseURL + '/files/' + state.file.upload)
   );
 
   useEffect(() => {
-    console.log({visible}, "imgUpload")
-    setUrl(Api.defaults.baseURL + '/files/null');
+    console.log({reduxFile})
+    if (reduxFile === "") {
+      setUrl(Api.defaults.baseURL + '/files/null');
+    } else {
+      setUrl(reduxFile);
+    }
+  }, [reduxFile]);
+
+  useEffect(() => {
+    console.log({ visible });
+    if (visible !== undefined && visible !== null) {
+      setUrl(Api.defaults.baseURL + '/files/null');
+    }
   }, [visible]);
 
   const validURL = url !== Api.defaults.baseURL + '/files/null';

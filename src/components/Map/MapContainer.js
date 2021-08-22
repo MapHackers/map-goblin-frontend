@@ -44,7 +44,7 @@ const MapContainer = ({ mapId, authority }) => {
     setisCreateModalVisible(true);
   };
 
-  const [layerArr, setlayerArr] = useState(['Layer1','Layer2']);
+  const [layerArr, setlayerArr] = useState(['Layer1', 'Layer2']);
 
   const onLayerCheckBoxClick = (checkedValues) => {
     setlayerArr(checkedValues);

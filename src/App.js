@@ -71,7 +71,6 @@ function App() {
           <Route component={NotFound} />
         </Switch>
       </Suspense>
-      {/* <Core /> */}
     </BrowserRouter>
   );
 }

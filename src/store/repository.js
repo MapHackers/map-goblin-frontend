@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Api from '../util/Api';
 import { getDate } from '../util/dateCalculate';
 
 const initialState = {
@@ -138,6 +139,9 @@ const repository = createSlice({
         tempList.push(temp);
       });
       state.requestDeniedList = tempList;
+    },
+    setRequestInfo(state, action) {
+      state.requestInfo = action.payload.data;
     },
     extraReducers: {},
   },

@@ -17,7 +17,7 @@ const CreateModal = ({ latlng, isCreateModalVisible, setIsCreateModalVisible }) 
   const [desc, setdesc] = useState('');
   const [rating, setRating] = useState(0);
   const [layer, setLayer] = useState('None');
-  const [fileList, setFileList] = useState(null);
+  const [fileList, setFileList] = useState("");
 
   const dispatch = useDispatch();
 

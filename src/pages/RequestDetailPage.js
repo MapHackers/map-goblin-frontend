@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CommonLayout from '../components/Layout/CommonLayout';
 import {
   Button,
@@ -15,16 +15,17 @@ import {
   Alert,
 } from 'antd';
 import RequestForm from '../components/Repository/RequestForm';
-import { useDispatch } from 'react-redux';
-import {
-  deniedRequestData,
-  mergeRequestData,
-  saveRequestReply,
-  selectRequestInfo,
-} from '../_actions/repository_action';
 import { useHistory, withRouter } from 'react-router-dom';
 import Api from '../util/Api';
 import SimpleMap from '../components/Map/SimpleMap';
+import { dateCalculate, getDate } from '../util/dateCalculate';
+import {
+  deniedRequestDataAPI,
+  getRepositoryInfo,
+  mergeRequestDataAPI,
+  saveRequestReplyAPI,
+  selectRequestInfoAPI,
+} from '../util/api/repository';
 
 const { TextArea } = Input;
 
@@ -44,7 +45,7 @@ const CommentList = ({ comments }) => (
               : `${Api.defaults.baseURL}/files/NoProfile.png`
           }
           content={item.content}
-          datetime={alarmCalculate(item.datetime)}
+          datetime={dateCalculate(item.datetime)}
         />
       </li>
     )}
@@ -68,39 +69,7 @@ const Editor = ({ onChange, onSubmit, value }) => (
   </>
 );
 
-function alarmCalculate(date) {
-  const cur_date = new Date();
-  const time_val = cur_date.getTime() - Date.parse(date);
-  const min = 60000;
-  const hour = 3600000;
-  const day = 86400000;
-  const week = day * 7;
-  const month = day * 30;
-  const year = day * 365;
-
-  if (time_val < min) return '방금 전';
-  else if (time_val < hour) return Math.round(time_val / min) + '분 전';
-  else if (time_val < day) return Math.round(time_val / hour) + '시간 전';
-  else if (time_val < week) return Math.round(time_val / day) + '일 전';
-  else if (time_val < month) return Math.round(time_val / week) + '주 전';
-  else if (time_val < year) return Math.round(time_val / month) + '개월 전';
-  else return Math.round(time_val / year) + '년 전';
-}
-
-function getDate(isoDate) {
-  const createdDate = isoDate.split(/-|T/);
-  const year = createdDate[0];
-  const month = parseInt(createdDate[1]).toString();
-  const date = parseInt(createdDate[2]).toString();
-  const time = createdDate[3].split(':');
-  const hour = time[0];
-  const min = time[1];
-
-  return `${year}년 ${month}월 ${date}일  ${hour}:${min}`;
-}
-
 const RequestDetailPage = (props) => {
-  const dispatch = useDispatch();
   const history = useHistory();
   const [repositoryInfo, setRepositoryInfo] = useState({});
   const [timeLineLoading, setTimeLineLoading] = useState(false);
@@ -124,17 +93,17 @@ const RequestDetailPage = (props) => {
   const [comments, setComments] = useState([]);
   const [commentValue, setCommentValue] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (commentValue !== '' && commentValue !== undefined) {
-      dispatch(saveRequestReply(`${props.location.pathname}/reply`, { content: commentValue }))
-        .then((response) => {
-          setComments([...comments, response.payload.data]);
-        })
-        .catch((error) => {
-          console.log(error);
+      try {
+        const response = await saveRequestReplyAPI(`${props.location.pathname}/reply`, {
+          content: commentValue,
         });
+        setComments([...comments, response.data]);
+      } catch (e) {
+        console.error(e);
+      }
     }
-
     setCommentValue('');
   };
 
@@ -144,103 +113,100 @@ const RequestDetailPage = (props) => {
 
   const [dataToSimpleMap, setdataToSimpleMap] = useState([]);
 
+  const init = useCallback(async () => {
+    try {
+      const response = await getRepositoryInfo(userId, repositoryName);
+      setRepositoryInfo(response.data);
+    } catch (e) {
+      console.error(e, `레포지토리 정보를 불러오는데 실패했습니다.`);
+    }
+
+    try {
+      const response = await selectRequestInfoAPI(props.location.pathname);
+      console.log(response.data);
+      let values = response.data.values;
+      setTitle(values[0].title);
+      setContent(values[0].content);
+      setRequestStatus(values[0].status);
+
+      let compareResult = response.data;
+      console.log({ compareResult });
+      setdataToSimpleMap(compareResult);
+      if (compareResult.added !== undefined) {
+        setAddList(
+          compareResult.added.map((data) => (
+            <p>
+              {getDate(data.createdDate)} {data.name}
+            </p>
+          ))
+        );
+      }
+
+      if (compareResult.modified !== undefined) {
+        setModifyList(
+          compareResult.modified.map((data) => (
+            <p>
+              {getDate(data.createdDate)} {data.name}
+            </p>
+          ))
+        );
+      }
+
+      if (compareResult.delete !== undefined) {
+        setDeleteList(
+          compareResult.delete.map((data) => (
+            <p>
+              {getDate(data.createdDate)} {data.name}
+            </p>
+          ))
+        );
+      }
+
+      if (compareResult.layer !== undefined) {
+        setLayerList(
+          compareResult.layer.map((data) => (
+            <p>
+              {getDate(data.createdDate)} {data.name}
+            </p>
+          ))
+        );
+      }
+
+      if (compareResult.replies !== undefined) {
+        setComments(compareResult.replies);
+      }
+      setTimeLineLoading(true);
+      setIsLoading(true);
+    } catch (e) {
+      console.error(e);
+      setNotFound(true);
+    }
+  }, [props.location.pathname, repositoryName, userId]);
+
   useEffect(() => {
-    Api.get(`/${userId}/repositories/${repositoryName}`)
-      .then((response) => {
-        setRepositoryInfo(response.data);
-      })
-      .catch((error) => {
-        setNotFound(true);
-      });
-
-    dispatch(selectRequestInfo(props.location.pathname))
-      .then((response) => {
-        let values = response.payload.data.values;
-
-        setTitle(values[0].title);
-        setContent(values[0].content);
-        setRequestStatus(values[0].status);
-
-        let compareResult = response.payload.data;
-        console.log({ compareResult });
-        setdataToSimpleMap(compareResult);
-        if (compareResult.added !== undefined) {
-          setAddList(
-            compareResult.added.map((data) => (
-              <p>
-                {getDate(data.createdDate)} {data.name}
-              </p>
-            ))
-          );
-        }
-
-        if (compareResult.modified !== undefined) {
-          setModifyList(
-            compareResult.modified.map((data) => (
-              <p>
-                {getDate(data.createdDate)} {data.name}
-              </p>
-            ))
-          );
-        }
-
-        if (compareResult.delete !== undefined) {
-          setDeleteList(
-            compareResult.delete.map((data) => (
-              <p>
-                {getDate(data.createdDate)} {data.name}
-              </p>
-            ))
-          );
-        }
-
-        if (compareResult.layer !== undefined) {
-          setLayerList(
-            compareResult.layer.map((data) => (
-              <p>
-                {getDate(data.createdDate)} {data.name}
-              </p>
-            ))
-          );
-        }
-
-        if (compareResult.replies !== undefined) {
-          setComments(compareResult.replies);
-        }
-        setTimeLineLoading(true);
-        setIsLoading(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        setNotFound(true);
-      });
-  }, []);
+    init();
+  }, [init]);
 
   const onClickBack = () => {
     history.push(`/${props.match.params.userId}/repositories/${props.match.params.repositoryName}`);
   };
 
-  const onClickMerge = () => {
-    dispatch(mergeRequestData(`${props.location.pathname}/merge`))
-      .then((response) => {
-        console.log('onClickMerge:', response);
-        setRequestStatus('ACCEPTED');
-      })
-      .catch((error) => {
-        console.log('onClickMerge error:', error);
-      });
+  const onClickMerge = async () => {
+    try {
+      await mergeRequestDataAPI(`${props.location.pathname}/merge`);
+      setRequestStatus('ACCEPTED');
+    } catch (e) {
+      console.error(`머지하는데 에러가 생겼습니다.`);
+    }
   };
 
-  const onClickDenied = () => {
-    console.log('onClickDenied');
-    dispatch(deniedRequestData(`${props.location.pathname}/denied`))
-      .then((response) => {
-        console.log('onClickDenied:', response);
-        setRequestStatus('DENIED');
-      })
-      .catch((error) => {
-        console.log('onClickDenied error:', error);
-      });
+  const onClickDenied = async () => {
+    try {
+      await deniedRequestDataAPI(`${props.location.pathname}/denied`);
+      setRequestStatus(`DENIED`);
+    } catch (e) {
+      console.error(`디나이하는데 에러가 생겼습니다.`);
+    }
   };
 
   if (isLoading) {

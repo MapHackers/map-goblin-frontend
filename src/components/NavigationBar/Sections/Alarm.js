@@ -44,9 +44,9 @@ function Alarm(props) {
                     height="1.5rem"
                     alt="example"
                     src={
-                      alarm.thumbnail !== null
+                      alarm.thumbnail && alarm.thumbnail !== "null"
                         ? Api.defaults.baseURL + '/files/' + alarm.thumbnail
-                        : 'no-image3.png'
+                        : '../../../no-image3.png'
                     }
                     style={{ borderRadius: '10%', marginTop: '5px' }}
                     preview={false}

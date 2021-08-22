@@ -41,7 +41,6 @@ const ProfileContainer = ({
             <ImgUpload
               uploadProfileFile={uploadProfileFile}
               setUploadProfileFile={setUploadProfileFile}
-              type={`profile`}
             />
           </span>
         ) : (

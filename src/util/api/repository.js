@@ -54,6 +54,30 @@ export const selectPullDataAPI = (userId, repositoryName) => {
   return Api.get(`/${userId}/repositories/${repositoryName}/pull/compare`);
 };
 
+export const modifyRepositoryAPI = (values, userId, repositoryName) => {
+  return Api.post(`/${userId}/repositories/${repositoryName}`, values);
+};
+
+export const deleteRepositoryAPI = (repositoryId) => {
+  return Api.post(`/repositories/${repositoryId}/delete`);
+};
+
 export const repositoryVisitCount = (userId, repositoryName) => {
   return Api.post(`/${userId}/${repositoryName}/visit`);
+};
+
+export const deniedRequestDataAPI = (url, data) => {
+  return Api.post(url, data);
+};
+
+export const mergeRequestDataAPI = (url, data) => {
+  return Api.post(url, data);
+};
+
+export const saveRequestReplyAPI = (url, data) => {
+  return Api.post(url, data);
+};
+
+export const selectRequestInfoAPI = (url) => {
+  return Api.get(url);
 };

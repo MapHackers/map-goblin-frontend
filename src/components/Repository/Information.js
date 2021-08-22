@@ -36,7 +36,7 @@ const Information = ({ repositoryInfo, colorArray, onClickLike, onClickClone }) 
         </Col>
         <Col flex="auto" style={{ marginLeft: '50px', marginRight: '50px' }}>
           <Row style={{ alignContent: 'center', justifyContent: 'center' }}>
-            {thumbnail !== '' ? (
+            {thumbnail !== '' && thumbnail !== 'null' ? (
               <Image
                 preview={false}
                 src={Api.defaults.baseURL + '/files/' + thumbnail}

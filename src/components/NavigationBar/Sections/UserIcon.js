@@ -2,34 +2,39 @@ import React from 'react';
 import { UserOutlined, DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Menu, Dropdown, Image } from 'antd';
-import { connect } from 'react-redux';
-import { useHistory, withRouter } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import Api from '../../../util/Api';
 
 function UserIcon(props) {
   const history = useHistory();
+
+  const thumbnail = useSelector((state) => state.user.profile)
+  const name = useSelector((state) => state.user.userName)
+  const userId = useSelector((state) => state.user.userId)
+
   const onClickLogoutHandler = () => {
     window.localStorage.setItem('userToken', '');
     history.push('/');
   };
 
   const onClickMyPageHandler = () => {
-    history.push(`/${props.userId}`);
+    history.push(`/${userId}`);
   };
 
   const UserMenu = (
     <Menu>
       <Menu.Item key="0" style={{ verticalAlign: 'center' }}>
-        {props.profile ? (
-          <Image
-            alt="user icon"
-            src={Api.defaults.baseURL + '/files/' + props.profile}
-            preview={false}
-            style={{ borderRadius: '5%', width: '5rem', height: '5rem' }}
-          />
-        ) : (
-          <UserOutlined style={{ fontSize: '2rem' }} />
-        )}
+        <Image
+          alt="user icon"
+          src={
+            thumbnail && thumbnail !== 'null'
+              ? Api.defaults.baseURL + '/files/' + thumbnail
+              : '../../../NoProfile.png'
+          }
+          preview={false}
+          style={{ borderRadius: '5%', width: '5rem', height: '5rem' }}
+        />
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="1" onClick={onClickMyPageHandler}>
@@ -44,16 +49,16 @@ function UserIcon(props) {
   return (
     <div style={{ display: 'flex' }}>
       <UserIconContainer>
-        {props.profile ? (
-          <Image
-            alt="user icon"
-            src={Api.defaults.baseURL + '/files/' + props.profile}
-            preview={false}
-            style={{ borderRadius: '1.3rem', width: '2.6rem', height: '2.6rem' }}
-          />
-        ) : (
-          <UserOutlined style={{ fontSize: '2rem' }} />
-        )}
+        <Image
+          alt="user icon"
+          src={
+            thumbnail && thumbnail !== 'null'
+              ? Api.defaults.baseURL + '/files/' + thumbnail
+              : '../../../NoProfile.png'
+          }
+          preview={false}
+          style={{ borderRadius: '1.3rem', width: '2.6rem', height: '2.6rem' }}
+        />
       </UserIconContainer>
       <div
         style={{
@@ -63,7 +68,7 @@ function UserIcon(props) {
         <Dropdown overlay={UserMenu} trigger={['click']}>
           <h3 style={{ marginTop: '1.2rem', marginLeft: '5px' }} className="ant-dropdown-link">
             {' '}
-            {props.userName} <DownOutlined />{' '}
+            {name} <DownOutlined />{' '}
           </h3>
         </Dropdown>
       </div>
@@ -71,13 +76,8 @@ function UserIcon(props) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  userId: state.user.userId,
-  userName: state.user.userName,
-  profile: state.user.profile,
-});
 
-export default withRouter(connect(mapStateToProps)(UserIcon));
+export default React.memo(UserIcon);
 
 const UserIconContainer = styled.div`
   border-radius: 1.3rem;

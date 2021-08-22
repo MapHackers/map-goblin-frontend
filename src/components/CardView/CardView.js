@@ -117,7 +117,7 @@ function CardView({ card }) {
             height="15rem"
             alt="example"
             src={
-              card.thumbnail ? Api.defaults.baseURL + '/files/' + card.thumbnail : 'no-image3.png'
+              card.thumbnail && card.thumbnail !== 'null' ? Api.defaults.baseURL + '/files/' + card.thumbnail : 'no-image3.png'
             }
             preview={false}
           />
