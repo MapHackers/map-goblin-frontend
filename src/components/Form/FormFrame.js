@@ -10,7 +10,6 @@ import styled from 'styled-components'
 function FormFrame({ FormType }) {
     switch (FormType) {
         case "Register":
-            console.log("Case", FormType)
             return (
                 <FrameContainer>
                     <HeaderContainer>

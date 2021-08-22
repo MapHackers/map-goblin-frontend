@@ -1,152 +1,194 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { Tabs, Rate, Divider, Comment, Input, Form, Button, List, Image } from 'antd';
-import { InfoCircleOutlined, CommentOutlined, HeartFilled } from '@ant-design/icons'
-import { connect } from 'react-redux'
+import { InfoCircleOutlined, CommentOutlined, HeartFilled } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
 import Api from '../../util/Api';
+import { registerReview } from '../../util/api/map';
+import { mapActinos } from '../../store/map';
 
 const { TabPane } = Tabs;
 
 const { TextArea } = Input;
 
-const Editor = ({ onChange, onSubmit, submitting, value }) => (
-    <>
-        <Form.Item>
-            <TextArea rows={4} onChange={onChange} value={value} placeholder="리뷰를 입력해 주세요" />
-        </Form.Item>
-        <Form.Item>
-            <Button htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
-                Add Comment
-            </Button>
-        </Form.Item>
-    </>
+const Editor = ({ onChange, onSubmit, value }) => (
+  <>
+    <Form.Item>
+      <TextArea rows={4} onChange={onChange} value={value} placeholder="리뷰를 입력해 주세요" />
+    </Form.Item>
+    <Form.Item>
+      <Button htmlType="submit" onClick={onSubmit} type="primary">
+        Add Comment
+      </Button>
+    </Form.Item>
+  </>
 );
 
 const CommentList = ({ comments }) => (
-    <List
-        dataSource={comments}
-        header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
-        itemLayout="horizontal"
-        pagination={{
-            onChange: page => {
-                console.log(page)
-            },
-            pageSize: 5
-        }}
-        renderItem={props => <Comment {...props} />}
-    />
+  <List
+    dataSource={comments}
+    header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
+    itemLayout="horizontal"
+    pagination={{
+      onChange: (page) => {
+        console.log(page);
+      },
+      pageSize: 5,
+    }}
+    renderItem={(props) => <Comment {...props} />}
+  />
 );
 
-const MarkerDescription = ({ title, description, rating, userName, thumbnail, mapId, latLng, layer }) => {
+const MarkerDescription = ({ mapId }) => {
+  const dispatch = useDispatch();
 
-    const [reviewInput, setreviewInput] = useState("")
-    const [value, setValue] = useState(0)
-    const [reviewList, setreviewList] = useState([])
-    const [submitting, setsubmitting] = useState(false)
+  const clickedMarker = useSelector((state) => state.map.clickedMarker);
+  const userName = useSelector((state) => state.user.userName);
 
-    useEffect(() => {
-        let dataToSubmit = {
-            "mapId": mapId,
-            "layerName": layer,
-            "geometry": latLng
-        }
-        Api.post(`/review/mapData`, dataToSubmit)
-            .then(response => {
-                let temp = []
-                response?.data.data.reverse().map((review, idx) => (
-                    temp.push(
-                        {
-                            author: <span style={{ display: 'flex' }}><p>{review.author}</p> <Rate style={{ marginLeft: '16px', fontSize: '14px' }} disabled allowHalf value={review.rating} /></span>,
-                            content: <p>{review.content}</p>
-                        }
-                    )
-                ))
-                setreviewList(temp)
-            })
-            .catch(e => {
-                console.log(e)
-            })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [latLng])
+  const [reviewInput, setreviewInput] = useState('');
+  const [value, setValue] = useState(0);
+  const [reviewList, setreviewList] = useState([]);
 
-    const handleReviewSubmit = async () => {
-        if (!reviewInput) {
-            return
-        }
+  //* 리뷰 데이터들을 작성자 별점등을 표현할 수 있게 가공
+  useEffect(() => {
+    setreviewList([]);
+    clickedMarker.reviews.forEach((review) => {
+      setreviewList((reviews) => [
+        ...reviews,
+        {
+          author: (
+            <span style={{ display: 'flex' }}>
+              <p>{review.author}</p>{' '}
+              <Rate
+                style={{ marginLeft: '16px', fontSize: '14px' }}
+                disabled
+                allowHalf
+                value={review.rating}
+              />
+            </span>
+          ),
+          content: <p>{review.content}</p>,
+        },
+      ]);
+    });
+  }, [clickedMarker.reviews]);
 
-        let dataToSubmit = {
-            "mapId": mapId,
-            "layerName": layer,
-            "geometry": latLng,
-            "author": userName,
-            "content": reviewInput,
-            "rating": value
-        }
-        await Api.post(`/review`, dataToSubmit)
-            .then(response => {
-            })
-            .catch(e => {
-                console.log(e)
-            })
-
-        setsubmitting(true)
-        setTimeout(() => {
-            setsubmitting(false)
-            setreviewList([
-                {
-                    author: <span style={{ display: 'flex' }}><p>{userName}</p> <Rate style={{ marginLeft: '16px', fontSize: '14px' }} disabled allowHalf value={value} /></span>,
-                    content: <p>{reviewInput}</p>
-                }, ...reviewList
-            ])
-            setreviewInput("")
-        }, 100);
+  const handleReviewSubmit = async () => {
+    if (!reviewInput) {
+      return;
     }
 
-    const handleRatingChange = async (value) => {
-        setValue(value)
+    if (value === 0) {
+      alert(`별점을 선택해 주세요`);
+      return;
     }
 
-    return (
-        <div style={{ padding: '0', marginTop: '-25px' }}>
-            <Tabs defaultActiveKey="1"
-                tabBarGutter={100}>
-                <TabPane tab={<span><InfoCircleOutlined /> Information </span>} key="1">
-                    <div>
-                        <h1> {title} </h1>
-                        <Rate disabled allowHalf={true} value={rating} style={{ marginBottom: '25px' }} />
-                        {thumbnail.substr(0, 4) === "http" ?
-                            <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={thumbnail} alt="staticImage" />
-                            :
-                            <Image preview={false} style={{ width: '400px', marginLeft: '30px' }} src={Api.defaults.baseURL + '/files/' + thumbnail} alt="cau" fallback="../../no-image3.png" />
-                        }
-                        <h3 style={{ marginTop: '25px' }}> {description} </h3>
-                    </div>
-                </TabPane>
-                <TabPane tab={<span><CommentOutlined /> Review </span>} key="2">
-                    <div>
-                        <h2> {title} </h2>
-                        <Rate character={<HeartFilled />} allowHalf allowClear={false} value={value} style={{ fontSize: '40px', marginBottom: '25px' }} onChange={handleRatingChange} />
-                        <Divider style={{ marginTop: '0px' }}> Review </Divider>
+    let dataToSubmit = {
+      mapId: mapId,
+      layerName: clickedMarker.layerName,
+      geometry: clickedMarker.latlng,
+      author: userName,
+      content: reviewInput,
+      rating: value,
+    };
+    try {
+      await registerReview(dataToSubmit);
+    } catch (e) {
+      console.log(e);
+    }
+    dispatch(
+      mapActinos.setClickedMarkerReview([
+        {
+          author: userName,
+          content: reviewInput,
+          rating: value,
+        },
+        ...clickedMarker.reviews,
+      ])
+    );
 
-                        <Comment
-                            content={
-                                <Editor
-                                    onChange={(event) => { setreviewInput(event.currentTarget.value) }}
-                                    onSubmit={handleReviewSubmit}
-                                    submitting={submitting}
-                                    value={reviewInput}
-                                />
-                            }
-                        />
-                        <CommentList key={Math.random()} comments={reviewList} />
-                    </div>
-                </TabPane>
-            </Tabs>
-        </div>
-    )
-}
+    setreviewInput('');
+    setValue(0);
+  };
 
-const mapStateToProps = state => ({
-    userName: state.user.userName
-})
+  const handleRatingChange = async (value) => {
+    setValue(value);
+  };
 
-export default connect(mapStateToProps)(MarkerDescription)
+  return (
+    <div style={{ padding: '0', marginTop: '-25px' }}>
+      <Tabs defaultActiveKey="1" tabBarGutter={100}>
+        <TabPane
+          tab={
+            <span>
+              <InfoCircleOutlined /> Information{' '}
+            </span>
+          }
+          key="1"
+        >
+          <div>
+            <h1> {clickedMarker.name} </h1>
+            <Rate
+              disabled
+              allowHalf={true}
+              value={clickedMarker.rating}
+              style={{ marginBottom: '25px' }}
+            />
+            {clickedMarker.thumbnail.substr(0, 4) === 'http' ? (
+              <Image
+                preview={false}
+                style={{ width: '400px', marginLeft: '30px' }}
+                src={clickedMarker.thumbnail}
+                alt="staticImage"
+              />
+            ) : (
+              <Image
+                preview={false}
+                style={{ width: '400px', marginLeft: '30px' }}
+                src={Api.defaults.baseURL + '/files/' + clickedMarker.thumbnail}
+                alt="cau"
+                fallback="../../no-image3.png"
+              />
+            )}
+            <h3 style={{ marginTop: '25px' }}> {clickedMarker.description} </h3>
+          </div>
+        </TabPane>
+        <TabPane
+          tab={
+            <span>
+              <CommentOutlined /> Review{' '}
+            </span>
+          }
+          key="2"
+        >
+          <div>
+            <h2> {clickedMarker.title} </h2>
+            <Rate
+              character={<HeartFilled />}
+              allowHalf
+              allowClear={false}
+              value={value}
+              style={{ fontSize: '40px', marginBottom: '25px' }}
+              onChange={handleRatingChange}
+            />
+            <Divider style={{ marginTop: '0px' }}> Review </Divider>
+
+            <Comment
+              content={
+                <Editor
+                  onChange={(event) => {
+                    setreviewInput(event.currentTarget.value);
+                  }}
+                  onSubmit={handleReviewSubmit}
+                  value={reviewInput}
+                />
+              }
+            />
+            <CommentList comments={reviewList} />
+          </div>
+        </TabPane>
+      </Tabs>
+    </div>
+  );
+};
+
+export default MarkerDescription;

@@ -1,40 +1,64 @@
-import React from 'react';
-import {Upload} from "antd";
-import ImgCrop from "antd-img-crop";
-import {useDispatch, useSelector} from "react-redux";
-import {withRouter} from "react-router-dom";
-import {addFile, modifiedFile} from "../../_actions/repository_action";
+import React, { useEffect, useState } from 'react';
+import { Upload, message, Button } from 'antd';
+import { useSelector } from 'react-redux';
+import Api from '../../util/Api';
 
-const ImgUpload = (props) => {
-    const dispatch = useDispatch();
+const ImgUpload = ({ setUploadProfileFile, visible }) => {
+  const [url, setUrl] = useState(
+    useSelector((state) => Api.defaults.baseURL + '/files/' + state.file.upload)
+  );
 
-    const fileList = useSelector(state => state.repository.fileList)
+  useEffect(() => {
+    console.log({visible}, "imgUpload")
+    setUrl(Api.defaults.baseURL + '/files/null');
+  }, [visible]);
 
-    const onChange = ({ fileList: newFileList }) => {
+  const validURL = url !== Api.defaults.baseURL + '/files/null';
 
-        let newFile = newFileList[0];
+  const onChange = (info) => {
+    getURL(info.file.originFileObj);
+    setUploadProfileFile(info.file.originFileObj);
+  };
 
-        if(newFile?.size > 5*1024*1000){
-            alert(`파일업로드 허용용량 5Mbyte를 초과하였습니다.`);
-            newFileList.splice(0, 1)
-        }else{
-            dispatch(addFile(newFileList));
-            dispatch(modifiedFile(true));
-        }
-    };
+  const getURL = (img) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      setUrl(reader.result);
+    });
+    reader.readAsDataURL(img);
+  };
 
-    return (
-        <ImgCrop rotate>
-            <Upload
-                listType="picture-card"
-                fileList={fileList}
-                onChange={onChange}
-                beforeUpload={() => {return false}}
-            >
-                {fileList.length < 1 && '+ Upload'}
-            </Upload>
-        </ImgCrop>
-    );
+  const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error('Image must smaller than 5MB!');
+    }
+    return isJpgOrPng && isLt5M;
+  };
+
+  const onClickDelete = async () => {
+    setUrl(Api.defaults.baseURL + '/files/null');
+    setUploadProfileFile('profileDelete');
+  };
+
+  return (
+    <>
+      <Upload listType="picture-card" fileList={[]} onChange={onChange} beforeUpload={beforeUpload}>
+        <div>{validURL ? <img src={url} alt="" style={{ width: '100%' }} /> : `+ upload`}</div>
+      </Upload>
+      {validURL && (
+        <div style={{ display: 'flex' }}>
+          <Button danger onClick={onClickDelete} style={{ left: '60px', marginRight: 'auto' }}>
+            삭제하기
+          </Button>
+        </div>
+      )}
+    </>
+  );
 };
 
-export default withRouter(ImgUpload);
+export default ImgUpload;

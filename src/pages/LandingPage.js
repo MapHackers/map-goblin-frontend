@@ -1,17 +1,24 @@
-import React from 'react'
-import MainImage from '../components/LandingFrame/MainImage'
-import Footer from '../components/Footer/Footer'
+import React from 'react';
+import styled from 'styled-components';
+import MainImage from '../components/LandingFrame/MainImage';
+import Footer from '../components/Footer/Footer';
+
+const Container = styled.div`
+  background: #f5f6f7;
+  height: 100vh;
+  background-image: url(/landing2.svg);
+  background-size: 100%;
+`;
 
 function LandingPage() {
-    return (
-        <div style={{ background: '#f5f6f7', height: '100vh', backgroundImage: 'url(/landing2.svg)', backgroundSize: '100%' }}>
-            <div>
-                <MainImage />
-                <Footer />
-            </div>
-        </div>
-
-    )
+  return (
+    <Container>
+      <div>
+        <MainImage />
+        <Footer />
+      </div>
+    </Container>
+  );
 }
 
-export default LandingPage
+export default LandingPage;

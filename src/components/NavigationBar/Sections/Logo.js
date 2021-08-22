@@ -1,12 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 function Logo() {
     return (
         <LogoContainer>
-            <a href="/main">
+            <Link to="/main">
                 <LogoItem src='/Logo.png' alt="MapGoblinLogo"/>
-            </a>
+            </Link>
         </LogoContainer>
     )
 }
