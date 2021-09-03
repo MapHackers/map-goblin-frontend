@@ -239,7 +239,7 @@ const MypageTabContainer = (props) => {
                                             />
                                         }
                                         title={
-                                            <a href={`/${userInfo.userId}/repositories/${item.name}`}
+                                            <a href={`/${userInfo.userId}/spaces/${item.name}`}
                                                 style={{ fontSize: '16px' }}>
                                                 {item.name}
                                             </a>
@@ -290,12 +290,12 @@ const MypageTabContainer = (props) => {
                                                 />
                                             }
                                             title={alarm.read ?
-                                                <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
+                                                <a href={`/${props.userId}/spaces/${alarm.spaceName}`}
                                                     style={{ marginLeft: "10px", fontSize: "14px" }}>
                                                     <text style={{ fontWeight: "bold" }}>{alarm.srcMemberName}</text>
                                                     님이 회원님의 {typemap[alarm.alarmType]}
                                                 </a> :
-                                                <a href={`/${props.userId}/repositories/${alarm.spaceName}`}
+                                                <a href={`/${props.userId}/spaces/${alarm.spaceName}`}
                                                     style={{ marginLeft: "10px", fontSize: "14px", color: '#36A2EB' }}>
                                                     <text style={{ fontWeight: "bold" }}>{alarm.srcMemberName}</text>
                                                     님이 회원님의 {typemap[alarm.alarmType]}

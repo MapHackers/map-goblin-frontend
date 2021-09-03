@@ -60,10 +60,10 @@ const columns = [
         render: (title, values) => {
             if (values.type === "issue") {
                 console.log("VALUES", values)
-                return (<Link to={`/${hrefId}/repositories/${hrefRepo}/issues/${values.key}`}>{title}</Link>)
+                return (<Link to={`/${hrefId}/spaces/${hrefRepo}/issues/${values.key}`}>{title}</Link>)
             } else {
                 return (<Link to={{
-                    pathname: `/${hrefId}/repositories/${hrefRepo}/requests/${values.key}`,
+                    pathname: `/${hrefId}/spaces/${hrefRepo}/requests/${values.key}`,
                     state: { userId: hrefId, repositoryName: hrefRepo }
                 }}>{title}</Link>)
             }
@@ -180,7 +180,7 @@ const RepositoryPage = (props) => {
             hrefRepo = repositoryName;
 
             setIsLoading(true);
-            await Api.get(`/${userId}/repositories/${repositoryName}`).then(response => {
+            await Api.get(`/${userId}/spaces/${repositoryName}`).then(response => {
                 setRepositoryInfo(response.data);
 
                 if (response.data.thumbnail !== null) {
@@ -380,9 +380,9 @@ const RepositoryPage = (props) => {
         } else {
             // eslint-disable-next-line no-restricted-globals
             if (confirm("지도를 클론하시겠습니까?")) {
-                Api.post('/repositories/clone', { "repositoryId": repositoryInfo.id }).then(response => {
+                Api.post('/spaces/clone', { "repositoryId": repositoryInfo.id }).then(response => {
                     alert("클론이 완료되었습니다. 클론된 지도로 이동합니다.");
-                    props.history.push(`/${props.user.userData.data.userId}/repositories/${response.data.name}`);
+                    props.history.push(`/${props.user.userData.data.userId}/spaces/${response.data.name}`);
                 }).catch(error => {
                     alert(error.response.data.message);
                 })
@@ -577,7 +577,7 @@ const RepositoryPage = (props) => {
                         {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>원본 지도 :
                             {repositoryInfo.hostUserId === null ?
                                 <p style={{ color: "blue", display: "inline" }}>&nbsp;원본 지도가 삭제되었습니다.</p> :
-                                <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/repositories/' + repositoryInfo.hostRepoName}>&nbsp;{`/${repositoryInfo.hostUserId}/repositories/${repositoryInfo.hostRepoName}`}</a>}</div>}
+                                <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/spaces/' + repositoryInfo.hostRepoName}>&nbsp;{`/${repositoryInfo.hostUserId}/spaces/${repositoryInfo.hostRepoName}`}</a>}</div>}
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px' }}>
@@ -675,7 +675,7 @@ const RepositoryPage = (props) => {
                             message="새로운 이슈를 올려주세요!"
                             type="warning"
                             action={
-                                <Link to={`/${userId}/repositories/${repositoryName}/issues`}>
+                                <Link to={`/${userId}/spaces/${repositoryName}/issues`}>
                                     <Button size="middle" type="primary">지적하기</Button>
                                 </Link>
                             }
@@ -707,7 +707,7 @@ const RepositoryPage = (props) => {
                                 message="복사한 지도에 변경사항이 있습니다!"
                                 type="info"
                                 action={
-                                    <Link to={{ pathname: `/${userId}/repositories/${repositoryName}/requests`, state: { userId: userId, repositoryName: repositoryName } }}>
+                                    <Link to={{ pathname: `/${userId}/spaces/${repositoryName}/requests`, state: { userId: userId, repositoryName: repositoryName } }}>
                                         <Button size="middle" type="primary">요청하기</Button>
                                     </Link>
                                 }

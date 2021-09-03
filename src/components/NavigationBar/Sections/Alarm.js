@@ -58,7 +58,7 @@ function Alarm(props) {
                                 }
                                 title={alarm.spaceName}
                                 onClick={onClickAlarm}>
-                                    <a href={`/${props.user.userId}/repositories/${alarm.spaceName}`} style={{ marginLeft: '8px' }}>
+                                    <a href={`/${props.user.userId}/spaces/${alarm.spaceName}`} style={{ marginLeft: '8px' }}>
                                         <text style={{ fontWeight: "bold" }}>{alarm.srcMemberName}</text>
                                     님이 회원님의 {typemap[alarm.alarmType]}
                                     </a>

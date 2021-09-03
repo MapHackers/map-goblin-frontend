@@ -5,7 +5,7 @@ import {
 import Api from "../util/Api";
 
 export function searchRepository(keyword){
-    const request = Api.get(`/search/repositories/${keyword}`)
+    const request = Api.get(`/search/spaces/${keyword}`)
         .then(response => response)
         .catch(error => console.log(error))
     return {

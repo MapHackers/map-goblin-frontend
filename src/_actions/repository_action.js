@@ -45,7 +45,7 @@ export const fileUpload = (formData) => {
 }
 
 export const saveRepositoryInfo = (values) => {
-    const request = Api.post('/repositories', values)
+    const request = Api.post('/spaces', values)
         .then(response=>response)
         .catch(error=>error.response);
 
@@ -56,7 +56,7 @@ export const saveRepositoryInfo = (values) => {
 }
 
 export const modifyRepositoryInfo = (values, userId, repositoryName) => {
-    const request = Api.post(`/${userId}/repositories/${repositoryName}`, values)
+    const request = Api.post(`/${userId}/spaces/${repositoryName}`, values)
         .then(response => response)
         .catch(error => error.response);
 
@@ -75,7 +75,7 @@ export const addSelectedCategory = (categoryList) => {
 }
 
 export const selectIssueList = (page, userId, repositoryName, status) => {
-    const request = Api.get(`/${userId}/repositories/${repositoryName}/issues?status=${status}&page=${page}`)
+    const request = Api.get(`/${userId}/spaces/${repositoryName}/issues?status=${status}&page=${page}`)
         .then(response => response)
         .catch(error => error.response);
 
@@ -86,7 +86,7 @@ export const selectIssueList = (page, userId, repositoryName, status) => {
 }
 
 export const selectRequestList = (page, userId, repositoryName, status) => {
-    const request = Api.get(`/${userId}/repositories/${repositoryName}/requests?status=${status}&page=${page}`)
+    const request = Api.get(`/${userId}/spaces/${repositoryName}/requests?status=${status}&page=${page}`)
         .then(response => response)
         .catch(error => error.response);
 
@@ -97,7 +97,7 @@ export const selectRequestList = (page, userId, repositoryName, status) => {
 }
 
 export const compareRepository = (userId, repositoryName) => {
-    const request = Api.get(`/${userId}/repositories/${repositoryName}/compare`)
+    const request = Api.get(`/${userId}/spaces/${repositoryName}/compare`)
         .then(response => response)
         .catch(error => error.response);
 
@@ -174,7 +174,7 @@ export const selectCategoryList = (url) => {
 }
 
 export const selectPullData = (userId, repositoryName) => {
-    const request = Api.get(`/${userId}/repositories/${repositoryName}/pull/compare`)
+    const request = Api.get(`/${userId}/spaces/${repositoryName}/pull/compare`)
         .then(response => response)
         .catch(error => error.response);
 

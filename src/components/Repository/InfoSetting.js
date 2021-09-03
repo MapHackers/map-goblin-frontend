@@ -65,7 +65,7 @@ const InfoSetting = (props) => {
     const onClick = () => {
         // eslint-disable-next-line no-restricted-globals
         if(confirm("정말 삭제하시겠습니까?")){
-            Api.post(`/repositories/${props.repositoryInfo.id}/delete`)
+            Api.post(`/spaces/${props.repositoryInfo.id}/delete`)
                 .then(response => {
                     props.history.push('/main');
                 })

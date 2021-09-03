@@ -138,7 +138,7 @@ const RequestDetailPage = (props) => {
 
     useEffect(() => {
 
-        Api.get(`/${userId}/repositories/${repositoryName}`)
+        Api.get(`/${userId}/spaces/${repositoryName}`)
             .then(response => {
                 setRepositoryInfo(response.data);
             })
@@ -187,7 +187,7 @@ const RequestDetailPage = (props) => {
     }, []);
 
     const onClickBack = () => {
-        props.history.push(`/${props.match.params.userId}/repositories/${props.match.params.repositoryName}`)
+        props.history.push(`/${props.match.params.userId}/spaces/${props.match.params.repositoryName}`)
     }
 
     const onClickMerge = () => {

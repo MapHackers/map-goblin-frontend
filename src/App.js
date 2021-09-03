@@ -49,11 +49,11 @@ function App({isLogin}) {
             <Route exact path="/main" component={Auth(MainPage, true)} />
             <Route exact path="/search" component={Auth(SearchPage, true)} />
             <Route exact path="/new" component={Auth(CreateMyMapPage, true)} />
-            <Route exact path="/:userId/repositories/:repositoryName" component={Auth(RepositoryPage, true)} />
-            <Route exact path="/:userId/repositories/:repositoryName/requests" component={Auth(CreateRequestPage, true)} />
-            <Route exact path="/:userId/repositories/:repositoryName/requests/:id" component={Auth(RequestDetailPage, true)} />
-            <Route exact path="/:userId/repositories/:repositoryName/issues" component={Auth(CreateIssuePage, true)} />
-            <Route exact path="/:userId/repositories/:repositoryName/issues/:id" component={Auth(IssueDetailPage, true)} />
+            <Route exact path="/:userId/spaces/:repositoryName" component={Auth(RepositoryPage, true)} />
+            <Route exact path="/:userId/spaces/:repositoryName/requests" component={Auth(CreateRequestPage, true)} />
+            <Route exact path="/:userId/spaces/:repositoryName/requests/:id" component={Auth(RequestDetailPage, true)} />
+            <Route exact path="/:userId/spaces/:repositoryName/issues" component={Auth(CreateIssuePage, true)} />
+            <Route exact path="/:userId/spaces/:repositoryName/issues/:id" component={Auth(IssueDetailPage, true)} />
             <Route exact path="/:userId" component={Auth(MyPage, true)} />
           </Switch>
         </Suspense>

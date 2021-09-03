@@ -105,7 +105,7 @@ function CardView({ card, history }) {
         <Card
             style={{ width: '17.5rem', marginLeft: '1rem', marginRight: '1rem', marginBottom: '1rem', boxShadow: '6px 6px 10px 0 rgba(169, 169, 169, 0.4)' }}
             cover={
-                <a href={`/${card.ownerId}/repositories/${card.name}`}>
+                <a href={`/${card.ownerId}/spaces/${card.name}`}>
                     <Image
                         width='17.5rem'
                         height='17.5rem'

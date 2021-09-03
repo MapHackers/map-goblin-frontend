@@ -150,13 +150,13 @@ const IssueDetailPage = (props) => {
     const checkIssue = async () => {
         await Api.post(props.location.pathname + '/check')
             .then(response => {
-                props.history.push(`/${userId}/repositories/${repositoryName}`)
+                props.history.push(`/${userId}/spaces/${repositoryName}`)
             })
             .catch(err => err.response)
     }
 
     const onClickBack = () => {
-        props.history.push(`/${props.match.params.userId}/repositories/${props.match.params.repositoryName}`)
+        props.history.push(`/${props.match.params.userId}/spaces/${props.match.params.repositoryName}`)
     }
 
     return (

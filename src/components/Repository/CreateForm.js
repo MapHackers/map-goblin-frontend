@@ -39,7 +39,7 @@ const CreateForm = (props) => {
                         if (props.formName === "modify"){
                             dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
                                 .then(response => {
-                                    props.history.push(`/${props.user.userId}/repositories/${values.name}`);
+                                    props.history.push(`/${props.user.userId}/spaces/${values.name}`);
                                     window.location.reload();
                                 })
                         }else{
@@ -47,7 +47,7 @@ const CreateForm = (props) => {
                                 .then(response => {
                                     const payload = response.payload;
 
-                                    props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
+                                    props.history.push(`/${props.user.userId}/spaces/${payload.data.name}`);
                                 })
                         }
                     });
@@ -58,14 +58,14 @@ const CreateForm = (props) => {
 
                     dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
                         .then(response => {
-                            props.history.push(`/${props.user.userId}/repositories/${values.name}`);
+                            props.history.push(`/${props.user.userId}/spaces/${values.name}`);
                             window.location.reload();
                         });
                 }else{
                     dispatch(saveRepositoryInfo(values))
                         .then(response => {
                             const payload = response.payload;
-                            props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
+                            props.history.push(`/${props.user.userId}/spaces/${payload.data.name}`);
                         });
                 }
             }
@@ -78,13 +78,13 @@ const CreateForm = (props) => {
 
                 dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
                     .then(response => {
-                        props.history.push(`/${props.user.userId}/repositories/${values.name}`);
+                        props.history.push(`/${props.user.userId}/spaces/${values.name}`);
                     });
             }else{
                 dispatch(saveRepositoryInfo(values))
                     .then(response => {
                         const payload = response.payload;
-                        props.history.push(`/${props.user.userId}/repositories/${payload.data.name}`);
+                        props.history.push(`/${props.user.userId}/spaces/${payload.data.name}`);
                     });
             }
         }

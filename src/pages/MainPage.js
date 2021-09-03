@@ -21,35 +21,35 @@ function MainPage(props) {
     const [CategoryRestThumbCards, setCategoryRestThumbCards] = useState([])
 
     useEffect(() => {
-        Api.get('/repositories')
+        Api.get('/spaces')
             .then(response => {
                 setThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/대학교/repositories/category`)
+        Api.get(`/대학교/spaces/category`)
             .then(response => {
                 setCategoryThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/서울/repositories/category`)
+        Api.get(`/서울/spaces/category`)
             .then(response => {
                 setCategorySeoulThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/정보전달/repositories/category`)
+        Api.get(`/정보전달/spaces/category`)
             .then(response => {
                 setCategoryInfoThumbCards(response.data?.data)
             })
             .catch(err => {
                 console.log(err)
             })
-        Api.get(`/맛집/repositories/category`)
+        Api.get(`/맛집/spaces/category`)
             .then(response => {
                 setCategoryRestThumbCards(response.data?.data)
             })
@@ -60,7 +60,7 @@ function MainPage(props) {
 
     useEffect(() => {
         if (props.user?.id !== undefined && props.user?.id !== "null" && props.user?.id !== "") {
-            Api.get(`/${props.user?.id}/repositories/likes`)
+            Api.get(`/${props.user?.id}/spaces/likes`)
                 .then(response => {
                     console.log({ response })
                     setLikedThumbCards(response.data?.data)

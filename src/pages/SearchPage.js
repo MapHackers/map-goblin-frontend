@@ -123,7 +123,7 @@ function SearchPage({location, history}) {
                                                 />
                                             }
                                             title={
-                                                <a href={`/${item.ownerId}/repositories/${item.name}`}
+                                                <a href={`/${item.ownerId}/spaces/${item.name}`}
                                                    style={{fontSize: '16px'}}>
                                                     {highlightedText(item.name)}
                                                 </a>
