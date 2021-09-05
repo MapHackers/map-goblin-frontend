@@ -668,7 +668,7 @@ const RepositoryPage = (props) => {
                             </div>
 
                         </Modal>
-                        <MapContainer mapId={repositoryInfo.map_id} authority={repositoryInfo.authority} key="mapContainer" />
+                        <MapContainer mapId={repositoryInfo.mapId} authority={repositoryInfo.authority} key="mapContainer" />
                     </TabPane>
                     {repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
                         <Alert
