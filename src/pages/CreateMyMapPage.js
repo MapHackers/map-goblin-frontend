@@ -2,7 +2,7 @@ import React from 'react';
 import CommonLayout from "../components/Layout/CommonLayout";
 
 import { Row, Col, Divider } from "antd";
-import CreateInfo from "../components/Repository/CreateInfo";
+import CreateInfo from "../components/Space/CreateInfo";
 
 const CreateMyMapPage = (props) => {
 

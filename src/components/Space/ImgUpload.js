@@ -3,12 +3,12 @@ import {Upload} from "antd";
 import ImgCrop from "antd-img-crop";
 import {useDispatch, useSelector} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {addFile, modifiedFile} from "../../_actions/repository_action";
+import {addFile, modifiedFile} from "../../_actions/space_action";
 
 const ImgUpload = (props) => {
     const dispatch = useDispatch();
 
-    const fileList = useSelector(state => state.repository.fileList)
+    const fileList = useSelector(state => state.space.fileList)
 
     const onChange = ({ fileList: newFileList }) => {
 

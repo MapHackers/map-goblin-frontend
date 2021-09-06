@@ -1,5 +1,5 @@
 import {
-    SEARCH_REPOSITORY,
+    SEARCH_SPACE,
     SEARCH_USER
 } from "../_actions/type";
 
@@ -9,7 +9,7 @@ export default function(state = {
     searchUser:[]
 }, action){
     switch (action.type) {
-        case SEARCH_REPOSITORY:
+        case SEARCH_SPACE:
             return {
                 ...state,
                 searchRepo: action.payload?.data.data

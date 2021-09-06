@@ -5,7 +5,7 @@ import {Avatar, Image, List, Space, Tabs, Card, Badge} from 'antd';
 import {UserOutlined, EnvironmentOutlined, LikeOutlined, DislikeOutlined, EyeOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
 import Api from "../util/Api";
-import {searchRepository, searchUser} from "../_actions/search_action";
+import {searchSpace, searchUser} from "../_actions/search_action";
 
 const {TabPane} = Tabs;
 const {Meta} = Card;
@@ -72,7 +72,7 @@ function SearchPage({location, history}) {
         if (searchValue !== ""){
             dispatch(searchUser(searchValue))
                 .then(response => response)
-            dispatch(searchRepository(searchValue))
+            dispatch(searchSpace(searchValue))
                 .then(response => response)
         }
     }, [searchValue])

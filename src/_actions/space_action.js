@@ -1,13 +1,13 @@
 import {
-    REPOSITORY_FILE_UPLOAD,
+    SPACE_FILE_UPLOAD,
     ADD_UPLOAD_FILE,
-    SAVE_REPOSITORY_INFO,
+    SAVE_SPACE_INFO,
     ADD_SELECTED_CATEGORY,
-    MODIFY_REPOSITORY_INFO,
+    MODIFY_SPACE_INFO,
     MODIFY_FILE,
     SELECT_ISSUE_LIST,
     SELECT_REQUEST_LIST,
-    COMPARE_REPOSITORY,
+    COMPARE_SPACE,
     CREATE_REQUEST,
     SELECT_REQUEST_INFO,
     MERGE_REQUEST_DATA, DENIED_REQUEST_DATA, SELECT_PULL_DATA
@@ -39,29 +39,29 @@ export const fileUpload = (formData) => {
         .catch(error => error.response);
 
     return {
-        type: REPOSITORY_FILE_UPLOAD,
+        type: SPACE_FILE_UPLOAD,
         payload: request
     }
 }
 
-export const saveRepositoryInfo = (values) => {
+export const saveSpaceInfo = (values) => {
     const request = Api.post('/spaces', values)
         .then(response=>response)
         .catch(error=>error.response);
 
     return {
-        type: SAVE_REPOSITORY_INFO,
+        type: SAVE_SPACE_INFO,
         payload: request
     }
 }
 
-export const modifyRepositoryInfo = (values, userId, repositoryName) => {
-    const request = Api.post(`/${userId}/spaces/${repositoryName}`, values)
+export const modifySpaceInfo = (values, userId, spaceName) => {
+    const request = Api.post(`/${userId}/spaces/${spaceName}`, values)
         .then(response => response)
         .catch(error => error.response);
 
     return {
-        type: MODIFY_REPOSITORY_INFO,
+        type: MODIFY_SPACE_INFO,
         payload: request
     }
 }
@@ -74,8 +74,8 @@ export const addSelectedCategory = (categoryList) => {
     }
 }
 
-export const selectIssueList = (page, userId, repositoryName, status) => {
-    const request = Api.get(`/${userId}/spaces/${repositoryName}/issues?status=${status}&page=${page}`)
+export const selectIssueList = (page, userId, spaceName, status) => {
+    const request = Api.get(`/${userId}/spaces/${spaceName}/issues?status=${status}&page=${page}`)
         .then(response => response)
         .catch(error => error.response);
 
@@ -85,8 +85,8 @@ export const selectIssueList = (page, userId, repositoryName, status) => {
     }
 }
 
-export const selectRequestList = (page, userId, repositoryName, status) => {
-    const request = Api.get(`/${userId}/spaces/${repositoryName}/requests?status=${status}&page=${page}`)
+export const selectRequestList = (page, userId, spaceName, status) => {
+    const request = Api.get(`/${userId}/spaces/${spaceName}/requests?status=${status}&page=${page}`)
         .then(response => response)
         .catch(error => error.response);
 
@@ -96,13 +96,13 @@ export const selectRequestList = (page, userId, repositoryName, status) => {
     }
 }
 
-export const compareRepository = (userId, repositoryName) => {
-    const request = Api.get(`/${userId}/spaces/${repositoryName}/compare`)
+export const comparespace = (userId, spaceName) => {
+    const request = Api.get(`/${userId}/spaces/${spaceName}/compare`)
         .then(response => response)
         .catch(error => error.response);
 
     return {
-        type: COMPARE_REPOSITORY,
+        type: COMPARE_SPACE,
         payload: request
     }
 }
@@ -173,8 +173,8 @@ export const selectCategoryList = (url) => {
     }
 }
 
-export const selectPullData = (userId, repositoryName) => {
-    const request = Api.get(`/${userId}/spaces/${repositoryName}/pull/compare`)
+export const selectPullData = (userId, spaceName) => {
+    const request = Api.get(`/${userId}/spaces/${spaceName}/pull/compare`)
         .then(response => response)
         .catch(error => error.response);
 

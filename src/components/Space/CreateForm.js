@@ -1,6 +1,6 @@
 import React from 'react';
 import {Form} from "antd";
-import {fileUpload, saveRepositoryInfo, modifyRepositoryInfo, modifiedFile} from "../../_actions/repository_action";
+import {fileUpload, saveSpaceInfo, modifySpaceInfo, modifiedFile} from "../../_actions/space_action";
 import {useDispatch, useSelector} from "react-redux";
 import {withRouter} from "react-router-dom";
 
@@ -18,8 +18,8 @@ const formItemLayout = {
 const CreateForm = (props) => {
     const dispatch = useDispatch()
 
-    const selectedCategories = useSelector(state => state.repository.selectedCategory)
-    const isModified = useSelector(state => state.repository.isModified)
+    const selectedCategories = useSelector(state => state.space.selectedCategory)
+    const isModified = useSelector(state => state.space.isModified)
 
     const onFinish = (values) => {
 
@@ -28,8 +28,8 @@ const CreateForm = (props) => {
         const formData = new FormData();
 
         if(isModified === true){
-            if(props.repository.fileList.length > 0){
-                formData.append('file', props.repository.fileList[0].originFileObj);
+            if(props.space.fileList.length > 0){
+                formData.append('file', props.space.fileList[0].originFileObj);
                 dispatch(fileUpload(formData))
                     .then(response => {
                         const payload = response.payload;
@@ -37,13 +37,13 @@ const CreateForm = (props) => {
                         values.thumbnail = payload.data;
 
                         if (props.formName === "modify"){
-                            dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
+                            dispatch(modifySpaceInfo(values, props.user.userId, props.spaceInfo.name))
                                 .then(response => {
                                     props.history.push(`/${props.user.userId}/spaces/${values.name}`);
                                     window.location.reload();
                                 })
                         }else{
-                            dispatch(saveRepositoryInfo(values))
+                            dispatch(saveSpaceInfo(values))
                                 .then(response => {
                                     const payload = response.payload;
 
@@ -56,13 +56,13 @@ const CreateForm = (props) => {
 
                     values.thumbnail = null;
 
-                    dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
+                    dispatch(modifySpaceInfo(values, props.user.userId, props.spaceInfo.name))
                         .then(response => {
                             props.history.push(`/${props.user.userId}/spaces/${values.name}`);
                             window.location.reload();
                         });
                 }else{
-                    dispatch(saveRepositoryInfo(values))
+                    dispatch(saveSpaceInfo(values))
                         .then(response => {
                             const payload = response.payload;
                             props.history.push(`/${props.user.userId}/spaces/${payload.data.name}`);
@@ -76,12 +76,12 @@ const CreateForm = (props) => {
 
                 console.log("values",values);
 
-                dispatch(modifyRepositoryInfo(values, props.user.userId, props.repositoryInfo.name))
+                dispatch(modifySpaceInfo(values, props.user.userId, props.spaceInfo.name))
                     .then(response => {
                         props.history.push(`/${props.user.userId}/spaces/${values.name}`);
                     });
             }else{
-                dispatch(saveRepositoryInfo(values))
+                dispatch(saveSpaceInfo(values))
                     .then(response => {
                         const payload = response.payload;
                         props.history.push(`/${props.user.userId}/spaces/${payload.data.name}`);

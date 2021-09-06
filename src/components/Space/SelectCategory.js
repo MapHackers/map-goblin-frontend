@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Select, Spin, Tag} from "antd";
 import {useDispatch} from "react-redux";
-import {addSelectedCategory, selectCategoryList} from "../../_actions/repository_action";
+import {addSelectedCategory, selectCategoryList} from "../../_actions/space_action";
 
 const SelectCategory = (props) => {
 

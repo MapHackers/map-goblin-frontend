@@ -3,7 +3,7 @@ import { Input } from 'antd'
 import {withRouter} from 'react-router-dom';
 import styled from 'styled-components'
 import {useDispatch} from "react-redux";
-import {searchRepository, searchUser} from "../../../_actions/search_action";
+import {searchSpace, searchUser} from "../../../_actions/search_action";
 
 const { Search } = Input;
 

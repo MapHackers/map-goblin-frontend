@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Col, Divider, Form, Input, Row} from "antd";
 import CommonLayout from "../components/Layout/CommonLayout";
-import IssueForm from "../components/Repository/IssueForm";
+import IssueForm from "../components/Space/IssueForm";
 
 const { TextArea } = Input;
 

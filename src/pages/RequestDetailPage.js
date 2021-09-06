@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import CommonLayout from "../components/Layout/CommonLayout";
 import { Button, Col, Divider, Form, Input, Result, Row, Spin, Timeline, Comment, List, Alert } from "antd";
-import RequestForm from "../components/Repository/RequestForm";
+import RequestForm from "../components/Space/RequestForm";
 import { useDispatch } from "react-redux";
-import { deniedRequestData, mergeRequestData, saveRequestReply, selectRequestInfo } from "../_actions/repository_action";
+import { deniedRequestData, mergeRequestData, saveRequestReply, selectRequestInfo } from "../_actions/space_action";
 import { withRouter } from "react-router-dom";
 import Api from "../util/Api";
 import SimpleMap from '../components/Map/SimpleMap';
@@ -94,7 +94,7 @@ const RequestDetailPage = (props) => {
 
     const dispatch = useDispatch()
 
-    const [repositoryInfo, setRepositoryInfo] = useState({});
+    const [spaceInfo, setspaceInfo] = useState({});
     const [timeLineLoading, setTimeLineLoading] = useState(false);
     const [addList, setAddList] = useState([]);
     const [modifyList, setModifyList] = useState([]);
@@ -107,7 +107,7 @@ const RequestDetailPage = (props) => {
     const [requestStatus, setRequestStatus] = useState("");
 
     const userId = props.match.params.userId;
-    const repositoryName = props.match.params.repositoryName;
+    const spaceName = props.match.params.spaceName;
 
     const backHome = () => {
         props.history.push('/main')
@@ -138,9 +138,9 @@ const RequestDetailPage = (props) => {
 
     useEffect(() => {
 
-        Api.get(`/${userId}/spaces/${repositoryName}`)
+        Api.get(`/${userId}/spaces/${spaceName}`)
             .then(response => {
-                setRepositoryInfo(response.data);
+                setspaceInfo(response.data);
             })
             .catch(error => {
                 setNotFound(true);
@@ -155,25 +155,24 @@ const RequestDetailPage = (props) => {
                 setRequestStatus(values[0].status);
 
                 let compareResult = response.payload.data;
-                console.log({ compareResult })
                 setdataToSimpleMap(compareResult)
-                if (compareResult.added !== undefined) {
+                if (compareResult.added.length > 0) {
                     setAddList(compareResult.added.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
                 }
 
-                if (compareResult.modified !== undefined) {
+                if (compareResult.modified.length > 0) {
                     setModifyList(compareResult.modified.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
                 }
 
-                if (compareResult.delete !== undefined) {
+                if (compareResult.delete.length > 0) {
                     setDeleteList(compareResult.delete.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
                 }
 
-                if (compareResult.layer !== undefined) {
+                if (compareResult.layer.length > 0) {
                     setLayerList(compareResult.layer.map((data) => <p>{getDate(data.createdDate)} {data.name}</p>));
                 }
 
-                if (compareResult.replies !== undefined) {
+                if (compareResult.replies.length > 0) {
                     setComments(compareResult.replies);
                 }
                 setTimeLineLoading(true);
@@ -187,7 +186,7 @@ const RequestDetailPage = (props) => {
     }, []);
 
     const onClickBack = () => {
-        props.history.push(`/${props.match.params.userId}/spaces/${props.match.params.repositoryName}`)
+        props.history.push(`/${props.match.params.userId}/spaces/${props.match.params.spaceName}`)
     }
 
     const onClickMerge = () => {
@@ -289,7 +288,7 @@ const RequestDetailPage = (props) => {
                             <Form.Item>
                                 <Button type="primary" style={{marginLeft: "30%"}} onClick={onClickBack}>뒤로가기</Button>
                                 {
-                                    repositoryInfo.authority === "OWNER" && requestStatus === "WAITING" && <>
+                                    spaceInfo.authority === "OWNER" && requestStatus === "WAITING" && <>
                                         <Button type="primary" style={{marginLeft: "10px"}} color="green" onClick={onClickMerge}>
                                             반영하기
                                         </Button>

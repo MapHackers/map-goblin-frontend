@@ -1,15 +1,15 @@
 import {
-    SEARCH_REPOSITORY,
+    SEARCH_SPACE,
     SEARCH_USER
 } from "./type";
 import Api from "../util/Api";
 
-export function searchRepository(keyword){
+export function searchSpace(keyword){
     const request = Api.get(`/search/spaces/${keyword}`)
         .then(response => response)
         .catch(error => console.log(error))
     return {
-        type: SEARCH_REPOSITORY,
+        type: SEARCH_SPACE,
         payload: request
     }
 }

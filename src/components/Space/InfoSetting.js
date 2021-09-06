@@ -6,7 +6,7 @@ import CreateForm from "./CreateForm";
 import CreateFormItem from "./CreateFormItem";
 import SelectCategory from "./SelectCategory";
 import {useDispatch, useSelector} from "react-redux";
-import {addFile, modifiedFile} from "../../_actions/repository_action";
+import {addFile, modifiedFile} from "../../_actions/space_action";
 import Api from "../../util/Api";
 
 const { TextArea } = Input;
@@ -42,7 +42,7 @@ const InfoSetting = (props) => {
     const dispatch = useDispatch();
 
     const user = useSelector(state => state.user);
-    const repository = useSelector(state => state.repository);
+    const space = useSelector(state => state.space);
 
     useEffect(()=>{
 
@@ -65,7 +65,7 @@ const InfoSetting = (props) => {
     const onClick = () => {
         // eslint-disable-next-line no-restricted-globals
         if(confirm("정말 삭제하시겠습니까?")){
-            Api.post(`/spaces/${props.repositoryInfo.id}/delete`)
+            Api.post(`/spaces/${props.spaceInfo.id}/delete`)
                 .then(response => {
                     props.history.push('/main');
                 })
@@ -77,18 +77,18 @@ const InfoSetting = (props) => {
     }
 
     const initialValues = {
-        "name": props.repositoryInfo.name,
-        "description": props.repositoryInfo.description,
-        "categories": props.repositoryInfo.categories,
-        "oneWord": props.repositoryInfo.oneWord,
-        "thumbnail": props.repositoryInfo.thumbnail
+        "name": props.spaceInfo.name,
+        "description": props.spaceInfo.description,
+        "categories": props.spaceInfo.categories,
+        "oneWord": props.spaceInfo.oneWord,
+        "thumbnail": props.spaceInfo.thumbnail
     }
 
     return (
         <Row style={{textAlign:'center'}}>
             <Col span={5}></Col>
             <Col span={14}>
-                <CreateForm formName="modify" repository={repository} user={user} repositoryInfo={props.repositoryInfo} initialValues={initialValues}>
+                <CreateForm formName="modify" space={space} user={user} spaceInfo={props.spaceInfo} initialValues={initialValues}>
                     <Row>
                         <Col span={14}>
                             <CreateFormItem label="지도 이름" name="name" >
@@ -98,7 +98,7 @@ const InfoSetting = (props) => {
                                 <TextArea rows={10} />
                             </CreateFormItem>
                             <CreateFormItem label="카테고리" name="categories">
-                                <SelectCategory categories={props.repositoryInfo.categories}/>
+                                <SelectCategory categories={props.spaceInfo.categories}/>
                             </CreateFormItem>
                             <CreateFormItem label="Owner의 한마디" name="oneWord">
                                 <TextArea showCount maxLength={20}/>

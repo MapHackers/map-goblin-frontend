@@ -28,10 +28,10 @@ import {
 import { LikeOutlined, LikeTwoTone, DislikeOutlined, DislikeTwoTone } from '@ant-design/icons';
 import Api from "../util/Api";
 
-import InfoSetting from "../components/Repository/InfoSetting";
+import InfoSetting from "../components/Space/InfoSetting";
 import { useDispatch } from "react-redux";
 
-import {compareRepository, selectIssueList, selectPullData, selectRequestList} from "../_actions/repository_action";
+import {comparespace, selectIssueList, selectPullData, selectRequestList} from "../_actions/space_action";
 import SimpleMap from "../components/Map/SimpleMap";
 
 const { TabPane } = Tabs
@@ -64,7 +64,7 @@ const columns = [
             } else {
                 return (<Link to={{
                     pathname: `/${hrefId}/spaces/${hrefRepo}/requests/${values.key}`,
-                    state: { userId: hrefId, repositoryName: hrefRepo }
+                    state: { userId: hrefId, spaceName: hrefRepo }
                 }}>{title}</Link>)
             }
         },
@@ -131,16 +131,16 @@ const Info = styled.div`
 
 let visitCount = 0
 
-const RepositoryPage = (props) => {
+const SpacePage = (props) => {
     const dispatch = useDispatch()
 
-    const [repositoryInfo, setRepositoryInfo] = useState({});
+    const [spaceInfo, setspaceInfo] = useState({});
     const [thumbnail, setThumbnail] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
     const [actionType, setActionType] = useState(null);
     const [isFirst, setIsFirst] = useState(true);
-    const { userId, repositoryName } = props.match.params;
+    const { userId, spaceName } = props.match.params;
     const userUrl = `/${userId}`;
 
     const [issueWaitingPage, setIssueWaitingPage] = useState(1);
@@ -170,18 +170,18 @@ const RepositoryPage = (props) => {
         if (isFirst && visitCount !== 0) {
             visitCount++
             setIsFirst(false)
-            Api.post(`/${userId}/${repositoryName}/visit`)
+            Api.post(`/${userId}/${spaceName}/visit`)
                 .then(response => response)
                 .catch(e => e)
         }
         visitCount++
-        async function getRepositoryInfo() {
+        async function getspaceInfo() {
             hrefId = userId;
-            hrefRepo = repositoryName;
+            hrefRepo = spaceName;
 
             setIsLoading(true);
-            await Api.get(`/${userId}/spaces/${repositoryName}`).then(response => {
-                setRepositoryInfo(response.data);
+            await Api.get(`/${userId}/spaces/${spaceName}`).then(response => {
+                setspaceInfo(response.data);
 
                 if (response.data.thumbnail !== null) {
                     setThumbnail(Api.defaults.baseURL + '/files/' + response.data.thumbnail);
@@ -191,7 +191,7 @@ const RepositoryPage = (props) => {
                 setNotFound(true);
             });
 
-            dispatch(selectIssueList(0, userId, repositoryName, 'WAITING'))
+            dispatch(selectIssueList(0, userId, spaceName, 'WAITING'))
                 .then(response => {
 
                     let issueList = response.payload?.data;
@@ -220,7 +220,7 @@ const RepositoryPage = (props) => {
                     setNotFound(true);
                 })
 
-            dispatch(selectIssueList(0, userId, repositoryName, 'CHECKED'))
+            dispatch(selectIssueList(0, userId, spaceName, 'CHECKED'))
                 .then(response => {
 
                     let issueList = response.payload.data;
@@ -251,7 +251,7 @@ const RepositoryPage = (props) => {
                     setNotFound(true);
                 });
 
-            dispatch(selectRequestList(0, userId, repositoryName, 'WAITING'))
+            dispatch(selectRequestList(0, userId, spaceName, 'WAITING'))
                 .then(response => {
 
                     let issueList = response.payload.data;
@@ -282,7 +282,7 @@ const RepositoryPage = (props) => {
                     setNotFound(true);
                 });
 
-            dispatch(selectRequestList(0, userId, repositoryName, 'ACCEPTED'))
+            dispatch(selectRequestList(0, userId, spaceName, 'ACCEPTED'))
                 .then(response => {
 
                     let requestList = response.payload.data;
@@ -313,7 +313,7 @@ const RepositoryPage = (props) => {
                     setNotFound(true);
                 });
 
-            dispatch(selectRequestList(0, userId, repositoryName, 'DENIED'))
+            dispatch(selectRequestList(0, userId, spaceName, 'DENIED'))
                 .then(response => {
 
                     let requestList = response.payload.data;
@@ -344,7 +344,7 @@ const RepositoryPage = (props) => {
                     setNotFound(true);
                 });
 
-            dispatch(compareRepository(userId, repositoryName))
+            dispatch(comparespace(userId, spaceName))
                 .then(response => {
                     if (response.payload.status === 200) {
                         if (response.payload.data.message === undefined) {
@@ -356,7 +356,7 @@ const RepositoryPage = (props) => {
                     console.log(error);
                 })
 
-            dispatch(selectPullData(userId, repositoryName))
+            dispatch(selectPullData(userId, spaceName))
                 .then(response => {
                     console.log("selectpull", response);
                     if (response.payload.status === 200) {
@@ -371,16 +371,16 @@ const RepositoryPage = (props) => {
                 })
         }
 
-        getRepositoryInfo().then();
+        getspaceInfo().then();
     }, [props, actionType])
 
     const onClickClone = () => {
-        if (repositoryInfo.source === "HOST" && repositoryInfo.authority === "OWNER") {
+        if (spaceInfo.source === "HOST" && spaceInfo.authority === "OWNER") {
             alert("본인의 지도는 클론할 수 없습니다.");
         } else {
             // eslint-disable-next-line no-restricted-globals
             if (confirm("지도를 클론하시겠습니까?")) {
-                Api.post('/spaces/clone', { "repositoryId": repositoryInfo.id }).then(response => {
+                Api.post('/spaces/clone', { "spaceId": spaceInfo.id }).then(response => {
                     alert("클론이 완료되었습니다. 클론된 지도로 이동합니다.");
                     props.history.push(`/${props.user.userData.data.userId}/spaces/${response.data.name}`);
                 }).catch(error => {
@@ -392,7 +392,7 @@ const RepositoryPage = (props) => {
     }
 
     const onClickLike = (type) => {
-        Api.post(`/${repositoryInfo.id}/like`, { "type": type }).then(response => {
+        Api.post(`/${spaceInfo.id}/like`, { "type": type }).then(response => {
             if (actionType === type) {
                 setActionType(null);
             } else {
@@ -405,7 +405,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeWaitingPage = (page) => {
-        dispatch(selectIssueList(page - 1, userId, repositoryName, 'WAITING'))
+        dispatch(selectIssueList(page - 1, userId, spaceName, 'WAITING'))
             .then(response => {
 
                 let issueList = response.payload.data;
@@ -434,7 +434,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeCheckedPage = (page) => {
-        dispatch(selectIssueList(page - 1, userId, repositoryName, 'CHECKED'))
+        dispatch(selectIssueList(page - 1, userId, spaceName, 'CHECKED'))
             .then(response => {
 
                 let issueList = response.payload.data;
@@ -463,7 +463,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeRequestWaitingPage = (page) => {
-        dispatch(selectRequestList(page - 1, userId, repositoryName, 'WAITING'))
+        dispatch(selectRequestList(page - 1, userId, spaceName, 'WAITING'))
             .then(response => {
 
                 let requestList = response.payload.data;
@@ -492,7 +492,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeRequestAcceptedPage = (page) => {
-        dispatch(selectRequestList(page - 1, userId, repositoryName, 'ACCEPTED'))
+        dispatch(selectRequestList(page - 1, userId, spaceName, 'ACCEPTED'))
             .then(response => {
 
                 let requestList = response.payload.data;
@@ -521,7 +521,7 @@ const RepositoryPage = (props) => {
     }
 
     const onChangeRequestDeniedPage = (page) => {
-        dispatch(selectRequestList(page - 1, userId, repositoryName, 'DENIED'))
+        dispatch(selectRequestList(page - 1, userId, spaceName, 'DENIED'))
             .then(response => {
 
                 let requestList = response.payload.data;
@@ -573,11 +573,11 @@ const RepositoryPage = (props) => {
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a href="">{repositoryName}</a>
-                        {repositoryInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>원본 지도 :
-                            {repositoryInfo.hostUserId === null ?
+                        <a href="">{spaceName}</a>
+                        {spaceInfo.source === "CLONE" && <div style={{ fontSize: "15px" }}>원본 지도 :
+                            {spaceInfo.hostUserId === null ?
                                 <p style={{ color: "blue", display: "inline" }}>&nbsp;원본 지도가 삭제되었습니다.</p> :
-                                <a style={{ color: "blue" }} href={'/' + repositoryInfo.hostUserId + '/spaces/' + repositoryInfo.hostRepoName}>&nbsp;{`/${repositoryInfo.hostUserId}/spaces/${repositoryInfo.hostRepoName}`}</a>}</div>}
+                                <a style={{ color: "blue" }} href={'/' + spaceInfo.hostUserId + '/spaces/' + spaceInfo.hostRepoName}>&nbsp;{`/${spaceInfo.hostUserId}/spaces/${spaceInfo.hostRepoName}`}</a>}</div>}
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <Tabs defaultActiveKey="1" size="large" style={{ padding: '0px 30px 10px 30px' }}>
@@ -587,7 +587,7 @@ const RepositoryPage = (props) => {
                                 <Col flex="auto" style={{ width: '200px' }}>
                                     <Row>
                                         <h1 style={{ width: '200px', marginBottom: '50px', fontSize: '2rem', fontWeight: '2rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}> 상세설명 </h1>
-                                        <h2 style={{ fontSize: '1.1rem', lineHeight: '2rem' }}>{repositoryInfo.description}</h2>
+                                        <h2 style={{ fontSize: '1.1rem', lineHeight: '2rem' }}>{spaceInfo.description}</h2>
                                     </Row>
                                 </Col>
                                 <Col flex="auto" style={{ marginLeft: '50px', marginRight: '50px' }}>
@@ -597,20 +597,20 @@ const RepositoryPage = (props) => {
                                 </Col>
                                 <Col flex="auto">
                                     <Info>
-                                        {repositoryInfo.source === "HOST" && <Button type="primary" size="large" style={{ width: "100%" }} onClick={onClickClone}>내 지도로 가져오기</Button>}
+                                        {spaceInfo.source === "HOST" && <Button type="primary" size="large" style={{ width: "100%" }} onClick={onClickClone}>내 지도로 가져오기</Button>}
                                         <Divider />
                                         <Row gutter={16}>
                                             <Col span={12}>
-                                                <Statistic title="좋아요" value={repositoryInfo.likeCount} prefix={repositoryInfo.likeType === "LIKE" ? <LikeTwoTone onClick={() => { onClickLike("LIKE") }} /> : <LikeOutlined onClick={() => { onClickLike("LIKE") }} />} />
+                                                <Statistic title="좋아요" value={spaceInfo.likeCount} prefix={spaceInfo.likeType === "LIKE" ? <LikeTwoTone onClick={() => { onClickLike("LIKE") }} /> : <LikeOutlined onClick={() => { onClickLike("LIKE") }} />} />
                                             </Col>
                                             <Col span={12}>
-                                                <Statistic title="싫어요" value={repositoryInfo.dislikeCount} prefix={repositoryInfo.likeType === "DISLIKE" ? <DislikeTwoTone onClick={() => { onClickLike("DISLIKE") }} /> : <DislikeOutlined onClick={() => { onClickLike("DISLIKE") }} />} />
+                                                <Statistic title="싫어요" value={spaceInfo.dislikeCount} prefix={spaceInfo.likeType === "DISLIKE" ? <DislikeTwoTone onClick={() => { onClickLike("DISLIKE") }} /> : <DislikeOutlined onClick={() => { onClickLike("DISLIKE") }} />} />
                                             </Col>
                                         </Row>
                                         <Divider>카테고리</Divider>
                                         <div style={{ overflow: 'hidden', width: '200px'}}>
                                             {
-                                                repositoryInfo.categories.map((category, idx) => {
+                                                spaceInfo.categories.map((category, idx) => {
                                                     return (
                                                         <Tag style={{marginBottom: '5px'}} color={colorArray[idx%colorArray.length]} key={idx}>{category}</Tag>
                                                     )
@@ -619,12 +619,12 @@ const RepositoryPage = (props) => {
                                         </div>
                                         <Divider>Owner의 한마디</Divider>
                                         <p>
-                                            {repositoryInfo.oneWord}
+                                            {spaceInfo.oneWord}
                                         </p>
                                         <Divider>Owner</Divider>
                                         <div>
                                             {
-                                                repositoryInfo.owners.map((ownerId, idx) => {
+                                                spaceInfo.owners.map((ownerId, idx) => {
                                                     return (
                                                         <h3 style={{ textAlign: "left" }} key={idx}>
                                                             <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
@@ -668,14 +668,14 @@ const RepositoryPage = (props) => {
                             </div>
 
                         </Modal>
-                        <MapContainer mapId={repositoryInfo.mapId} authority={repositoryInfo.authority} key="mapContainer" />
+                        <MapContainer mapId={spaceInfo.mapId} authority={spaceInfo.authority} key="mapContainer" />
                     </TabPane>
-                    {repositoryInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
+                    {spaceInfo.source === "HOST" && <TabPane tab={<span><ExclamationCircleOutlined />지적하기</span>} key="3">
                         <Alert
                             message="새로운 이슈를 올려주세요!"
                             type="warning"
                             action={
-                                <Link to={`/${userId}/spaces/${repositoryName}/issues`}>
+                                <Link to={`/${userId}/spaces/${spaceName}/issues`}>
                                     <Button size="middle" type="primary">지적하기</Button>
                                 </Link>
                             }
@@ -701,13 +701,13 @@ const RepositoryPage = (props) => {
                         </Tabs>
                     </TabPane>
                     }
-                    {repositoryInfo.source === "HOST" && <TabPane tab={<span><PullRequestOutlined />변경 요청</span>} key="4">
+                    {spaceInfo.source === "HOST" && <TabPane tab={<span><PullRequestOutlined />변경 요청</span>} key="4">
                         {
                             requestLoading && <Alert
                                 message="복사한 지도에 변경사항이 있습니다!"
                                 type="info"
                                 action={
-                                    <Link to={{ pathname: `/${userId}/spaces/${repositoryName}/requests`, state: { userId: userId, repositoryName: repositoryName } }}>
+                                    <Link to={{ pathname: `/${userId}/spaces/${spaceName}/requests`, state: { userId: userId, spaceName: spaceName } }}>
                                         <Button size="middle" type="primary">요청하기</Button>
                                     </Link>
                                 }
@@ -742,8 +742,8 @@ const RepositoryPage = (props) => {
                         </Tabs>
                     </TabPane>
                     }
-                    {repositoryInfo.authority === "OWNER" && <TabPane tab={<span><SettingOutlined />설정</span>} key="5">
-                        <InfoSetting repositoryInfo={repositoryInfo} thumbnailUrl={thumbnail} />
+                    {spaceInfo.authority === "OWNER" && <TabPane tab={<span><SettingOutlined />설정</span>} key="5">
+                        <InfoSetting spaceInfo={spaceInfo} thumbnailUrl={thumbnail} />
                     </TabPane>
                     }
 
@@ -764,4 +764,4 @@ const RepositoryPage = (props) => {
     }
 };
 
-export default withRouter(RepositoryPage);
+export default withRouter(SpacePage);

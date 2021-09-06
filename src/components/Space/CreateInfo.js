@@ -3,7 +3,7 @@ import {Button, Input} from "antd";
 import ImgUpload from "./ImgUpload";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {addFile} from "../../_actions/repository_action";
+import {addFile} from "../../_actions/space_action";
 import CreateForm from "./CreateForm";
 import CreateFormItem from "./CreateFormItem";
 import SelectCategory from "./SelectCategory";
@@ -28,7 +28,7 @@ const CreateInfo = (props) => {
     const dispatch = useDispatch();
 
     const user = useSelector(state => state.user);
-    const repository = useSelector(state => state.repository);
+    const space = useSelector(state => state.space);
 
     useEffect(()=>{
         let newFileList = [];
@@ -37,7 +37,7 @@ const CreateInfo = (props) => {
     }, []);
 
     return (
-        <CreateForm formName="create" repository={repository} user={user}>
+        <CreateForm formName="create" space={space} user={user}>
             <CreateFormItem label="썸네일" name="thumbnail" style={{width:"50%", marginLeft:"25%"}}>
                 <div id="create-map-upload">
                     <ImgUpload />

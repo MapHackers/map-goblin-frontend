@@ -5,8 +5,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {editUser} from "../../_actions/user_action";
 import styled from "styled-components";
 import Api from "../../util/Api";
-import {addFile, modifiedFile} from "../../_actions/repository_action";
-import ImgUpload from "../Repository/ImgUpload";
+import {addFile, modifiedFile} from "../../_actions/space_action";
+import ImgUpload from "../Space/ImgUpload";
 
 const {Meta} = Card;
 
@@ -23,8 +23,8 @@ const ProfileContainer = (props) => {
     const dispatch = useDispatch()
     const onClick = () => setShowResults(!editData)
 
-    const fileList = useSelector(state => state.repository.fileList)
-    const isModified = useSelector(state => state.repository.isModified)
+    const fileList = useSelector(state => state.space.fileList)
+    const isModified = useSelector(state => state.space.isModified)
     const userInfo = useSelector(state => state.userInfo)
 
     const onClickEdit = () => {

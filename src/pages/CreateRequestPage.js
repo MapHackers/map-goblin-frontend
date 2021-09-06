@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import CommonLayout from "../components/Layout/CommonLayout";
 import {Button, Col, Divider, Form, Input, Row, Timeline} from "antd";
-import RequestForm from "../components/Repository/RequestForm";
-import {compareRepository} from "../_actions/repository_action";
+import RequestForm from "../components/Space/RequestForm";
+import {comparespace} from "../_actions/space_action";
 import {useDispatch, useSelector} from "react-redux";
 
 const { TextArea } = Input;
@@ -41,17 +41,17 @@ const CreateRequestPage = (props) => {
     const [modifyList, setModifyList] = useState([]);
     const [deleteList, setDeleteList] = useState([]);
     const [layerList, setLayerList] = useState([]);
-    const compareResult = useSelector(state => state.repository.compareResult);
+    const compareResult = useSelector(state => state.space.compareResult);
 
     let userId;
-    let repositoryName;
+    let spaceName;
 
     useEffect(() => {
         if(Object.keys(compareResult).length === 0 && props.location.state !== undefined){
             userId = props.location.state.userId;
-            repositoryName = props.location.state.repositoryName;
+            spaceName = props.location.state.spaceName;
 
-            dispatch(compareRepository(userId, repositoryName))
+            dispatch(comparespace(userId, spaceName))
                 .then(response => {
                 })
                 .catch(error => {
@@ -88,7 +88,7 @@ const CreateRequestPage = (props) => {
                         변경사항 반영 요청
                     </p>
                     <Divider />
-                    <RequestForm initialValue={compareResult} userId={userId} repositoryName={repositoryName}>
+                    <RequestForm initialValue={compareResult} userId={userId} spaceName={spaceName}>
                         <Form.Item
                             label="제목"
                             name="title"

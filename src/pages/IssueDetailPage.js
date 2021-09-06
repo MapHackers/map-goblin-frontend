@@ -4,7 +4,7 @@ import { CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons'
 import CommonLayout from "../components/Layout/CommonLayout";
 import TextArea from "antd/es/input/TextArea";
 import Api from "../util/Api";
-import RequestForm from "../components/Repository/RequestForm";
+import RequestForm from "../components/Space/RequestForm";
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <>
@@ -79,7 +79,7 @@ const IssueDetailPage = (props) => {
     const [status, setStatus] = useState('')
     const [date, setDate] = useState('')
     const [isLoading, setIsLoading] = useState(true)
-    const {userId, repositoryName, issue} = props.match.params
+    const {userId, spaceName, issue} = props.match.params
 
 
     useEffect(() => {
@@ -150,13 +150,13 @@ const IssueDetailPage = (props) => {
     const checkIssue = async () => {
         await Api.post(props.location.pathname + '/check')
             .then(response => {
-                props.history.push(`/${userId}/spaces/${repositoryName}`)
+                props.history.push(`/${userId}/spaces/${spaceName}`)
             })
             .catch(err => err.response)
     }
 
     const onClickBack = () => {
-        props.history.push(`/${props.match.params.userId}/spaces/${props.match.params.repositoryName}`)
+        props.history.push(`/${props.match.params.userId}/spaces/${props.match.params.spaceName}`)
     }
 
     return (

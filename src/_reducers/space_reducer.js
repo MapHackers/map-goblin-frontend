@@ -1,13 +1,13 @@
 import {
-    REPOSITORY_FILE_UPLOAD,
+    SPACE_FILE_UPLOAD,
     ADD_UPLOAD_FILE,
-    SAVE_REPOSITORY_INFO,
+    SAVE_SPACE_INFO,
     ADD_SELECTED_CATEGORY,
-    MODIFY_REPOSITORY_INFO,
+    MODIFY_SPACE_INFO,
     MODIFY_FILE,
     SELECT_ISSUE_LIST,
     SELECT_REQUEST_LIST,
-    COMPARE_REPOSITORY,
+    COMPARE_SPACE,
     CREATE_REQUEST,
     SELECT_REQUEST_INFO,
     SAVE_REQUEST_REPLY, MERGE_REQUEST_DATA, DENIED_REQUEST_DATA, SELECT_CATEGORY_LIST, SELECT_PULL_DATA
@@ -28,17 +28,17 @@ const initialState = {
     pullData: {}
 }
 
-const repository = (state = initialState, action) => {
+const space = (state = initialState, action) => {
     switch (action.type) {
-        case REPOSITORY_FILE_UPLOAD:
+        case SPACE_FILE_UPLOAD:
             return { ...state, thumbnail: action.payload.data }
         case ADD_UPLOAD_FILE:
             return { ...state, fileList: action.payload }
         case MODIFY_FILE:
             return { ...state, isModified: action.payload }
-        case SAVE_REPOSITORY_INFO:
+        case SAVE_SPACE_INFO:
             return { ...state, info: action.payload.data }
-        case MODIFY_REPOSITORY_INFO:
+        case MODIFY_SPACE_INFO:
             return { ...state, info: action.payload.data }
         case ADD_SELECTED_CATEGORY:
             return {...state, selectedCategory: action.payload}
@@ -46,7 +46,7 @@ const repository = (state = initialState, action) => {
             return {...state, issueList: action.payload.data}
         case SELECT_REQUEST_LIST:
             return {...state, requestList: action.payload.data}
-        case COMPARE_REPOSITORY:
+        case COMPARE_SPACE:
             return {...state, compareResult: action.payload.data}
         case CREATE_REQUEST:
             return {...state, requestId: action.payload.data.requestId}
@@ -67,4 +67,4 @@ const repository = (state = initialState, action) => {
     }
 }
 
-export default repository;
+export default space;

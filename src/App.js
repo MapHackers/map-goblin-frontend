@@ -17,7 +17,7 @@ import CreateMyMapPage from './pages/CreateMyMapPage'
 import { Suspense } from 'react';
 import Auth from './hoc/Auth'
 import "antd/dist/antd.css"
-import RepositoryPage from "./pages/RepositoryPage";
+import SpacePage from "./pages/SpacePage";
 
 import styled from 'styled-components'
 import RequestDetailPage from "./pages/RequestDetailPage";
@@ -49,11 +49,11 @@ function App({isLogin}) {
             <Route exact path="/main" component={Auth(MainPage, true)} />
             <Route exact path="/search" component={Auth(SearchPage, true)} />
             <Route exact path="/new" component={Auth(CreateMyMapPage, true)} />
-            <Route exact path="/:userId/spaces/:repositoryName" component={Auth(RepositoryPage, true)} />
-            <Route exact path="/:userId/spaces/:repositoryName/requests" component={Auth(CreateRequestPage, true)} />
-            <Route exact path="/:userId/spaces/:repositoryName/requests/:id" component={Auth(RequestDetailPage, true)} />
-            <Route exact path="/:userId/spaces/:repositoryName/issues" component={Auth(CreateIssuePage, true)} />
-            <Route exact path="/:userId/spaces/:repositoryName/issues/:id" component={Auth(IssueDetailPage, true)} />
+            <Route exact path="/:userId/spaces/:spaceName" component={Auth(SpacePage, true)} />
+            <Route exact path="/:userId/spaces/:spaceName/requests" component={Auth(CreateRequestPage, true)} />
+            <Route exact path="/:userId/spaces/:spaceName/requests/:id" component={Auth(RequestDetailPage, true)} />
+            <Route exact path="/:userId/spaces/:spaceName/issues" component={Auth(CreateIssuePage, true)} />
+            <Route exact path="/:userId/spaces/:spaceName/issues/:id" component={Auth(IssueDetailPage, true)} />
             <Route exact path="/:userId" component={Auth(MyPage, true)} />
           </Switch>
         </Suspense>
